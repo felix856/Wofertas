@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VerPDF">
+
+    <!-- Toolbar com botão “voltar” -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_ver_pdf"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/wofertas_blue_primary"
+        app:title="Encarte da Oferta"
+        app:titleTextColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ImageView onde cada página do PDF será renderizada -->
+    <ImageView
+        android:id="@+id/imageViewPdfPage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:contentDescription="Página do PDF"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_ver_pdf"
+        app:layout_constraintBottom_toTopOf="@id/layoutNavegacaoPdf"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Layout de navegação de páginas -->
+    <LinearLayout
+        android:id="@+id/layoutNavegacaoPdf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btnPaginaAnterior"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anterior"
+            android:enabled="false"/>
+
+        <TextView
+            android:id="@+id/textViewContadorPagina"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="16sp"
+            tools:text="Página 1 / 10" />
+
+        <Button
+            android:id="@+id/btnProximaPagina"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Próxima"
+            android:enabled="false"/>
+    </LinearLayout>
+
+    <!-- ProgressBar para download/renderização -->
+    <ProgressBar
+        android:id="@+id/progressBarVerPDF"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

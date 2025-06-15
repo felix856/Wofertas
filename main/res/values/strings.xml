@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Wofertas</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="descr_avatar">Avatar do usuário</string>
+    <string name="trocar_senha">Trocar Senha</string>
+    <string name="sair">Sair</string>
+    <string name="meu_perfil">Meu Perfil</string>
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+    </string>
+    <string name="Email">Insira seu Email</string>
+    <string name="Senha">Insira sua Senha</string>
+    <string name="Nome">Insira seu Nome\n</string>
+    <string name="CPF">Insira seu CPF</string>
+    <string name="Telefone">Insira seu n° de telefone\n</string>
+    <string name="Confirmar">Confirme sua senha</string>
+    <string name="default_web_client_id">AIzaSyCINTOrohOIxldtE8iW6TvHQP-AmR81PRU</string>
+    <string name="login_com_o_google">Entrar com o Google</string>
+
+    <string-array name="perfis">
+        <item>Cliente</item>
+        <item>Supermercado</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="google_maps_key">AIzaSyBV7bNZOs1By_bb2--NI8TLddzXkpM7rts</string>
+
+</resources>

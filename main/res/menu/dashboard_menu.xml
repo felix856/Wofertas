@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Item para o ícone de Perfil -->
+    <item
+        android:id="@+id/action_perfil_dashboard"
+        android:title="Perfil"
+        android:icon="@drawable/perfil"
+        app:showAsAction="ifRoom"
+        android:contentDescription="Acessar perfil do usuário" />
+
+</menu>

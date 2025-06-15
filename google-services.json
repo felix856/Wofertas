@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "336472289071",
+    "project_id": "wofertas-c637e",
+    "storage_bucket": "wofertas-c637e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336472289071:android:81902651bdb0f7d6367bda",
+        "android_client_info": {
+          "package_name": "com.example.wofertas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "336472289071-977act4g5vcjq1uvumvhkcdls05cte21.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjaiXCdgkKiKSE5bawmsyM2KkC5qN-roQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "336472289071-977act4g5vcjq1uvumvhkcdls05cte21.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

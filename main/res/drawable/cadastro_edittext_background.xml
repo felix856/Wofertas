@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!--
+        Cor de fundo do EditText.
+        Usaremos 'colorSurface' do tema, que definimos como branco.
+        Se quisesse que fosse o bege da tela, usaria "?android:attr/colorBackground"
+        mas geralmente campos de texto têm um fundo que se destaca um pouco.
+    -->
+    <solid android:color="?attr/colorSurface" />
+
+    <!--
+        Borda do EditText.
+        Usaremos a cor secundária (amarelo) para a borda, como no seu design original.
+        Se quisesse uma borda mais sutil, poderia usar "?android:attr/textColorHint"
+    -->
+    <stroke
+        android:width="1dp"
+        android:color="?attr/colorSecondary" />
+
+    <!-- Cantos arredondados, ajuste o raio se necessário -->
+    <corners android:radius="4dp" />
+
+</shape>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_perfil"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wofertas_background"
+    tools:context=".Perfil">
+
+    <!-- Toolbar com botão Voltar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_perfil"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginBottom="32dp"
+        android:background="@color/wofertas_background"
+        app:layout_constraintBottom_toTopOf="@+id/imageViewAvatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="Meu Perfil"
+        app:titleTextColor="@color/black" />
+
+
+    <!-- Avatar do usuário -->
+
+    <!-- Rótulo "Nome" -->
+
+    <ImageView
+        android:id="@+id/imageViewAvatar"
+        android:layout_width="219dp"
+        android:layout_height="148dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="492dp"
+        android:contentDescription="@string/descr_avatar"
+        android:src="@drawable/perfil"
+        app:tint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_perfil" />
+
+    <TextView
+        android:id="@+id/label_nome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="48dp"
+        android:text="Nome"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:background="@color/wofertas_yellow"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewAvatar" />
+
+    <!-- Exibição do nome do usuário -->
+    <TextView
+        android:id="@+id/textViewNomePerfil"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/wofertas_yellow"
+        android:padding="12dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/label_nome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_nome"
+        tools:text="Alan Rick Batista" />
+
+    <!-- Rótulo "Email" -->
+    <TextView
+        android:id="@+id/label_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Email"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/textViewNomePerfil"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNomePerfil" />
+
+    <!-- Exibição do email -->
+    <TextView
+        android:id="@+id/textViewEmailPerfil"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@color/wofertas_yellow"
+        android:padding="12dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/label_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_email"
+        tools:text="alan.rick@exemplo.com" />
+
+    <!-- Botão “Trocar Senha” -->
+
+    <!-- Botão “Sair” para Logout -->
+
+    <Button
+        android:id="@+id/btnTrocarSenha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="104dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/wofertas_blue_primary"
+        android:padding="12dp"
+        android:text="Trocar Senha"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/textViewEmailPerfil"
+        app:layout_constraintTop_toBottomOf="@id/textViewEmailPerfil"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btnSair"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="37dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:padding="12dp"
+        android:text="Sair"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/textViewEmailPerfil"
+        app:layout_constraintTop_toBottomOf="@id/btnTrocarSenha"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

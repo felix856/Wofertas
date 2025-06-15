@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema Base do Aplicativo para Modo Claro -->
+    <style name="Base.Theme.Wofertas" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Cores principais da sua paleta -->
+        <item name="colorPrimary">@color/wofertas_blue_primary</item>
+        <item name="colorSecondary">@color/wofertas_yellow</item>
+
+        <!-- Cor de fundo padrão para as telas -->
+        <item name="android:colorBackground">@color/wofertas_yellow</item>
+
+        <!-- Cores para textos e ícones que aparecem SOBRE as cores acima -->
+        <item name="colorOnPrimary">@color/white</item> <!-- Texto/ícone sobre o azul primário -->
+        <item name="colorOnSecondary">@color/black</item> <!-- Texto/ícone sobre o amarelo secundário -->
+        <item name="colorOnBackground">@color/black</item> <!-- Texto/ícone sobre o fundo bege -->
+
+        <!-- Cor para superfícies de cards, diálogos, etc. -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item> <!-- Texto/ícone sobre a cor de superfície -->
+
+        <!-- Cor padrão para hints de EditText -->
+        <item name="android:textColorHint">@color/darker_gray</item>
+    </style>
+
+    <style name="Theme.Wofertas" parent="Base.Theme.Wofertas" />
+</resources>

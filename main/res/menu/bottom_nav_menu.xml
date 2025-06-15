@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/wofertas_logo_semfundo"
+        android:title="Início" />
+    <item
+        android:id="@+id/navigation_mapa"
+        android:icon="@drawable/map"
+        android:title="Mapa" />
+    <item
+        android:id="@+id/navigation_salvos"
+        android:icon="@drawable/ic_placeholder"
+        android:title="Salvos" />
+</menu>
