@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wofertas_background"
+    tools:context=".EditarPerfilActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_editar_perfil"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"/>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_editar_perfil"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/perfil"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/wofertas_blue_primary"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:contentDescription="Imagem de Perfil" />
+
+            <Button
+                android:id="@+id/btnSelectImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selecionar Imagem"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewProfile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:backgroundTint="@color/wofertas_orange_primary"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tvNomeLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Nome:"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@+id/btnSelectImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <EditText
+                android:id="@+id/etNome"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Seu Nome ou Nome da Loja"
+                android:inputType="textCapWords"
+                android:minHeight="48dp"
+                android:textColorHint="#757575"
+                app:layout_constraintTop_toBottomOf="@+id/tvNomeLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvEmailLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Email:"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/etNome"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="seu.email@exemplo.com"
+                android:inputType="textEmailAddress"
+                android:enabled="false"
+                android:focusable="false"
+                android:minHeight="48dp"
+                android:textColorHint="#757575"
+                app:layout_constraintTop_toBottomOf="@+id/tvEmailLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <!-- Campos específicos para Supermercado -->
+            <TextView
+                android:id="@+id/tvLatitudeLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Latitude:"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/etEmail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <EditText
+                android:id="@+id/etLatitude"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Ex: -27.6479"
+                android:inputType="numberDecimal|numberSigned"
+                android:minHeight="48dp"
+                android:textColorHint="#757575"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/tvLatitudeLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvLongitudeLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Longitude:"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/etLatitude"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <EditText
+                android:id="@+id/etLongitude"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="Ex: -48.6718"
+                android:inputType="numberDecimal|numberSigned"
+                android:minHeight="48dp"
+                android:textColorHint="#757575"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/tvLongitudeLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <Button
+                android:id="@+id/btnSaveProfile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Salvar Alterações"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="@color/wofertas_blue_primary"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@+id/etLongitude"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ProgressBar
+                android:id="@+id/progressBarEditProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/btnSaveProfile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

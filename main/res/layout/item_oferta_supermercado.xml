@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="12dp">
 
         <!-- Imagem de Perfil/Logo do Supermercado -->
         <de.hdodenhof.circleimageview.CircleImageView
@@ -67,17 +68,19 @@
             app:layout_constraintTop_toBottomOf="@+id/imageViewSupermercadoLogo"
             tools:text="Ofertas válidas de 01/07 a 07/07. Não perca!"/>
 
-        <!-- Distância (para Cliente) -->
+        <!-- Status da Oferta (para Supermercado) -->
         <TextView
-            android:id="@+id/tvDistancia"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvStatusOferta"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textSize="14sp"
-            android:textColor="@color/grey_600"
+            android:textColor="@color/black"
+            android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvDetalhesOferta"
-            tools:text="2.5 km de você"/>
+            tools:text="Status: Ativa" />
 
         <!-- Botão de Ver PDF -->
         <Button
@@ -88,22 +91,38 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/wofertas_orange_primary"
             android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@+id/tvDistancia"
+            app:layout_constraintTop_toBottomOf="@+id/tvStatusOferta"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <!-- Botão de Salvar/Desalvar (para Cliente) -->
-        <ImageButton
-            android:id="@+id/btnSalvarOferta"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_heart_empty"
-            android:contentDescription="Salvar Oferta"
+        <!-- Botões de Editar e Excluir (para Supermercado) -->
+        <LinearLayout
+            android:id="@+id/layout_supermercado_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btnVerPdf"
-            app:layout_constraintBottom_toBottomOf="@+id/btnVerPdf"
-            app:tint="@color/wofertas_blue_primary" />
+            app:layout_constraintTop_toBottomOf="@+id/tvStatusOferta"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <Button
+                android:id="@+id/btnEditarOferta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Editar"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/wofertas_blue_primary"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnExcluirOferta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Excluir"
+                android:backgroundTint="@color/wofertas_red_primary"
+                android:textColor="@color/white" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
