@@ -6,102 +6,195 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/wofertas_yellow"
+    android:background="@color/wofertas_background"
     tools:context=".DashboardSupermercadoActivity">
 
-    <!-- ADICIONADO: Toolbar no topo -->
-    <androidx.appcompat.widget.Toolbar
+    <!-- Toolbar no topo da tela -->
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar_dashboard"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/wofertas_blue_primary"
-        app:title="Painel do Supermercado"
-        app:titleTextColor="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light">
 
-    <ScrollView
+        <!-- Logo do supermercado -->
+        <ImageView
+            android:id="@+id/toolbar_logo"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="Logo Supermercado"
+            android:src="@drawable/perfil"
+            android:scaleType="centerCrop" />
+
+        <!-- Título da tela -->
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Publicar Oferta"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <!-- FrameLayout para o conteúdo principal -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_dashboard"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_dashboard"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_supermercado"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <!-- Dia da Oferta (usado como Título da Oferta) -->
-            <EditText
-                android:id="@+id/edtDiaOferta"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:layout_marginTop="16dp"
-                android:hint="Título da Oferta (ex: 'Semanal')"
-                android:inputType="textCapWords"
-                android:textColor="@color/black"
-                android:textColorHint="@color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:padding="16dp">
 
-            <!-- Botão para selecionar um PDF do dispositivo -->
-            <Button
-                android:id="@+id/btnSelectPdf"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Selecionar Encarte (PDF)"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:backgroundTint="@color/wofertas_blue_primary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edtDiaOferta" />
+                <!-- Título da Oferta -->
+                <EditText
+                    android:id="@+id/etTituloOferta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Título da Oferta (Ex: Pão Francês)"
+                    android:inputType="textCapSentences"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:autofillHints="name" />
 
-            <TextView
-                android:id="@+id/tvPdfName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Nenhum PDF selecionado"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnSelectPdf" />
+                <!-- Descrição Detalhada -->
+                <EditText
+                    android:id="@+id/etDescricaoOferta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Descrição Detalhada"
+                    android:inputType="textMultiLine"
+                    android:lines="4"
+                    android:gravity="top"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etTituloOferta"
+                    android:autofillHints="long_form_text" />
 
-            <Button
-                android:id="@+id/btnPublishOffer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Publicar Oferta"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:backgroundTint="@color/wofertas_blue_primary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvPdfName" />
+                <!-- Botão Selecionar PDF -->
+                <Button
+                    android:id="@+id/btnSelectPdf"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Selecionar PDF da Oferta"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/wofertas_blue_primary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etDescricaoOferta" />
 
-            <ProgressBar
-                android:id="@+id/progressBarUpload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/btnPublishOffer"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="16dp"
-                tools:visibility="visible"/>
+                <!-- Nome do PDF -->
+                <TextView
+                    android:id="@+id/tvPdfName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Nenhum PDF selecionado"
+                    android:textColor="@color/darker_gray"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnSelectPdf" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <!-- Data -->
+                <EditText
+                    android:id="@+id/etScheduledDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Data de Agendamento (Opcional)"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:inputType="none"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPdfName"
+                    android:autofillHints="date" />
 
-    </ScrollView>
+                <!-- Hora -->
+                <EditText
+                    android:id="@+id/etScheduledTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="Hora de Agendamento (Opcional)"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:inputType="none"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_edittext_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etScheduledDate"
+                    android:autofillHints="time" />
+
+                <!-- Botão Publicar -->
+                <Button
+                    android:id="@+id/btnPublishOffer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Publicar Oferta"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/wofertas_blue_primary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etScheduledTime" />
+
+                <!-- ProgressBar -->
+                <ProgressBar
+                    android:id="@+id/progressBarUpload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnPublishOffer"
+                    tools:visibility="visible" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_supermercado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/bottom_nav_menu_supermercado"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
