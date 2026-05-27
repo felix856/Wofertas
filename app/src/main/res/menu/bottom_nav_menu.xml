@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/wofertas_logo_semfundo"
+        android:title="Início" />
+
+    <item
+        android:id="@+id/navigation_mapa"
+        android:icon="@drawable/map"
+        android:title="Mapa" />
+
+    <!-- FIX: lista de compras (CarrinhoActivity) — faltava aqui -->
+    <item
+        android:id="@+id/navigation_carrinho"
+        android:icon="@drawable/ic_bookmark_border"
+        android:title="Lista" />
+
+    <item
+        android:id="@+id/navigation_salvos"
+        android:icon="@drawable/ic_heart_empty"
+        android:title="Salvos" />
+
+    <item
+        android:id="@+id/navigation_perfil"
+        android:icon="@drawable/perfil"
+        android:title="Perfil" />
+
+</menu>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="login_fields_background_tint">#F5F5F5</color>
+    <color name="wofertas_blue_primary">#1802C6</color>
+    <color name="wofertas_blue_dark">#0D00A1</color>
+    <color name="wofertas_blue_light">#EAE8FF</color>
+    <color name="wofertas_yellow">#FFBD59</color>
+    <color name="wofertas_yellow_dark">#E5A030</color>
+    <color name="wofertas_yellow_light">#FFF8E7</color>
+    <color name="wofertas_background">#F4E0BF</color>
+    <color name="bg_screen">#F2F2F2</color>
+    <color name="wofertas_surface">#FFFFFF</color>
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#666666</color>
+    <color name="text_hint">#AAAAAA</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="status_ativo">#00875A</color>
+    <color name="status_ativo_bg">#E3F7EF</color>
+    <color name="status_suspenso">#C62828</color>
+    <color name="status_suspenso_bg">#FFEBEE</color>
+    <color name="divider">#EEEEEE</color>
+    <color name="border_light">#E0E0E0</color>
+    <!-- legacy compat -->
+    <color name="wofertas_success">#00875A</color>
+    <color name="wofertas_warning">#FFC107</color>
+    <color name="wofertas_error">#C62828</color>
+    <color name="wofertas_green">#00875A</color>
+    <color name="darker_gray">#666666</color>
+    <color name="gray_light">#AAAAAA</color>
+    <color name="yellow_light_alpha">#80FFBD59</color>
+    <color name="color_salvos_bg">#F4E0BF</color>
+</resources>

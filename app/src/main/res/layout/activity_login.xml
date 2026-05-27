@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wofertas_background">
+
+    <!-- ── Cabeçalho ─────────────────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/llHeaderLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="W"
+            android:textColor="@color/wofertas_blue_primary"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:includeFontPadding="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ofertas"
+            android:textColor="@color/wofertas_yellow_dark"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:includeFontPadding="false" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvLoginTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bem-vindo de volta!"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toBottomOf="@+id/llHeaderLogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ── Conteúdo rolável ─────────────────────────────── -->
+    <ScrollView
+        android:id="@+id/scrollViewLogin"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@+id/tvLoginTitulo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="32dp">
+
+            <!-- Card de campos -->
+            <LinearLayout
+                android:id="@+id/containerLoginFields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_section_card"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="20dp"
+                android:elevation="2dp">
+
+                <!-- Label Email -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="E-mail"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="6dp" />
+
+                <!-- Campo Email -->
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:autofillHints="emailAddress"
+                    android:background="@drawable/bg_input_focused"
+                    android:gravity="center_vertical"
+                    android:hint="seu@email.com.br"
+                    android:inputType="textEmailAddress"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="0dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/darker_gray"
+                    android:textSize="15sp" />
+
+                <!-- Label Senha -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Senha"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="6dp" />
+
+                <!-- Campo Senha -->
+                <EditText
+                    android:id="@+id/senha"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:autofillHints="password"
+                    android:background="@drawable/bg_input_focused"
+                    android:drawableEnd="@drawable/baseline_visibility_off_24"
+                    android:gravity="center_vertical"
+                    android:hint="Sua senha"
+                    android:inputType="textPassword"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="0dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/darker_gray"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <!-- Link esqueceu a senha -->
+            <TextView
+                android:id="@+id/tvForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Esqueceu a senha?"
+                android:textColor="@color/wofertas_blue_primary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingVertical="12dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="4dp" />
+
+            <!-- Botões Voltar / Entrar em par -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:weightSum="2">
+
+                <!-- Botão Voltar -->
+                <Button
+                    android:id="@+id/btn_voltar"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Voltar"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/wofertas_yellow"
+                    app:cornerRadius="12dp"
+                    android:stateListAnimator="@null" />
+
+                <!-- Botão Entrar -->
+                <Button
+                    android:id="@+id/btn_entrar"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Entrar"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/wofertas_blue_primary"
+                    app:cornerRadius="12dp"
+                    android:stateListAnimator="@null" />
+
+            </LinearLayout>
+
+            <!-- Loading -->
+            <ProgressBar
+                android:id="@+id/progressBarLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
+
+            <!-- Divisor visual -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider"
+                android:layout_marginVertical="24dp" />
+
+            <!-- Cadastre-se -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Não tem conta ainda?"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:id="@+id/button3"
+                style="@style/Wofertas.Button.Outline"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="Criar conta grátis"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

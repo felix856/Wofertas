@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_salvos_bg">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_carrinho"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/wofertas_blue_primary"
+        app:title="Lista de Compras"
+        app:titleTextColor="@color/wofertas_yellow"
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/wofertas_blue_primary"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="12dp"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/etNovoProduto"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_search_bar"
+            android:hint="Adicionar produto..."
+            android:textColorHint="@color/text_hint"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:paddingHorizontal="14dp"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionDone"
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/btnAdicionarProduto"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:src="@android:drawable/ic_input_add"
+            android:background="@color/wofertas_yellow"
+            app:tint="@color/text_primary"
+            android:contentDescription="Adicionar"
+            android:scaleType="center" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvCarrinhoVazio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:text="Sua lista está vazia.\nDigite um produto acima para começar!"
+        android:textColor="@color/text_secondary"
+        android:textSize="15sp"
+        android:lineSpacingExtra="4dp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerCarrinho"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp" />
+
+</LinearLayout>

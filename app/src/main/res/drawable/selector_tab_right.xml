@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <shape>
+            <solid android:color="#1802C6"/>
+            <corners android:topRightRadius="10dp" android:bottomRightRadius="10dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="#FFFFFF"/>
+            <corners android:topRightRadius="10dp" android:bottomRightRadius="10dp"/>
+        </shape>
+    </item>
+</selector>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

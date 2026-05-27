@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    res/xml/file_provider_paths.xml
+    Necessário para PdfHelper.abrirComAppExterno() e compartilhar PDFs.
+    Referenciado pelo FileProvider no AndroidManifest.xml.
+-->
+<paths>
+    <!-- PDFs baixados via PdfHelper ficam em cache/pdfs/ -->
+    <cache-path name="pdf_cache" path="pdfs/" />
+    <!-- Outros arquivos gerados em cache raiz -->
+    <cache-path name="cache_root" path="." />
+</paths>

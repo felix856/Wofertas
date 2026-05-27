@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Base.Theme.Wofertas" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/wofertas_blue_primary</item>
+        <item name="colorPrimaryVariant">@color/wofertas_blue_dark</item>
+        <item name="colorSecondary">@color/wofertas_yellow</item>
+        <item name="colorSecondaryVariant">@color/wofertas_yellow_dark</item>
+        <!-- Fundo padrão para telas de listas -->
+        <item name="android:colorBackground">@color/bg_screen</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/text_primary</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+        <item name="colorSurface">@color/wofertas_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <!-- Hint padrão -->
+        <item name="android:textColorHint">@color/text_hint</item>
+        <!-- Remove divider automático do BottomNav -->
+        <item name="bottomNavigationStyle">@style/Wofertas.BottomNav</item>
+    </style>
+
+    <style name="Theme.Wofertas" parent="Base.Theme.Wofertas">
+        <!-- Barras transparentes para edge-to-edge -->
+        <item name="android:navigationBarColor">@color/wofertas_blue_primary</item>
+        <item name="android:statusBarColor">@color/wofertas_blue_primary</item>
+    </style>
+
+    <!-- BottomNav sem elevação excessiva -->
+    <style name="Wofertas.BottomNav" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="elevation">8dp</item>
+    </style>
+
+    <!-- Overlay para toolbars escuras -->
+    <style name="ThemeOverlay.Wofertas.ActionBar" parent="ThemeOverlay.Material3.Dark.ActionBar">
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
+</resources>
