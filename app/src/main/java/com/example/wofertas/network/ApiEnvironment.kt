@@ -18,7 +18,7 @@ enum class ApiEnvironment(val baseUrl: String, val description: String) {
      *   - No Windows: ipconfig (procure por "IPv4 Address")
      *   - No Mac/Linux: ifconfig ou ip addr
      */
-    PHYSICAL_DEVICE("http://192.168.3.161:8080/", "Physical Device (WiFi)"),
+    PHYSICAL_DEVICE("http://192.168.3.177:8080/", "Physical Device (WiFi)"),
 
     /**
      * Servidor em produção (mudar para seu domínio real).

@@ -16,7 +16,7 @@ object Constants {
         get() = if (isEmulator()) {
             "http://10.0.2.2:8080/"
         } else {
-            "http://192.168.3.201:8080/"
+            "http://192.168.3.177:8080/"
         }
 
     private fun isEmulator(): Boolean {
