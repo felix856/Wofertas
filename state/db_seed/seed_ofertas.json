@@ -1,0 +1,24 @@
+[
+  {
+    "_id": {"$oid": "660000000000000000000001"},
+    "mercadoId": {"$oid": "650000000000000000000001"},
+    "titulo": "Arroz Tipo 1 - Pacote 5kg",
+    "descricao": "Promoção semanal - pacote 5kg",
+    "precoOriginal": 39.90,
+    "precoPromocional": 29.90,
+    "ativo": true,
+    "categoria": "Alimentos",
+    "createdAt": {"$date": "2026-05-19T09:00:00Z"}
+  },
+  {
+    "_id": {"$oid": "660000000000000000000002"},
+    "mercadoId": {"$oid": "650000000000000000000002"},
+    "titulo": "Leite Integral 1L",
+    "descricao": "Oferta: 2 por 7.00",
+    "precoOriginal": 4.50,
+    "precoPromocional": 3.50,
+    "ativo": true,
+    "categoria": "Laticínios",
+    "createdAt": {"$date": "2026-05-19T09:15:00Z"}
+  }
+]

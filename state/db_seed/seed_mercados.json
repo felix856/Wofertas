@@ -1,0 +1,24 @@
+[
+  {
+    "_id": {"$oid": "650000000000000000000001"},
+    "nome": "App Mercado",
+    "email": "contato@appmercado.com",
+    "endereco": "Av. Paulista, 1000 - São Paulo, SP",
+    "latitude": -23.561414,
+    "longitude": -46.655881,
+    "ativo": true,
+    "logo": "/uploads/logos/appmercado.png",
+    "createdAt": {"$date": "2026-05-19T08:00:00Z"}
+  },
+  {
+    "_id": {"$oid": "650000000000000000000002"},
+    "nome": "Mercado Central",
+    "email": "contato@mercadocentral.com",
+    "endereco": "R. da Quitanda, 200 - Centro, São Paulo, SP",
+    "latitude": -23.548943,
+    "longitude": -46.635350,
+    "ativo": true,
+    "logo": "/uploads/logos/mercadocentral.png",
+    "createdAt": {"$date": "2026-05-19T08:05:00Z"}
+  }
+]

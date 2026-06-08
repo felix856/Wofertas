@@ -1,0 +1,58 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Credenciais & Secrets ###
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secret.properties
+
+### IDE Local Settings ###
+.DS_Store
+*.swp
+*.swo
+
+### Uploads (dados locais, não vão para prod) ###
+uploads/
+
+### Logs & PIDs ###
+*.log
+server.pid
+
+### Misc ###
+.openclaw/
+memory/
+AC

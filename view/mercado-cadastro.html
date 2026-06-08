@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <title>Wofertas · Cadastro do Mercado</title>
+  <script src="js/modules.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="logo-container">
+      <img src="imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
+      <a href="index.html">
+        <div class="logo"><span class="w">W</span><span class="rest">ofertas</span></div>
+      </a>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html">Início</a>
+      <a href="login.html">Entrar</a>
+    </nav>
+  </header>
+
+  <main class="login-container">
+    <div class="login-card">
+      <h2>Cadastro da loja</h2>
+      <p class="page-subtle" style="margin-top:-4px;margin-bottom:24px;line-height:1.6">
+        Registre os dados principais do supermercado para liberar o acesso ao painel.
+      </p>
+
+      <div class="form-group">
+        <label for="nome">Nome do mercado</label>
+        <input id="nome" type="text" placeholder="Digite o nome">
+      </div>
+
+      <div class="form-group">
+        <label for="cnpj">CNPJ</label>
+        <input id="cnpj" type="text" placeholder="Digite o CNPJ">
+      </div>
+
+      <div class="form-group">
+        <label for="endereco">Endereço</label>
+        <input id="endereco" type="text" placeholder="Digite o endereço">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="Digite o email">
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input id="senha" type="password" placeholder="Digite a senha">
+      </div>
+      <div class="form-group">
+        <label for="telefone">Telefone / WhatsApp</label>
+        <input id="telefone" type="text" placeholder="Ex: 48999999999" maxlength="11">
+        <div class="small-muted mt-4">Somente números (DDD + número).</div>
+      </div>
+
+      <div class="form-group">
+        <label for="logoInput">Logo do mercado</label>
+        <input id="logoInput" type="file" accept="image/*">
+        <div class="small-muted mt-12">A imagem pode ser definida depois no perfil também.</div>
+      </div>
+
+      <button class="login-btn btnLoginPage" id="btnCadastrar">Cadastrar mercado</button>
+    </div>
+  </main>
+
+  <script src="mercado-cadastro.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <title>Wofertas · Perfil</title>
+  <script src="js/modules.js"></script>
+</head>
+<body>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <header class="header">
+    <div class="logo-container">
+      <img src="imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
+      <a href="mercadoHome.html">
+        <div class="logo"><span class="w">W</span><span class="rest">ofertas</span></div>
+      </a>
+    </div>
+    <nav class="header-nav">
+      <a href="mercadoHome.html">Painel</a>
+      <a href="criar-oferta.html">Nova Oferta</a>
+      <a href="historico.html">Histórico</a>
+      <a href="perfil_mercado.html" class="active">Perfil</a>
+      <button class="btn-sair" onclick="logout()">Sair</button>
+    </nav>
+  </header>
+
+  <main class="login-container">
+    <div class="login-card">
+      <h2>Perfil da loja</h2>
+      <p class="page-subtle" style="margin-top:-4px;margin-bottom:24px;line-height:1.6">
+        Atualize os dados da sua loja e mantenha o painel consistente com a identidade do mercado.
+      </p>
+
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap">
+        <div style="position:relative;flex-shrink:0;cursor:pointer" onclick="document.getElementById('logoInput').click()" title="Clique para trocar a logo">
+          <div id="avatarCircle">
+            <span id="avatarLetter">S</span>
+            <img id="avatarImg" alt="Logo do mercado">
+          </div>
+          <div style="position:absolute;bottom:0;right:0;background:var(--accent);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg)">✏️</div>
+        </div>
+        <div style="min-width:0">
+          <div id="nomeDisplay" style="font-weight:800;color:#fff;font-size:1.05rem">Carregando...</div>
+          <div id="emailDisplay" class="page-subtle">—</div>
+          <div class="small-muted mt-12">Clique na logo para alterar</div>
+        </div>
+      </div>
+
+      <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(this)">
+      <input type="hidden" id="logoB64">
+
+      <hr>
+
+      <div class="form-group">
+        <label>Nome da loja *</label>
+        <input type="text" id="nome" placeholder="Nome do mercado">
+      </div>
+
+      <div class="form-group">
+        <label>Telefone</label>
+        <input type="tel" id="telefone" placeholder="(00) 00000-0000">
+      </div>
+
+      <div class="form-group">
+        <label>Endereço completo *</label>
+        <input type="text" id="endereco" placeholder="Rua, número, bairro, cidade">
+      </div>
+
+      <!-- NOVO CAMPO: SENHA -->
+      <div class="form-group">
+        <label>Nova senha (deixe em branco para não alterar)</label>
+        <input type="password" id="senha" placeholder="Digite a nova senha">
+        <div class="small-muted mt-4">Mínimo de 6 caracteres se for alterar.</div>
+      </div>
+
+      <div class="form-2col">
+        <div class="form-group">
+          <label>E-mail (não editável)</label>
+          <input type="email" id="email" disabled>
+        </div>
+        <div class="form-group">
+          <label>CNPJ (não editável)</label>
+          <input type="text" id="cnpj" disabled>
+        </div>
+      </div>
+
+      <button class="btnLoginPage" id="btnSalvar" onclick="salvarPerfil()">Salvar alterações</button>
+    </div>
+  </main>
+
+  <script src="logout.js"></script>
+  <script src="perfil-mercado.js"></script>
+  <script src="js/pages/perfil.js"></script>
+</body>
+</html>

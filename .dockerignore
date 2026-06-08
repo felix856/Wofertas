@@ -1,0 +1,11 @@
+target/
+.idea/
+.vscode/
+.git/
+.github/
+.mvn/
+*.log
+uploads/
+node_modules/
+app/
+database.sqlite

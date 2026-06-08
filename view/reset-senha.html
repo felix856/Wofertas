@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <title>Wofertas · Redefinir Senha</title>
+</head>
+<body>
+  <header class="header">
+    <div class="logo-container">
+      <img src="imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
+      <a href="index.html">
+        <div class="logo"><span class="w">W</span><span class="rest">ofertas</span></div>
+      </a>
+    </div>
+    <nav class="header-nav">
+      <a href="login.html">Entrar</a>
+    </nav>
+  </header>
+
+  <main class="reset-container">
+    <div class="reset-card">
+      <div class="stage-1 active">
+        <h2>Redefinir senha</h2>
+        <p class="page-subtle" style="margin-top:-4px;margin-bottom:18px;line-height:1.6">
+          Informe o e-mail da loja para receber o código de recuperação.
+        </p>
+        <input type="email" id="emailSolicitar" class="reset-input" placeholder="seu@email.com">
+        <button class="reset-btn btnSolicitar">Solicitar código</button>
+        <div class="back-link"><a href="login.html">Voltar ao login</a></div>
+      </div>
+
+      <div class="stage-2">
+        <h2>Redefinir senha</h2>
+        <div class="success-message" id="successMessage">Código enviado. Verifique seu email.</div>
+        <p class="page-subtle" style="margin-top:-4px;margin-bottom:18px;line-height:1.6">
+          Digite o código recebido e defina uma nova senha.
+        </p>
+        <input type="hidden" id="emailRedefinir">
+        <input type="text" id="codigoRecuperacao" class="reset-input" placeholder="Código de recuperação">
+        <input type="password" id="novaSenha" class="reset-input" placeholder="Nova senha">
+        <input type="password" id="confirmarSenha" class="reset-input" placeholder="Confirmar nova senha">
+        <button class="reset-btn btnRedefinir">Redefinir senha</button>
+        <div class="back-link"><a href="login.html">Voltar ao login</a></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="reset-senha.js"></script>
+</body>
+</html>

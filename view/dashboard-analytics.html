@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wofertas · Analytics Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="js/modules.js"></script>
+    <style>
+        .analytics-container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .analytics-header {
+            margin-bottom: 40px;
+        }
+
+        .analytics-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #ffffff;
+        }
+
+        .analytics-header p {
+            color: rgba(255,255,255,0.45);
+            font-size: 15px;
+        }
+
+        /* ─ MÉTRICAS ─ */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.05);
+            border: 0.5px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
+            padding: 22px 24px;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .metric-card:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-2px);
+        }
+
+        .metric-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .metric-value {
+            font-size: 38px;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .metric-subtext {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .metric-badge {
+            display: inline-block;
+            background: rgba(52,211,153,0.15);
+            color: #6ee7b7;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* ─ INSIGHT BOX ─ */
+        .insight-box {
+            background: rgba(255,255,255,0.05);
+            border: 0.5px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insight-box::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #f97316, #ef4444);
+            border-radius: 14px 0 0 14px;
+        }
+
+        .insight-title {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 10px;
+        }
+
+        .insight-main {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .insight-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.55);
+        }
+
+        .insight-clients {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 0.5px solid rgba(255,255,255,0.10);
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .insight-clients strong {
+            color: rgba(255,255,255,0.85);
+        }
+
+        /* ─ SECTIONS ─ */
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        /* ─ RANKING CARD ─ */
+        .ranking-card {
+            background: rgba(255,255,255,0.05);
+            border: 0.5px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .ranking-header {
+            padding: 14px 20px;
+            border-bottom: 0.5px solid rgba(255,255,255,0.08);
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.03);
+        }
+
+        .ranking-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .ranking-item {
+            padding: 14px 20px;
+            border-bottom: 0.5px solid rgba(255,255,255,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s;
+        }
+
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+
+        .ranking-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .ranking-position {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: rgba(249,115,22,0.2);
+            color: #fb923c;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 11px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .ranking-name {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.75);
+        }
+
+        .ranking-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fb923c;
+        }
+
+        /* ─ CONVERSÃO ─ */
+        .conversion-chart {
+            background: rgba(255,255,255,0.05);
+            border: 0.5px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
+            padding: 22px 24px;
+        }
+
+        .conversion-item {
+            margin-bottom: 20px;
+        }
+
+        .conversion-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .conversion-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.55);
+        }
+
+        .conversion-label span:last-child {
+            color: rgba(255,255,255,0.85);
+            font-weight: 600;
+        }
+
+        .conversion-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .conversion-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f97316, #ef4444);
+            border-radius: 8px;
+            transition: width 0.6s ease;
+        }
+
+        /* ─ LOADING ─ */
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: rgba(255,255,255,0.35);
+        }
+
+        .spinner {
+            border: 2px solid rgba(255,255,255,0.08);
+            border-top: 2px solid #f97316;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        #loading-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.35);
+        }
+
+        @keyframes spin {
+            0%   { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ─ ERRO ─ */
+        #error-box {
+            background: rgba(239,68,68,0.08);
+            border: 0.5px solid rgba(239,68,68,0.3);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        #error-msg {
+            color: #fca5a5;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        #error-detail {
+            color: rgba(252,165,165,0.7);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ─ RESPONSIVE ─ */
+        @media (max-width: 768px) {
+            .metrics-grid  { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .section-grid  { grid-template-columns: 1fr; }
+            .metric-value  { font-size: 28px; }
+            .insight-main  { font-size: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-grid  { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
+            <a href="index.html">
+                <div class="logo"><span class="w">W</span><span class="rest">ofertas</span></div>
+            </a>
+        </div>
+        <nav class="header-nav">
+            <a href="mercadoHome.html">Dashboard</a>
+            <a href="#" class="btnLogin" onclick="logout(); return false;">Sair</a>
+        </nav>
+    </header>
+
+    <div class="analytics-container">
+
+        <div class="analytics-header">
+            <h1>📊 Analytics do Seu Mercado</h1>
+            <p>Dados agregados de clientes. Tome decisões estratégicas informadas.</p>
+        </div>
+
+        <!-- LOADING -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p id="loading-text">Carregando dados...</p>
+        </div>
+
+        <!-- ERRO -->
+        <div id="error-box" style="display:none;">
+            <div id="error-msg">Erro desconhecido</div>
+            <div id="error-detail"></div>
+        </div>
+
+        <!-- CONTEÚDO -->
+        <div id="content" style="display:none;">
+
+            <!-- MÉTRICAS PRINCIPAIS -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">👁️ Visualizações</div>
+                    <div class="metric-value" id="metricVisualizations">0</div>
+                    <div class="metric-subtext">Total de visualizações de encartes</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">❤️ Curtidas e salvos</div>
+                    <div class="metric-value" id="metricLikes">0</div>
+                    <div class="metric-subtext">Curtidas em ofertas + favoritos do mercado</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">🛒 Itens no Carrinho</div>
+                    <div class="metric-value" id="metricCart">0</div>
+                    <div class="metric-subtext">Total de itens adicionados</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">📦 Encartes Ativos</div>
+                    <div class="metric-value" id="metricOffers">0</div>
+                    <div class="metric-subtext">Total de ofertas publicadas</div>
+                </div>
+            </div>
+
+            <!-- INSIGHT ESTRATÉGICO -->
+            <div class="insight-box" id="insightBox">
+                <div class="insight-title">💡 Insight Estratégico</div>
+                <div class="insight-main" id="insightTitle">Analisando seus dados...</div>
+                <div class="insight-text" id="insightText"></div>
+                <div class="insight-clients">
+                    👥 <strong id="clientsActive">0</strong> clientes ativos interagiram com seus encartes
+                </div>
+            </div>
+
+            <!-- RANKING DE COMPETITIVIDADE -->
+            <div class="section">
+                <div class="section-title">🏆 Ranking de Competitividade de Supermercados</div>
+                <div class="ranking-card" style="background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.15);">
+                    <div class="ranking-header" style="background: rgba(255,255,255,0.05); display: flex; justify-content: space-between;">
+                        <span>Supermercado (Sua Posição vs Concorrentes)</span>
+                        <span>Pontuação (Curtidas Totais de Ofertas)</span>
+                    </div>
+                    <ul class="ranking-list" id="rankingConcorrentes">
+                        <li class="loading" style="padding: 20px; text-align: center; color: rgba(255,255,255,0.5);">Carregando ranking geral de concorrentes...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TAXA DE CONVERSÃO -->
+            <div class="section">
+                <div class="section-title">📈 Taxa de Conversão</div>
+                <div class="conversion-chart">
+                    <div class="conversion-item">
+                        <div class="conversion-label">
+                            <span>Visualizações → Curtidas</span>
+                            <span id="conversionLikesPercent">0%</span>
+                        </div>
+                        <div class="conversion-bar">
+                            <div class="conversion-fill" id="conversionLikesFill" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <div class="conversion-item">
+                        <div class="conversion-label">
+                            <span>Visualizações → Carrinho</span>
+                            <span id="conversionCartPercent">0%</span>
+                        </div>
+                        <div class="conversion-bar">
+                            <div class="conversion-fill" id="conversionCartFill" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RANKINGS -->
+            <div class="section">
+                <div class="section-title">🏆 Seus Melhores Encartes</div>
+                <div class="section-grid">
+                    <div class="ranking-card">
+                        <div class="ranking-header">🎯 Melhor Performance Geral</div>
+                        <ul class="ranking-list" id="rankingPerformance"></ul>
+                    </div>
+                    <div class="ranking-card">
+                        <div class="ranking-header">❤️ Mais Curtidos</div>
+                        <ul class="ranking-list" id="rankingLikes"></ul>
+                    </div>
+                    <div class="ranking-card">
+                        <div class="ranking-header">🛒 Mais Adicionados ao Carrinho</div>
+                        <ul class="ranking-list" id="rankingCart"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PREFERÊNCIAS -->
+            <div class="section">
+                <div class="section-title">🎯 Preferências dos Clientes</div>
+                <div class="section-grid">
+                    <div class="ranking-card">
+                        <div class="ranking-header">❤️ Produtos Mais Curtidos</div>
+                        <ul class="ranking-list" id="topProductsLikes"></ul>
+                    </div>
+                    <div class="ranking-card">
+                        <div class="ranking-header">🛒 Produtos Mais Procurados</div>
+                        <ul class="ranking-list" id="topProductsCart"></ul>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /#content -->
+    </div><!-- /.analytics-container -->
+
+    <script src="auth-check.js"></script>
+    <script src="js/pages/dashboard.js"></script>
+</body>
+</html>

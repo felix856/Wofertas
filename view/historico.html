@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <title>Wofertas · Histórico</title>
+</head>
+<body>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <header class="header">
+    <div class="logo-container">
+      <img src="imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
+      <a href="mercadoHome.html">
+        <div class="logo"><span class="w">W</span><span class="rest">ofertas</span></div>
+      </a>
+    </div>
+    <nav class="header-nav">
+      <a href="mercadoHome.html">Painel</a>
+      <a href="criar-oferta.html">Nova Oferta</a>
+      <a href="historico.html" class="active">Histórico</a>
+      <a href="perfil_mercado.html">Perfil</a>
+      <button class="btn-sair" onclick="logout()">Sair</button>
+    </nav>
+  </header>
+
+  <main class="historico-container">
+    <div class="page-head">
+      <div>
+        <h2 class="historico-title" style="margin:0">Histórico de ofertas</h2>
+        <div class="page-subtle" style="margin-top:6px">Edite, filtre e acompanhe as publicações do supermercado.</div>
+      </div>
+      <div class="filter-bar">
+        <!-- CORRIGIDO: "SUSPENSO" → "INATIVO" para bater com o modelo do backend -->
+        <select id="filtroStatus" onchange="filtrar()">
+          <option value="">Todos os status</option>
+          <option value="ATIVO">Ativos</option>
+          <option value="INATIVO">Inativos</option>
+        </select>
+        <button class="btn-reload" onclick="carregarHistorico()">Atualizar</button>
+        <a href="criar-oferta.html" class="btnLogin btn-sm">+ Nova oferta</a>
+      </div>
+    </div>
+
+    <div class="ofertas-grid" id="listaOfertas">
+      <p class="page-subtle">Carregando...</p>
+    </div>
+
+    <div id="mensagemVazia" class="msg-vazia" style="display:none">Nenhuma oferta encontrada.</div>
+  </main>
+
+    <!-- Modal Editar -->
+  <div class="modal-overlay" id="modalEditar">
+    <div class="modal">
+      <h3>Editar oferta</h3>
+      <input type="hidden" id="editId">
+
+      <div class="form-group">
+        <label for="editNome">Nome da oferta *</label>
+        <input type="text" id="editNome" placeholder="Digite o nome">
+      </div>
+
+      <div class="form-2col">
+        <div class="form-group">
+          <label for="editStatus">Status</label>
+          <select id="editStatus">
+            <option value="ATIVO">Ativo</option>
+            <option value="INATIVO">Inativo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editData">Data de Validade</label>
+          <input type="date" id="editData">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="editImagemInput">Imagem (clique abaixo para trocar)</label>
+        <div class="upload-area" id="editUploadArea" onclick="document.getElementById('editImagemInput').click()">
+          <input type="file" accept="image/*" id="editImagemInput" onchange="handleEditUpload(this)" style="display:none">
+          <div id="editUploadHint" class="upload-hint">
+            <div style="font-size:28px;margin-bottom:4px">🖼️</div>
+            <div style="font-size:13px;font-weight:700">Clique para trocar</div>
+          </div>
+          <img id="editPreview" alt="Prévia da imagem" style="display:none; max-width:100%; border-radius:8px;">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btnMercado btn-sm" onclick="fecharModal()">Cancelar</button>
+        <button class="btnLoginPage btn-sm" id="btnSalvarEdit" onclick="salvarEdicao()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="modalImagem" onclick="this.style.display='none'">
+    <img id="modalFoto" src="" alt="Imagem ampliada">
+  </div>
+
+  <script src="logout.js"></script>
+  <script src="historico.js"></script>
+</body>
+</html>
