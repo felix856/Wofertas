@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/auth/**",
                         "/api/auth/**"
+                    
                 ).permitAll()
 
                 // páginas públicas
@@ -92,11 +93,20 @@ public class SecurityConfig {
 
                 // arquivos estáticos
                 .requestMatchers(
-                        "/css/**",
-                        "/js/**",
-                        "/assets/**",
-                        "/imagens/**",
-                        "/uploads/**"
+                     // arquivos estáticos
+               .requestMatchers(
+        "/css/**",
+        "/js/**",
+        "/assets/**",
+        "/imagens/**",
+        "/uploads/**",
+        "/*.css",
+        "/*.js",
+        "/*.png",
+        "/*.jpg",
+        "/*.ico",
+        "/*.svg"
+            ).permitAll()
                 ).permitAll()
 
                 // JWT obrigatório
