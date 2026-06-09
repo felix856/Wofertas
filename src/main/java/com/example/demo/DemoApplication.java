@@ -42,7 +42,7 @@ public class DemoApplication implements WebMvcConfigurer {
 				.addResourceLocations("file:./view/imagens/")
 				.setCachePeriod(86400); // Cache de 1 dia para imagens
 		
-		// Servir outras pastas estáticas (se existirem)
+// Servir outras pastas estáticas (se existirem)
 		registry.addResourceHandler("/js/**")
 				.addResourceLocations("file:./view/js/")
 				.setCachePeriod(3600);
