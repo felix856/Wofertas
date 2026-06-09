@@ -64,9 +64,17 @@ public class SecurityConfig {
 
                 // páginas públicas
                 .requestMatchers(
-                        "/",
-                        "/error",
-                        "/*.html"
+    "/",
+    "/error",
+    "/index.html",
+    "/login.html",
+    "/mercadoHome.html",
+    "/criar-oferta.html",
+    "/dashboard-analytics.html",
+    "/dashboard-pro.html",
+    "/historico.html",
+    "/mercado-cadastro.html"
+).permitAll()
                 ).permitAll()
 
                 // arquivos estáticos
