@@ -66,9 +66,7 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/", 
                         "/error", 
-                        "/login.html",
-                        "/mercado-cadastro.html",
-                        "/usuario-cadastro.html"
+                        "/*.html"
                 ).permitAll()
 
                 // endpoints públicos
