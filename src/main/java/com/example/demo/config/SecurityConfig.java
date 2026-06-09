@@ -29,138 +29,91 @@ public class SecurityConfig {
     private JwtAuthFilter jwtAuthFilter;
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http)
-            throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-
-        .csrf(csrf -> csrf.disable())
-
-        .cors(cors ->
-                cors.configurationSource(
-                        corsConfigurationSource()
-                )
-        )
-
-        .sessionManagement(session ->
-                session.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS
-                )
-        )
-
-        .authorizeHttpRequests(auth -> auth
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
 
                 // preflight
-                .requestMatchers(
-                        HttpMethod.OPTIONS,
-                        "/**"
-                ).permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // autenticação
-                .requestMatchers(
-                        "/auth/**",
-                        "/api/auth/**"
-                ).permitAll()
+                .requestMatchers("/auth/**", "/api/auth/**").permitAll()
 
-                // páginas públicas
+                // páginas HTML públicas
                 .requestMatchers(
-    "/",
-    "/error",
-    "/index.html",
-    "/login.html",
-    "/mercadoHome.html",
-    "/criar-oferta.html",
-    "/dashboard-analytics.html",
-    "/dashboard-pro.html",
-    "/historico.html",
-    "/mercado-cadastro.html"
-).permitAll()
+                    "/",
+                    "/error",
+                    "/index.html",
+                    "/login.html",
+                    "/mercado-cadastro.html",
+                    "/reset-senha.html",
+                    "/mercadoHome.html",
+                    "/criar-oferta.html",
+                    "/dashboard-analytics.html",
+                    "/dashboard-pro.html",
+                    "/historico.html",
+                    "/perfil_mercado.html"
                 ).permitAll()
 
                 // arquivos estáticos
                 .requestMatchers(
-                        "/css/**",
-                        "/js/**",
-                        "/assets/**",
-                        "/imagens/**",
-                        "/uploads/**",
-                        "/*.css",
-                        "/*.js",
-                        "/*.png",
-                        "/*.jpg",
-                        "/*.ico",
-                        "/*.svg"
+                    "/*.css",
+                    "/*.js",
+                    "/*.ico",
+                    "/*.png",
+                    "/*.jpg",
+                    "/*.svg",
+                    "/js/**",
+                    "/imagens/**",
+                    "/assets/**",
+                    "/uploads/**"
                 ).permitAll()
 
-                // endpoints públicos
+                // endpoints públicos POST
                 .requestMatchers(
-                        HttpMethod.POST,
-                        "/usuarios",
-                        "/api/usuarios",
-                        "/mercados",
-                        "/api/mercados",
-                        "/api/mercado/cadastro",
-                        "/mercado/cadastro"
+                    HttpMethod.POST,
+                    "/usuarios",
+                    "/api/usuarios",
+                    "/mercados",
+                    "/api/mercados",
+                    "/api/mercado/cadastro",
+                    "/mercado/cadastro"
                 ).permitAll()
 
+                // endpoints públicos GET
                 .requestMatchers(
-                        HttpMethod.GET,
-                        "/ofertas/**",
-                        "/mercados/**",
-                        "/encartes/**",
-                        "/api/ofertas/**",
-                        "/api/mercados/**",
-                        "/api/encartes/**"
+                    HttpMethod.GET,
+                    "/ofertas/**",
+                    "/mercados/**",
+                    "/encartes/**",
+                    "/api/ofertas/**",
+                    "/api/mercados/**",
+                    "/api/encartes/**"
                 ).permitAll()
 
-                // JWT obrigatório
-                .anyRequest()
-                .authenticated()
-        )
-
-        .addFilterBefore(
-                jwtAuthFilter,
-                UsernamePasswordAuthenticationFilter.class
-        );
+                // JWT obrigatório para o resto
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-
-        CorsConfiguration config =
-                new CorsConfiguration();
+        CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedMethods(
-                List.of(
-                        "GET",
-                        "POST",
-                        "PUT",
-                        "PATCH",
-                        "DELETE",
-                        "OPTIONS"
-                )
-        );
-
-        config.setAllowedHeaders(
-                List.of("*")
-        );
-
-        config.setExposedHeaders(
-                List.of("Authorization")
-        );
-
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-
-        source.registerCorsConfiguration(
-                "/**",
-                config
-        );
-
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 
@@ -170,9 +123,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config
-    ) throws Exception {
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }
