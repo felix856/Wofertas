@@ -13,19 +13,35 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
-        // Expõe a pasta de uploads para que as imagens sejam acessíveis via URL
+
         Path uploadDir = Paths.get("uploads");
         String uploadPath = uploadDir.toFile().getAbsolutePath();
 
+        // Pasta de uploads (imagens)
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + uploadPath + "/");
 
-        // Expõe a pasta "view" para servir arquivos HTML, CSS e JS
         Path viewDir = Paths.get("view");
         String viewPath = viewDir.toFile().getAbsolutePath();
 
-        registry.addResourceHandler("/**")
+        // Arquivos CSS e JS na raiz do view
+        registry.addResourceHandler("/*.css", "/*.js", "/*.ico", "/*.png", "/*.jpg", "/*.svg")
                 .addResourceLocations("file:" + viewPath + "/")
-                .setCachePeriod(0); // Desabilita cache para desenvolvimento
+                .setCachePeriod(0);
+
+        // Subpastas do view (js/, imagens/, etc)
+        registry.addResourceHandler("/js/**", "/imagens/**", "/assets/**")
+                .addResourceLocations("file:" + viewPath + "/")
+                .setCachePeriod(0);
+
+        // Páginas HTML
+        registry.addResourceHandler("/*.html")
+                .addResourceLocations("file:" + viewPath + "/")
+                .setCachePeriod(0);
+
+        // Raiz → index.html
+        registry.addResourceHandler("/")
+                .addResourceLocations("file:" + viewPath + "/")
+                .setCachePeriod(0);
     }
 }
