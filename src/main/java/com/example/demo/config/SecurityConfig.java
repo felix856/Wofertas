@@ -60,14 +60,28 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/auth/**",
                         "/api/auth/**"
-                    
                 ).permitAll()
 
                 // páginas públicas
                 .requestMatchers(
-                        "/", 
-                        "/error", 
+                        "/",
+                        "/error",
                         "/*.html"
+                ).permitAll()
+
+                // arquivos estáticos
+                .requestMatchers(
+                        "/css/**",
+                        "/js/**",
+                        "/assets/**",
+                        "/imagens/**",
+                        "/uploads/**",
+                        "/*.css",
+                        "/*.js",
+                        "/*.png",
+                        "/*.jpg",
+                        "/*.ico",
+                        "/*.svg"
                 ).permitAll()
 
                 // endpoints públicos
@@ -89,24 +103,6 @@ public class SecurityConfig {
                         "/api/ofertas/**",
                         "/api/mercados/**",
                         "/api/encartes/**"
-                ).permitAll()
-
-                // arquivos estáticos
-                .requestMatchers(
-                     // arquivos estáticos
-               .requestMatchers(
-        "/css/**",
-        "/js/**",
-        "/assets/**",
-        "/imagens/**",
-        "/uploads/**",
-        "/*.css",
-        "/*.js",
-        "/*.png",
-        "/*.jpg",
-        "/*.ico",
-        "/*.svg"
-            ).permitAll()
                 ).permitAll()
 
                 // JWT obrigatório
@@ -162,16 +158,13 @@ public class SecurityConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
-
     }
 
     @Bean
     AuthenticationManager authenticationManager(
             AuthenticationConfiguration config
     ) throws Exception {
-
         return config.getAuthenticationManager();
     }
 }
