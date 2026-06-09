@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wofertas · Analytics Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="js/modules.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/js/modules.js"></script>
     <style>
         .analytics-container {
             max-width: 1400px;
@@ -204,288 +204,82 @@
             background: rgba(255,255,255,0.04);
         }
 
-        .ranking-position {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            background: rgba(249,115,22,0.2);
-            color: #fb923c;
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 11px;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .ranking-name {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 500;
+        .ranking-item-label {
+            font-size: 13px;
             color: rgba(255,255,255,0.75);
         }
 
-        .ranking-value {
+        .ranking-item-value {
             font-size: 14px;
             font-weight: 600;
-            color: #fb923c;
+            color: #ffffff;
         }
 
-        /* ─ CONVERSÃO ─ */
-        .conversion-chart {
+        /* ─ CHART PLACEHOLDER ─ */
+        .chart-placeholder {
             background: rgba(255,255,255,0.05);
             border: 0.5px solid rgba(255,255,255,0.10);
             border-radius: 14px;
-            padding: 22px 24px;
-        }
-
-        .conversion-item {
-            margin-bottom: 20px;
-        }
-
-        .conversion-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .conversion-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.55);
-        }
-
-        .conversion-label span:last-child {
-            color: rgba(255,255,255,0.85);
-            font-weight: 600;
-        }
-
-        .conversion-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .conversion-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #f97316, #ef4444);
-            border-radius: 8px;
-            transition: width 0.6s ease;
-        }
-
-        /* ─ LOADING ─ */
-        .loading {
+            padding: 40px;
             text-align: center;
-            padding: 80px 20px;
-            color: rgba(255,255,255,0.35);
-        }
-
-        .spinner {
-            border: 2px solid rgba(255,255,255,0.08);
-            border-top: 2px solid #f97316;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        #loading-text {
+            color: rgba(255,255,255,0.4);
             font-size: 14px;
-            color: rgba(255,255,255,0.35);
-        }
-
-        @keyframes spin {
-            0%   { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ─ ERRO ─ */
-        #error-box {
-            background: rgba(239,68,68,0.08);
-            border: 0.5px solid rgba(239,68,68,0.3);
-            border-radius: 14px;
-            padding: 20px 24px;
-            margin-bottom: 24px;
-        }
-
-        #error-msg {
-            color: #fca5a5;
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 6px;
-        }
-
-        #error-detail {
-            color: rgba(252,165,165,0.7);
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        /* ─ RESPONSIVE ─ */
-        @media (max-width: 768px) {
-            .metrics-grid  { grid-template-columns: 1fr 1fr; gap: 12px; }
-            .section-grid  { grid-template-columns: 1fr; }
-            .metric-value  { font-size: 28px; }
-            .insight-main  { font-size: 16px; }
-        }
-
-        @media (max-width: 480px) {
-            .metrics-grid  { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo-container">
-            <img src="imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
-            <a href="index.html">
-                <div class="logo"><span class="w">W</span><span class="rest">ofertas</span></div>
-            </a>
-        </div>
-        <nav class="header-nav">
-            <a href="mercadoHome.html">Dashboard</a>
-            <a href="#" class="btnLogin" onclick="logout(); return false;">Sair</a>
-        </nav>
-    </header>
+  <header class="header">
+    <div class="logo-container">
+      <img src="/imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
+      <a href="/mercadoHome.html">
+        <div class="logo"><span class="w">W</span><span class="rest">ofertas</span></div>
+      </a>
+    </div>
+    <nav class="header-nav">
+      <a href="/mercadoHome.html">Painel</a>
+      <a href="/dashboard-analytics.html" class="active">📊 Analytics</a>
+      <a href="/criar-oferta.html">Nova Oferta</a>
+      <a href="/historico.html">Histórico</a>
+      <a href="/perfil_mercado.html">Perfil</a>
+      <button onclick="logout()" class="btn-sair">Sair</button>
+    </nav>
+  </header>
 
-    <div class="analytics-container">
+  <div class="analytics-container">
+    <div class="analytics-header">
+      <h1>Dashboard Analytics</h1>
+      <p>Acompanhamento de performance e dados de suas ofertas</p>
+    </div>
 
-        <div class="analytics-header">
-            <h1>📊 Analytics do Seu Mercado</h1>
-            <p>Dados agregados de clientes. Tome decisões estratégicas informadas.</p>
-        </div>
+    <div class="metrics-grid" id="metricsGrid">
+      <div class="metric-card">
+        <div class="metric-label">📦 Total de Ofertas</div>
+        <div class="metric-value" id="totalOfertas">—</div>
+        <div class="metric-subtext">Todas as publicações</div>
+      </div>
 
-        <!-- LOADING -->
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p id="loading-text">Carregando dados...</p>
-        </div>
+      <div class="metric-card">
+        <div class="metric-label">✅ Ativas</div>
+        <div class="metric-value" id="ofertasAtivas">—</div>
+        <div class="metric-subtext">Publicadas agora</div>
+      </div>
 
-        <!-- ERRO -->
-        <div id="error-box" style="display:none;">
-            <div id="error-msg">Erro desconhecido</div>
-            <div id="error-detail"></div>
-        </div>
+      <div class="metric-card">
+        <div class="metric-label">⏳ Inativos</div>
+        <div class="metric-value" id="ofertasInativas">—</div>
+        <div class="metric-subtext">Pausadas ou expiradas</div>
+      </div>
 
-        <!-- CONTEÚDO -->
-        <div id="content" style="display:none;">
+      <div class="metric-card">
+        <div class="metric-label">📈 Taxa de Atividade</div>
+        <div class="metric-value" id="taxaAtividade">—</div>
+        <div class="metric-subtext">Última semana</div>
+      </div>
+    </div>
+  </div>
 
-            <!-- MÉTRICAS PRINCIPAIS -->
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-label">👁️ Visualizações</div>
-                    <div class="metric-value" id="metricVisualizations">0</div>
-                    <div class="metric-subtext">Total de visualizações de encartes</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">❤️ Curtidas e salvos</div>
-                    <div class="metric-value" id="metricLikes">0</div>
-                    <div class="metric-subtext">Curtidas em ofertas + favoritos do mercado</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">🛒 Itens no Carrinho</div>
-                    <div class="metric-value" id="metricCart">0</div>
-                    <div class="metric-subtext">Total de itens adicionados</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">📦 Encartes Ativos</div>
-                    <div class="metric-value" id="metricOffers">0</div>
-                    <div class="metric-subtext">Total de ofertas publicadas</div>
-                </div>
-            </div>
-
-            <!-- INSIGHT ESTRATÉGICO -->
-            <div class="insight-box" id="insightBox">
-                <div class="insight-title">💡 Insight Estratégico</div>
-                <div class="insight-main" id="insightTitle">Analisando seus dados...</div>
-                <div class="insight-text" id="insightText"></div>
-                <div class="insight-clients">
-                    👥 <strong id="clientsActive">0</strong> clientes ativos interagiram com seus encartes
-                </div>
-            </div>
-
-            <!-- RANKING DE COMPETITIVIDADE -->
-            <div class="section">
-                <div class="section-title">🏆 Ranking de Competitividade de Supermercados</div>
-                <div class="ranking-card" style="background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.15);">
-                    <div class="ranking-header" style="background: rgba(255,255,255,0.05); display: flex; justify-content: space-between;">
-                        <span>Supermercado (Sua Posição vs Concorrentes)</span>
-                        <span>Pontuação (Curtidas Totais de Ofertas)</span>
-                    </div>
-                    <ul class="ranking-list" id="rankingConcorrentes">
-                        <li class="loading" style="padding: 20px; text-align: center; color: rgba(255,255,255,0.5);">Carregando ranking geral de concorrentes...</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- TAXA DE CONVERSÃO -->
-            <div class="section">
-                <div class="section-title">📈 Taxa de Conversão</div>
-                <div class="conversion-chart">
-                    <div class="conversion-item">
-                        <div class="conversion-label">
-                            <span>Visualizações → Curtidas</span>
-                            <span id="conversionLikesPercent">0%</span>
-                        </div>
-                        <div class="conversion-bar">
-                            <div class="conversion-fill" id="conversionLikesFill" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <div class="conversion-item">
-                        <div class="conversion-label">
-                            <span>Visualizações → Carrinho</span>
-                            <span id="conversionCartPercent">0%</span>
-                        </div>
-                        <div class="conversion-bar">
-                            <div class="conversion-fill" id="conversionCartFill" style="width:0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RANKINGS -->
-            <div class="section">
-                <div class="section-title">🏆 Seus Melhores Encartes</div>
-                <div class="section-grid">
-                    <div class="ranking-card">
-                        <div class="ranking-header">🎯 Melhor Performance Geral</div>
-                        <ul class="ranking-list" id="rankingPerformance"></ul>
-                    </div>
-                    <div class="ranking-card">
-                        <div class="ranking-header">❤️ Mais Curtidos</div>
-                        <ul class="ranking-list" id="rankingLikes"></ul>
-                    </div>
-                    <div class="ranking-card">
-                        <div class="ranking-header">🛒 Mais Adicionados ao Carrinho</div>
-                        <ul class="ranking-list" id="rankingCart"></ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PREFERÊNCIAS -->
-            <div class="section">
-                <div class="section-title">🎯 Preferências dos Clientes</div>
-                <div class="section-grid">
-                    <div class="ranking-card">
-                        <div class="ranking-header">❤️ Produtos Mais Curtidos</div>
-                        <ul class="ranking-list" id="topProductsLikes"></ul>
-                    </div>
-                    <div class="ranking-card">
-                        <div class="ranking-header">🛒 Produtos Mais Procurados</div>
-                        <ul class="ranking-list" id="topProductsCart"></ul>
-                    </div>
-                </div>
-            </div>
-
-        </div><!-- /#content -->
-    </div><!-- /.analytics-container -->
-
-    <script src="auth-check.js"></script>
-    <script src="js/pages/dashboard.js"></script>
+  <script src="/auth-check.js"></script>
+  <script src="/logout.js"></script>
+  <script src="/dashboard-analytics.js"></script>
 </body>
 </html>
