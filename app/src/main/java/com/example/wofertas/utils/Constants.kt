@@ -9,34 +9,10 @@ object Constants {
 
     /**
      * URL Automática:
-     * 1. No Emulador: Usa 10.0.2.2 (que é o localhost do PC).
-     * 2. No Celular Real: Usa localhost (requer o comando 'adb reverse' via cabo ou wifi).
+     * Conectando diretamente na nuvem (Render) para todos os dispositivos.
      */
     val BASE_URL: String
-        get() = if (isEmulator()) {
-            "http://10.0.2.2:8080/"
-        } else {
-            "http://192.168.3.177:8080/"
-        }
-
-    private fun isEmulator(): Boolean {
-        return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
-                || Build.FINGERPRINT.startsWith("generic")
-                || Build.FINGERPRINT.startsWith("unknown")
-                || Build.HARDWARE.contains("goldfish")
-                || Build.HARDWARE.contains("ranchu")
-                || Build.MODEL.contains("google_sdk")
-                || Build.MODEL.contains("Emulator")
-                || Build.MODEL.contains("Android SDK built for x86")
-                || Build.MANUFACTURER.contains("Genymotion")
-                || Build.PRODUCT.contains("sdk_google")
-                || Build.PRODUCT.contains("google_sdk")
-                || Build.PRODUCT.contains("sdk")
-                || Build.PRODUCT.contains("sdk_x86")
-                || Build.PRODUCT.contains("vbox86p")
-                || Build.PRODUCT.contains("emulator")
-                || Build.PRODUCT.contains("simulator")
-    }
+        get() = "https://wofertas-production.up.railway.app/"
 
     const val CONNECT_TIMEOUT = 30L
     const val READ_TIMEOUT = 30L
