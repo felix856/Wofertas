@@ -37,8 +37,9 @@ const moduleLoader = {
     console.log('🚀 Iniciando carregamento de módulos...');
 
     try {
-      // Fase 1: Client HTTP (base) - Ajustado removendo a / inicial para caminhos relativos
-      console.log('📦 Fase 1: Client HTTP');
+      // Fase 1: Configuração Global e Client HTTP (base)
+      console.log('📦 Fase 1: Core');
+      await this.loadScript('js/config.js');
       await this.loadScript('js/api/client.js');
 
       // Fase 2: Serviços utilitários

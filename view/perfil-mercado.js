@@ -1,4 +1,4 @@
-const BASE_URL = localStorage.getItem("wof_base_url") || "https://wofertas.onrender.com";
+const BASE_URL = window.AppConfig?.API_URL || "https://wofertas.koyeb.app";
 const token    = localStorage.getItem("token");
 const mercId   = localStorage.getItem("id");
 

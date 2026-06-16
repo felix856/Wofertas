@@ -4,7 +4,7 @@ const apiClient = (function () {
     const { protocol, hostname, port, origin } = window.location;
 
     if (protocol === 'file:') {
-      return 'http://localhost:8080';
+      return window.AppConfig?.API_URL || 'https://wofertas.koyeb.app';
     }
 
     if (port && port !== '8080') {

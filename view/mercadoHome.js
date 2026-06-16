@@ -1,4 +1,4 @@
-const BASE_URL = localStorage.getItem("wof_base_url") || "http://localhost:8080";
+const BASE_URL = window.AppConfig?.API_URL || "https://wofertas.koyeb.app";
 const token    = localStorage.getItem("token");
 
 if (!token) { window.location.href = "login.html"; }
@@ -8,15 +8,19 @@ const h = new Date().getHours();
 document.getElementById("saudacao").textContent = (h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite") + "! 👋";
 
 async function carregarDashboard() {
-    try {
-        const res = await fetch(`${BASE_URL}/ofertas/historico`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        const ofertas = await res.json();
+    const res = await window.AppConfig.safeFetch(`/ofertas/historico`);
 
-        document.getElementById("statTotal").textContent    = ofertas.length;
-        document.getElementById("statAtivas").textContent   = ofertas.filter(o => o.status === "ATIVO").length;
-        document.getElementById("statSuspensas").textContent = ofertas.filter(o => o.status === "SUSPENSO").length;
+    if (!res.ok) {
+        window.AppConfig.toast("Não foi possível carregar o dashboard: " + res.error, "error");
+        document.getElementById("ultimasOfertas").innerHTML = `<div class="msg-vazia" style="color:var(--danger)">Erro de conexão com o servidor.</div>`;
+        return;
+    }
+
+    const ofertas = Array.isArray(res.data) ? res.data : [];
+
+    document.getElementById("statTotal").textContent    = ofertas.length;
+    document.getElementById("statAtivas").textContent   = ofertas.filter(o => o.status === "ATIVO").length;
+    document.getElementById("statSuspensas").textContent = ofertas.filter(o => o.status === "SUSPENSO").length;
 
         const grid = document.getElementById("ultimasOfertas");
         const lista = ofertas.slice(0, 8); 
@@ -44,10 +48,6 @@ async function carregarDashboard() {
                 </div>
             </div>`;
         }).join("");
-
-    } catch (e) {
-        document.getElementById("ultimasOfertas").innerHTML = `<p style="color:var(--danger)">Erro ao carregar.</p>`;
-    }
 }
 
 // Lógica de Zoom e Modal

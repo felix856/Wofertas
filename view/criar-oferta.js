@@ -1,4 +1,4 @@
-const BASE_URL = localStorage.getItem("wof_base_url") || "http://localhost:8080";
+const BASE_URL = window.AppConfig?.API_URL || "https://wofertas.koyeb.app";
 const token    = localStorage.getItem("token");
 
 if (!token) { window.location.href = "login.html"; }
