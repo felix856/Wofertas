@@ -1,7 +1,8 @@
 package com.example.demo.controller;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Controller que serve as páginas HTML estáticas.
@@ -77,4 +78,17 @@ public class PageController {
     public String dashboard() {
         return "forward:/dashboard-pro.html";
     }
+    // Adiciona dentro do PageController, antes do fechamento da classe
+
+@GetMapping("/dashboard-analytics")
+public String dashboardAnalytics() {
+    return "forward:/dashboard-analytics.html";
+}
+
+// Corrige o favicon (500 error)
+@GetMapping("/favicon.ico")
+@ResponseBody
+public org.springframework.http.ResponseEntity<Void> favicon() {
+    return org.springframework.http.ResponseEntity.noContent().build();
+}
 }
