@@ -21,27 +21,5 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + uploadPath + "/");
 
-        Path viewDir = Paths.get("view");
-        String viewPath = viewDir.toFile().getAbsolutePath();
-
-        // Arquivos CSS e JS na raiz do view
-        registry.addResourceHandler("/*.css", "/*.js", "/*.ico", "/*.png", "/*.jpg", "/*.svg")
-                .addResourceLocations("file:" + viewPath + "/")
-                .setCachePeriod(0);
-
-        // Subpastas do view (js/, imagens/, etc)
-        registry.addResourceHandler("/js/**", "/imagens/**", "/assets/**")
-                .addResourceLocations("file:" + viewPath + "/")
-                .setCachePeriod(0);
-
-        // Páginas HTML
-        registry.addResourceHandler("/*.html")
-                .addResourceLocations("file:" + viewPath + "/")
-                .setCachePeriod(0);
-
-        // Raiz → index.html
-        registry.addResourceHandler("/")
-                .addResourceLocations("file:" + viewPath + "/")
-                .setCachePeriod(0);
     }
 }
