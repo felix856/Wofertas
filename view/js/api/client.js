@@ -1,26 +1,16 @@
 const apiClient = (function () {
 
-  function resolveServerOrigin() {
-    const { protocol, hostname, port, origin } = window.location;
+  const SERVER_ORIGIN =
+    window.AppConfig?.API_URL ||
+    'https://wofertas-production.up.railway.app';
 
-    if (protocol === 'file:') {
-      return window.AppConfig?.API_URL || 'https://wofertas-production.up.railway.app';
-    }
-
-    if (port && port !== '8080') {
-      return `${protocol}//${hostname}:8080`;
-    }
-
-    return origin;
-  }
-
-  const SERVER_ORIGIN = resolveServerOrigin();
   const API_BASE_URL = `${SERVER_ORIGIN}/api`;
 
   let _token = localStorage.getItem('token');
 
   function setToken(token) {
     _token = token;
+
     try {
       localStorage.setItem('token', token);
     } catch (e) {
@@ -30,6 +20,7 @@ const apiClient = (function () {
 
   function clearToken() {
     _token = null;
+
     try {
       localStorage.removeItem('token');
       localStorage.removeItem('tipo');
@@ -48,7 +39,7 @@ const apiClient = (function () {
     }
 
     if (_token) {
-      headers.Authorization = `Bearer ${_token}`;
+      headers['Authorization'] = `Bearer ${_token}`;
     }
 
     return headers;
@@ -63,7 +54,10 @@ const apiClient = (function () {
   }
 
   async function request(endpoint, options = {}) {
-    const hasFormDataBody = typeof FormData !== 'undefined' && options.body instanceof FormData;
+
+    const hasFormDataBody =
+      typeof FormData !== 'undefined' &&
+      options.body instanceof FormData;
 
     const headers = {
       ...getHeaders(!hasFormDataBody),
@@ -71,28 +65,40 @@ const apiClient = (function () {
     };
 
     try {
-      const response = await fetch(API_BASE_URL + endpoint, {
-        ...options,
-        headers,
-      });
+
+      const response = await fetch(
+        `${API_BASE_URL}${endpoint}`,
+        {
+          ...options,
+          headers,
+        }
+      );
 
       const text = await response.text();
+
       let data = null;
 
       try {
         data = text ? JSON.parse(text) : null;
-      } catch (e) {
+      } catch {
         data = text;
       }
 
       return {
         data,
         status: response.status,
-        error: !response.ok ? data?.message ?? data?.error ?? data ?? `Erro ${response.status}` : null,
+        error: !response.ok
+          ? data?.message ??
+            data?.error ??
+            data ??
+            `Erro ${response.status}`
+          : null,
       };
 
     } catch (error) {
+
       console.error('[apiClient] Erro de rede:', error);
+
       return {
         data: null,
         status: 0,
@@ -105,15 +111,40 @@ const apiClient = (function () {
     setToken,
     clearToken,
     getHeaders,
+
     getServerOrigin: () => SERVER_ORIGIN,
     getBaseUrl: () => API_BASE_URL,
 
-    get:        (url)       => request(url),
-    post:       (url, data) => request(url, { method: 'POST',   body: serializeBody(data) }),
-    postPublic: (url, data) => request(url, { method: 'POST',   body: serializeBody(data) }),
-    put:        (url, data) => request(url, { method: 'PUT',    body: serializeBody(data) }),
-    patch:      (url, data) => request(url, { method: 'PATCH',  body: serializeBody(data) }),
-    delete:     (url)       => request(url, { method: 'DELETE' }),
+    get: (url) => request(url),
+
+    post: (url, data) =>
+      request(url, {
+        method: 'POST',
+        body: serializeBody(data),
+      }),
+
+    postPublic: (url, data) =>
+      request(url, {
+        method: 'POST',
+        body: serializeBody(data),
+      }),
+
+    put: (url, data) =>
+      request(url, {
+        method: 'PUT',
+        body: serializeBody(data),
+      }),
+
+    patch: (url, data) =>
+      request(url, {
+        method: 'PATCH',
+        body: serializeBody(data),
+      }),
+
+    delete: (url) =>
+      request(url, {
+        method: 'DELETE',
+      }),
   };
 
 })();
