@@ -1,4 +1,4 @@
-const BASE_URL = window.AppConfig?.API_URL || "https://wofertas.koyeb.app";
+const BASE_URL = window.AppConfig?.API_URL || "https://wofertas-production.up.railway.app";
 const token    = localStorage.getItem("token");
 
 if (!token) { window.location.href = "login.html"; }
