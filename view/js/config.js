@@ -16,7 +16,7 @@ const AppConfig = (() => {
     }
 
     // 3. Se está na Vercel ou produção (Substitua esta URL quando criar a conta no Koyeb)
-    return "https://wofertas.koyeb.app"; 
+    return "https://wofertas-production.up.railway.app";
   };
 
   const API_URL = getApiUrl();
