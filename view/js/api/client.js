@@ -1,10 +1,13 @@
 const apiClient = (function () {
 
-  const SERVER_ORIGIN =
-    window.AppConfig?.API_URL ||
-    'https://wofertas-production.up.railway.app';
+ const SERVER_ORIGIN =
+  window.AppConfig?.API_URL ||
+  'https://wofertas-production.up.railway.app';
 
-  const API_BASE_URL = `${SERVER_ORIGIN}/api`;
+const API_BASE_URL = `${SERVER_ORIGIN}/api`;
+
+console.log('[API] SERVER_ORIGIN:', SERVER_ORIGIN);
+console.log('[API] API_BASE_URL:', API_BASE_URL);
 
   let _token = localStorage.getItem('token');
 
