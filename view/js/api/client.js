@@ -4,7 +4,7 @@ const apiClient = (function () {
     const { protocol, hostname, port, origin } = window.location;
 
     if (protocol === 'file:') {
-      return window.AppConfig?.API_URL || 'https://wofertas.koyeb.app';
+      return window.AppConfig?.API_URL || 'https://wofertas-production.up.railway.app';
     }
 
     if (port && port !== '8080') {
