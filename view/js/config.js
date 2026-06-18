@@ -4,20 +4,13 @@
  */
 const AppConfig = (() => {
   // Define a URL base da API
-  const getApiUrl = () => {
-    // 1. Prioriza o que estiver no localStorage (para testes fáceis no console)
-    const stored = localStorage.getItem("wof_base_url");
-    if (stored) return stored;
+ const getApiUrl = () => {
 
-    // 2. Se está rodando localmente (VS Code Live Server, file://, localhost)
-    const hostname = window.location.hostname;
-    if (hostname === "localhost" || hostname === "127.0.0.1" || window.location.protocol === 'file:') {
-      return "http://localhost:8080";
-    }
+  const stored = localStorage.getItem("wof_base_url");
+  if (stored) return stored;
 
-    // 3. Se está na Vercel ou produção (Substitua esta URL quando criar a conta no Koyeb)
-    return "https://wofertas-production.up.railway.app";
-  };
+  return "https://wofertas-production.up.railway.app";
+};
 
   const API_URL = getApiUrl();
 
