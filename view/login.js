@@ -286,14 +286,14 @@ function initLoginHandler() {
                     case "MERCADO":
 
                         window.location.href =
-                            `${origin}/view/mercadoHome.html`;
+                            `${origin}/mercadoHome.html`;
 
                         break;
 
                     case "ADMIN":
 
                         window.location.href =
-                            `${origin}/view/dashboard-admin.html`;
+                            `${origin}/dashboard-admin.html`;
 
                         break;
 
