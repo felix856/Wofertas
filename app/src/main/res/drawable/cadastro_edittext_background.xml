@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Fundo branco fixo — independente do tema -->
+    <solid android:color="#FFFFFF" />
+
+    <!-- Borda cinza escuro visível sobre o fundo branco -->
+    <stroke
+        android:width="1.5dp"
+        android:color="#CCCCCC" />
+
+    <corners android:radius="8dp" />
+
+</shape>

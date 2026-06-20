@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <item
+            android:id="@+id/navigation_dashboard"
+            android:icon="@drawable/publicar_oferta"
+            android:title="Publicar" />
+
+        <item
+            android:id="@+id/navigation_minhas_ofertas"
+            android:icon="@drawable/ic_dashboard"
+            android:title="Minhas Ofertas" />
+
+        <item
+            android:id="@+id/navigation_gerenciar_ofertas_supermercado"
+            android:icon="@drawable/lista_ofertas"
+            android:title="Gerenciar Ofertas" />
+
+        <item
+            android:id="@+id/navigation_encartes"
+            android:icon="@drawable/ic_pdf"
+            android:title="Encartes" />
+
+        <item
+            android:id="@+id/navigation_perfil_supermercado"
+            android:icon="@drawable/perfil"
+            android:title="Perfil" />
+
+
+</menu>

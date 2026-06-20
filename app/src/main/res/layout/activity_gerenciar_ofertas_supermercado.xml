@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    IDs EXATOS usados por GerenciarOfertasSupermercadoActivity.kt:
+    toolbar_gerenciar_ofertas | recyclerViewSupermercadoOfertas
+    progressBarSupermercadoOfertas | tvNoOffersMessageSupermercado
+    Sem BottomNavigationView nesta tela (kt não busca bottom_nav).
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_screen">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_gerenciar_ofertas"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/wofertas_blue_primary"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:title="Minhas Ofertas"
+        app:titleTextColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Lista -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSupermercadoOfertas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/yellow_light_alpha"
+        android:clipToPadding="false"
+        android:paddingVertical="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_gerenciar_ofertas"
+        tools:listitem="@layout/item_oferta_supermercado" />
+
+    <!-- Estado vazio -->
+    <TextView
+        android:id="@+id/tvNoOffersMessageSupermercado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:gravity="center"
+        android:textColor="@color/text_secondary"
+        android:textSize="15sp"
+        android:lineSpacingExtra="4dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_gerenciar_ofertas"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Você ainda não publicou nenhuma oferta."
+        tools:visibility="visible" />
+
+    <!-- Loading -->
+    <ProgressBar
+        android:id="@+id/progressBarSupermercadoOfertas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_gerenciar_ofertas"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

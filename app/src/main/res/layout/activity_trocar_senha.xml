@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/yellow_light_alpha"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_trocar_senha"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/wofertas_blue_primary"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="Trocar Senha"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="32dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/bg_card_white"
+                android:elevation="2dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="16dp">
+
+                <TextView
+                    style="@style/SectionLabel"
+                    android:text="ALTERAR SENHA"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    style="@style/FieldLabel"
+                    android:text="Senha atual" />
+
+                <EditText
+                    android:id="@+id/editSenhaAtual"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:gravity="center_vertical"
+                    android:hint="Digite sua senha atual"
+                    android:inputType="textPassword"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/darker_gray"
+                    android:textSize="14sp" />
+
+                <TextView
+                    style="@style/FieldLabel"
+                    android:layout_marginTop="14dp"
+                    android:text="Nova senha" />
+
+                <EditText
+                    android:id="@+id/editNovaSenha"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:gravity="center_vertical"
+                    android:hint="Mínimo 6 caracteres"
+                    android:inputType="textPassword"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/darker_gray"
+                    android:textSize="14sp" />
+
+                <TextView
+                    style="@style/FieldLabel"
+                    android:layout_marginTop="14dp"
+                    android:text="Confirmar nova senha" />
+
+                <EditText
+                    android:id="@+id/editConfirmarSenha"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:gravity="center_vertical"
+                    android:hint="Repita a nova senha"
+                    android:inputType="textPassword"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/darker_gray"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSalvarSenha"
+                style="@style/Btn.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="Salvar Nova Senha" />
+
+            <ProgressBar
+                android:id="@+id/progressBarTrocarSenha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

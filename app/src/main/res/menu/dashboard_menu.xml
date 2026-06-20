@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Item para Dashboard -->
+    <item
+    android:id="@+id/navigation_dashboard"
+    android:icon="@drawable/ic_dashboard"
+    android:title="Dashboard" />
+
+    <!-- Item para Publicar Oferta -->
+    <item
+    android:id="@+id/navigation_criar_oferta"
+    android:icon="@drawable/publicar_oferta"
+    android:title="Publicar Oferta" />
+
+    <!-- Item para Minhas Ofertas -->
+    <item
+    android:id="@+id/navigation_minhas_ofertas"
+    android:icon="@drawable/lista_ofertas"
+    android:title="Minhas Ofertas" />
+
+    <!-- Item para Perfil do Supermercado -->
+    <item
+        android:id="@+id/navigation_perfil_supermercado"
+        android:icon="@drawable/perfil"
+        android:title="Perfil" />
+
+</menu>

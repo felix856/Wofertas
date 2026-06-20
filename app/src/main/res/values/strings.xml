@@ -1,0 +1,111 @@
+<resources>
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- APP BASICS -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="app_name">Wofertas</string>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- MAIN ACTIVITY -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="btn_login">Entrar</string>
+    <string name="btn_signup">Cadastre-se</string>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- AUTHENTICATION -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="title_login">Login</string>
+    <string name="title_signup">Cadastro</string>
+    <string name="hint_email">Insira seu Email</string>
+    <string name="hint_password">Insira sua Senha</string>
+    <string name="hint_password_confirm">Confirme sua senha</string>
+    <string name="hint_name">Insira seu Nome</string>
+    <string name="hint_cpf">Insira seu CPF</string>
+    <string name="hint_phone">Insira seu n° de telefone</string>
+    <string name="hint_cnpj">Insira seu CNPJ</string>
+    <string name="hint_address">Insira seu endereço</string>
+    <string name="forgot_password">Esqueceu a senha?</string>
+
+    <string name="type_client">Cliente</string>
+    <string name="type_supermarket">Supermercado</string>
+
+    <string-array name="perfis">
+        <item>Cliente</item>
+        <item>Supermercado</item>
+    </string-array>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- PROFILE & ACCOUNT -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="meu_perfil">Meu Perfil</string>
+    <string name="trocar_senha">Trocar Senha</string>
+    <string name="sair">Sair</string>
+    <string name="descr_avatar">Avatar do usuário</string>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- OFFERS & NAVIGATION -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="offers_nearby">Ofertas Próximas</string>
+    <string name="search_hint">Buscar supermercado...</string>
+    <string name="nav_home">Início</string>
+    <string name="nav_map">Mapa</string>
+    <string name="nav_saved">Salvos</string>
+    <string name="nav_profile">Perfil</string>
+    <string name="nav_lista">Lista</string>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- PERMISSIONS -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="location_permission_granted">Permissão concedida. Obtendo localização...</string>
+    <string name="location_permission_denied">Permissão negada. Ofertas não serão ordenadas por distância.</string>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- MESSAGES -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="msg_loading">Carregando...</string>
+    <string name="msg_success">Sucesso!</string>
+    <string name="msg_error">Algo deu errado. Tente novamente.</string>
+    <string name="msg_no_offers">Nenhuma oferta encontrada</string>
+    <string name="msg_network_error">Erro de conexão. Verifique sua internet.</string>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- VALIDATION ERRORS -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="error_empty_field">Este campo não pode estar vazio</string>
+    <string name="error_invalid_email">Email inválido</string>
+    <string name="error_short_password">A senha deve ter no mínimo 6 caracteres</string>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- FIX: content descriptions para item_oferta_supermercado  -->
+    <!-- (lint: hardcoded text → @string)                         -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="cd_logo_supermercado">Logo do supermercado</string>
+    <string name="cd_ver_encarte">Ver encarte</string>
+    <string name="cd_editar_oferta">Editar oferta</string>
+    <string name="cd_alterar_status">Alterar status</string>
+    <string name="cd_excluir_oferta">Excluir oferta</string>
+    <string name="status_ativo">ATIVO</string>
+    <string name="status_suspenso">SUSPENSO</string>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- LEGACY -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </string>
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

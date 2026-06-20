@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    MainActivity.kt usa: R.id.main (raiz) | R.id.button (Entrar) | R.id.button2 (Cadastrar)
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wofertas_background">
+
+    <LinearLayout
+        android:id="@+id/llLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tvTagline"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.38">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="W"
+            android:textColor="@color/wofertas_blue_primary"
+            android:textSize="72sp"
+            android:textStyle="bold"
+            android:contentDescription="@string/app_name"
+            android:includeFontPadding="false" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ofertas"
+            android:textColor="@color/wofertas_yellow_dark"
+            android:textSize="72sp"
+            android:textStyle="bold"
+            android:contentDescription="@string/app_name"
+            android:includeFontPadding="false" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvTagline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Promoções dos supermercados\nperto de você"
+        android:textColor="@color/text_secondary"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="52dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llLogo"
+        app:layout_constraintBottom_toTopOf="@+id/btn_voltar" />
+
+    <!-- Botão Entrar — R.id.button -->
+
+    <!-- Botão Cadastrar — R.id.button2 -->
+    <Button
+        android:id="@+id/btn_entrar"
+        style="@style/Wofertas.Button.Primary"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="444dp"
+        android:layout_marginBottom="14dp"
+        android:text="Entrar"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_continuar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btn_criar_conta"
+        style="@style/Wofertas.Button.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:text="Criar conta grátis"
+        android:textSize="17sp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

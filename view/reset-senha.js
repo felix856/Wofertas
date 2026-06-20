@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const BASE_URL = window.AppConfig?.API_URL || localStorage.getItem("wof_base_url") || "https://wofertas-production.up.railway.app";
 
     const btnSolicitar = document.querySelector(".btnSolicitar");
     const btnRedefinir = document.querySelector(".btnRedefinir");
@@ -31,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnSolicitar.disabled = true;
             btnSolicitar.textContent = "Enviando...";
 
-            const response = await fetch("http://localhost:8080/auth/forgot-password", {
+            const response = await fetch(`${BASE_URL}/auth/forgot-password`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
@@ -93,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnRedefinir.disabled = true;
             btnRedefinir.textContent = "Redefinindo...";
 
-            const response = await fetch("http://localhost:8080/auth/reset-password", {
+            const response = await fetch(`${BASE_URL}/auth/reset-password`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

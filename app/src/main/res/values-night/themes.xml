@@ -1,0 +1,7 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Remova o bloco Base.Theme.Wofertas daqui se ele já existe no themes.xml comum -->
+    <style name="Theme.Wofertas" parent="Base.Theme.Wofertas">
+        <!-- Aqui você coloca apenas o que muda no modo escuro, por exemplo: -->
+        <item name="android:statusBarColor">@color/black</item>
+    </style>
+</resources>

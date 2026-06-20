@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    IDs preservados para Cadastro.kt:
+    rgPerfil | rbCliente | rbSupermercado
+    edtNome | edtCNPJ | edtTelefone | edtEndereco | edtEmail | edtSenha | edtConfirmaSenha
+    btnVoltar | btnContinuar | progressBarCadastro
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/wofertas_background"
+    tools:context=".Cadastro">
+
+    <!-- Header: logo + título -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="28dp"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <requestFocus />
+        </TextView>
+
+        <!-- Logo tipográfico -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="W"
+                android:textColor="@color/wofertas_blue_primary"
+                android:textSize="52sp"
+                android:textStyle="bold"
+                android:includeFontPadding="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ofertas"
+                android:textColor="@color/wofertas_yellow_dark"
+                android:textSize="52sp"
+                android:textStyle="bold"
+                android:includeFontPadding="false" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Criar conta"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <!-- Conteúdo rolável -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="28dp">
+
+            <!-- Selector de perfil -->
+            <RadioGroup
+                android:id="@+id/rgPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_card_white"
+                android:padding="4dp">
+
+                <RadioButton
+                    android:id="@+id/rbCliente"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Cliente"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/selector_tab_left" />
+
+                <RadioButton
+                    android:id="@+id/rbSupermercado"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Supermercado"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/selector_tab_right" />
+            </RadioGroup>
+
+            <!-- Card: dados pessoais / empresa -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_white"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:elevation="2dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    style="@style/SectionLabel"
+                    android:text="IDENTIFICAÇÃO" />
+
+                <TextView style="@style/FieldLabel" android:text="Nome" />
+                <EditText
+                    android:id="@+id/edtNome"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:hint="Seu nome completo"
+                    android:inputType="textPersonName|textCapWords"
+                    android:paddingHorizontal="14dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- CNPJ — visível apenas para Supermercado -->
+                <TextView
+                    style="@style/FieldLabel"
+                    android:id="@+id/labelCNPJ"
+                    android:text="CNPJ"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+                <EditText
+                    android:id="@+id/edtCNPJ"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:hint="00.000.000/0000-00"
+                    android:inputType="number"
+                    android:maxLength="14"
+                    android:paddingHorizontal="14dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:visibility="gone"
+                    android:layout_marginBottom="12dp"
+                    tools:visibility="visible" />
+
+                <!-- Telefone — visível apenas para Supermercado -->
+                <TextView
+                    style="@style/FieldLabel"
+                    android:id="@+id/labelTelefone"
+                    android:text="Telefone"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+                <EditText
+                    android:id="@+id/edtTelefone"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:hint="(00) 00000-0000"
+                    android:inputType="phone"
+                    android:paddingHorizontal="14dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:visibility="gone"
+                    android:layout_marginBottom="12dp"
+                    tools:visibility="visible" />
+
+                <!-- Endereço — visível apenas para Supermercado -->
+                <TextView
+                    style="@style/FieldLabel"
+                    android:id="@+id/labelEndereco"
+                    android:text="Endereço completo"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+                <EditText
+                    android:id="@+id/edtEndereco"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:hint="Rua, número, bairro, cidade"
+                    android:inputType="textPostalAddress|textCapWords"
+                    android:paddingHorizontal="14dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:visibility="gone"
+                    android:layout_marginBottom="4dp"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <!-- Card: acesso -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_white"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:elevation="2dp"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    style="@style/SectionLabel"
+                    android:text="ACESSO" />
+
+                <TextView style="@style/FieldLabel" android:text="E-mail" />
+                <EditText
+                    android:id="@+id/edtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:hint="seu@email.com.br"
+                    android:inputType="textEmailAddress"
+                    android:paddingHorizontal="14dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView style="@style/FieldLabel" android:text="Senha" />
+                <EditText
+                    android:id="@+id/edtSenha"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:hint="Mínimo 6 caracteres"
+                    android:inputType="textPassword"
+                    android:paddingHorizontal="14dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView style="@style/FieldLabel" android:text="Confirmar senha" />
+                <EditText
+                    android:id="@+id/edtConfirmaSenha"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_field"
+                    android:hint="Repita a senha"
+                    android:inputType="textPassword"
+                    android:paddingHorizontal="14dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:layout_marginBottom="4dp" />
+
+            </LinearLayout>
+
+            <!-- Botões -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btnVoltar"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="Voltar"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/wofertas_yellow"
+                    app:cornerRadius="12dp"
+                    android:stateListAnimator="@null" />
+
+                <Button
+                    android:id="@+id/btnContinuar"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="Continuar"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/wofertas_blue_primary"
+                    app:cornerRadius="12dp"
+                    android:stateListAnimator="@null" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBarCadastro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

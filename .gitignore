@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
@@ -56,3 +57,65 @@ server.pid
 .openclaw/
 memory/
 AC
+=======
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Android/Gradle generated outputs
+build/
+*/build/
+outputs/
+tmp/
+captures/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# Local/private configuration
+*.env
+.env
+service-account.json
+*-firebase-adminsdk-*.json
+database.sqlite
+*.sqlite
+*.db
+
+# Archives and reports generated locally
+*.zip
+problems-report.html
+
+# Node/runtime artifacts not required by the Android app
+node_modules/
+npm-debug.log*
+
+# Stray files copied outside the Android module
+/main/
+/androidTest/
+/test/
+/gmpAppId/
+/app.js
+/server.js
+/package.json
+/package-lock.json
+/gradle-wrapper.jar
+/gradle-wrapper.properties
+/libs.versions.toml
+/proguard-rules.pro
+/google-services.json
+/.env.example
+>>>>>>> f493123585e4c68ca236493080c7eb79a0086d7f

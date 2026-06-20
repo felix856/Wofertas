@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/imgOferta"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/logo_supermercado_placeholder"
+            android:contentDescription="Imagem do supermercado"
+            android:layout_marginEnd="12dp"/>
+
+        <TextView
+            android:id="@+id/txtNome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@id/imgOferta"
+            app:layout_constraintTop_toTopOf="@id/imgOferta"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewSave"
+        tools:text="Fort Atacadista" />
+
+        <!-- TextView para o Título/Descrição Curta da Oferta -->
+        <TextView
+            android:id="@+id/txtDescricao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="@id/txtNome"
+            app:layout_constraintTop_toBottomOf="@id/txtNome"
+            app:layout_constraintEnd_toEndOf="@id/txtNome"
+            tools:text="Encarte da Semana" />
+
+        <!-- TextView para a Descrição Detalhada da Oferta -->
+        <TextView
+            android:id="@+id/txtDetalhesOferta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="@id/txtNome"
+            app:layout_constraintTop_toBottomOf="@id/txtDescricao"
+            app:layout_constraintEnd_toEndOf="@id/txtNome"
+            tools:text="Ofertas em carnes, hortifrúti e limpeza válidas até 08/06/2025." />
+
+        <TextView
+            android:id="@+id/txtDistancia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="@id/txtDetalhesOferta"
+            app:layout_constraintTop_toBottomOf="@+id/txtDetalhesOferta"
+            tools:text="2.5 km" />
+
+        <!-- NOVO: ImageView para Salvar/Curtir (Ícone de Coração) -->
+        <ImageView
+            android:id="@+id/imageViewSave"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Salvar Supermercado"
+            android:focusable="true"
+            android:src="@drawable/ic_heart_empty"
+            app:layout_constraintBottom_toTopOf="@+id/txtDescricao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
