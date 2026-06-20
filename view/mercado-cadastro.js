@@ -8,6 +8,41 @@ const BASE_URL_CADASTRO = (() => {
     : "https://wofertas-production.up.railway.app";
 })();
 
+const CNPJ_DIGITOS = 14;
+const TELEFONE_MIN_DIGITOS = 10;
+const TELEFONE_MAX_DIGITOS = 11;
+
+function apenasDigitos(value) {
+  return (value || "").replace(/\D/g, "");
+}
+
+function formatarCnpj(value) {
+  return apenasDigitos(value)
+    .slice(0, CNPJ_DIGITOS)
+    .replace(/^(\d{2})(\d)/, "$1.$2")
+    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/\.(\d{3})(\d)/, ".$1/$2")
+    .replace(/(\d{4})(\d)/, "$1-$2");
+}
+
+function formatarTelefone(value) {
+  const digits = apenasDigitos(value).slice(0, TELEFONE_MAX_DIGITOS);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
+function extrairMensagemErroCadastro(data, status) {
+  if (data?.fieldErrors && typeof data.fieldErrors === "object") {
+    return Object.values(data.fieldErrors).filter(Boolean).join("\n");
+  }
+
+  return data?.message || data?.error || `Codigo ${status}`;
+}
+
 // ── Estado global ────────────────────────────────────────────────
 let logoBase64 = null;
 let latSelecionada = null;
@@ -29,6 +64,24 @@ if (logoInput) {
     const reader = new FileReader();
     reader.onload = (e) => { logoBase64 = e.target.result; };
     reader.readAsDataURL(file);
+  });
+}
+
+const cnpjInput = document.getElementById("cnpj");
+if (cnpjInput) {
+  cnpjInput.maxLength = 18;
+  cnpjInput.inputMode = "numeric";
+  cnpjInput.addEventListener("input", () => {
+    cnpjInput.value = formatarCnpj(cnpjInput.value);
+  });
+}
+
+const telefoneInput = document.getElementById("telefone");
+if (telefoneInput) {
+  telefoneInput.maxLength = 15;
+  telefoneInput.inputMode = "numeric";
+  telefoneInput.addEventListener("input", () => {
+    telefoneInput.value = formatarTelefone(telefoneInput.value);
   });
 }
 
@@ -220,16 +273,28 @@ if (btnCadastrar) {
   btnCadastrar.addEventListener("click", async () => {
 
     const nome     = document.getElementById("nome")?.value.trim() || "";
-    const cnpj     = (document.getElementById("cnpj")?.value.trim() || "").replace(/\D/g, "");
+    const cnpj     = apenasDigitos(document.getElementById("cnpj")?.value.trim() || "");
     const endereco = document.getElementById("endereco")?.value.trim() || "";
     const email    = document.getElementById("email")?.value.trim() || "";
     const senha    = document.getElementById("senha")?.value.trim() || "";
-    const telefone = (document.getElementById("telefone")?.value.trim() || "").replace(/\D/g, "");
+    const telefone = apenasDigitos(document.getElementById("telefone")?.value.trim() || "");
     const lat      = document.getElementById("latitude").value;
     const lon      = document.getElementById("longitude").value;
 
     if (!nome || !cnpj || !endereco || !email || !senha || !telefone) {
       alert("Preencha todos os campos obrigatórios!");
+      return;
+    }
+
+    if (cnpj.length !== CNPJ_DIGITOS) {
+      alert("CNPJ incompleto. Digite os 14 numeros no formato 00.000.000/0000-00.");
+      document.getElementById("cnpj")?.focus();
+      return;
+    }
+
+    if (telefone.length < TELEFONE_MIN_DIGITOS || telefone.length > TELEFONE_MAX_DIGITOS) {
+      alert("Telefone incompleto. Digite DDD + numero com 10 ou 11 digitos.");
+      document.getElementById("telefone")?.focus();
       return;
     }
 
@@ -262,7 +327,7 @@ if (btnCadastrar) {
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
-        alert("Erro ao cadastrar: " + (err.message || response.status));
+        alert("Erro ao cadastrar: " + extrairMensagemErroCadastro(err, response.status));
         return;
       }
 
