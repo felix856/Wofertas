@@ -233,6 +233,20 @@ function initLoginHandler() {
                     usuario.tipo || ""
                 );
 
+                if (usuario.id) {
+
+                    localStorage.setItem(
+                        "id",
+                        usuario.id
+                    );
+
+                    localStorage.setItem(
+                        "mercadoId",
+                        usuario.id
+                    );
+
+                }
+
                 localStorage.setItem(
                     "mercado",
                     JSON.stringify(
