@@ -2,6 +2,7 @@ package com.example.wofertas
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Locale
@@ -138,15 +140,26 @@ class VerPDF : AppCompatActivity() {
     private fun downloadAndOpenPdf(urlStr: String) {
         lifecycleScope.launch {
             val file = withContext(Dispatchers.IO) {
+                var conn: HttpURLConnection? = null
                 try {
-                    val conn = URL(urlStr).openConnection() as HttpURLConnection
-                    conn.connectTimeout = 15000
+                    val connection = URL(urlStr).openConnection() as HttpURLConnection
+                    conn = connection
+                    connection.connectTimeout = 15000
+                    connection.readTimeout = 30000
+                    connection.instanceFollowRedirects = true
+                    connection.setRequestProperty("Accept", "application/pdf,image/*,*/*")
+                    val statusCode = connection.responseCode
+                    if (statusCode !in 200..299) {
+                        throw IOException("HTTP $statusCode ao baixar encarte")
+                    }
                     val temp = File(cacheDir, "temp_encarte.dat")
-                    conn.inputStream.use { input -> FileOutputStream(temp).use { output -> input.copyTo(output) } }
+                    connection.inputStream.use { input -> FileOutputStream(temp).use { output -> input.copyTo(output) } }
                     temp
                 } catch (e: Exception) { 
                     Log.e("VerPDF", "Erro no download: $urlStr", e)
                     null 
+                } finally {
+                    conn?.disconnect()
                 }
             }
             progressBar.visibility = View.GONE
@@ -178,12 +191,16 @@ class VerPDF : AppCompatActivity() {
             currentPage?.close()
             currentPage = renderer.openPage(index)
             val bitmap = createBitmap(currentPage!!.width, currentPage!!.height)
+            bitmap.eraseColor(Color.WHITE)
             currentPage!!.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
             imageViewPdfPage.setImageBitmap(bitmap)
             currentPageIndex = index
             atualizarBotoes(renderer.pageCount)
             executarOcrNaPagina(bitmap, index)
-        } catch (e: Exception) { Log.e("VerPDF", "Erro ao renderizar PDF", e) }
+        } catch (e: Exception) {
+            Log.e("VerPDF", "Erro ao renderizar PDF", e)
+            handleError("Nao foi possivel renderizar este encarte.")
+        }
     }
 
     private fun mostrarBitmapDireto(index: Int) {

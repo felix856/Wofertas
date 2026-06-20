@@ -30,6 +30,7 @@ class Mapa : BaseClienteActivity() {
 
     private val listaOfertas = mutableListOf<Oferta>()
     private val api get() = ApiClient.authService(this)
+    private val raioOfertasKm = 30.0
 
     // ✅ NOVO: Gerenciador de permissões moderno
     private val requestPermissionLauncher = registerForActivityResult(
@@ -102,6 +103,7 @@ class Mapa : BaseClienteActivity() {
                     longitude = geo.longitude
                 }
                 LocationPrefs.salvar(this, location)
+                carregarOfertas()
             }
         }, 2000)
     }
@@ -109,18 +111,28 @@ class Mapa : BaseClienteActivity() {
     private fun carregarOfertas() {
         lifecycleScope.launch {
             try {
-                val resp = api.listarOfertas()
+                val localizacao = LocationPrefs.getLast(this@Mapa)
+                val resp = if (localizacao != null) {
+                    api.listarOfertasProximas(
+                        lat = localizacao.latitude,
+                        lng = localizacao.longitude,
+                        raioKm = raioOfertasKm,
+                        ativo = true
+                    )
+                } else {
+                    api.listarOfertas(size = 100, ativo = true)
+                }
                 if (resp.isSuccessful) {
                     val dtos = resp.body() ?: emptyList()
                     listaOfertas.clear()
                     listaOfertas.addAll(dtos.map { dto ->
                         Oferta().apply {
                             ofertaId = dto.id
-                            mercadoId = dto.mercado?.id
+                            mercadoId = dto.mercado?.id ?: dto.mercadoId
                             nome = dto.nome
                             status = dto.status
                             dataValidade = dto.data
-                            imagemOferta = dto.imagemOferta
+                            imagemOferta = dto.imagem ?: dto.imagemOferta
                             nomeSupermercado = dto.mercado?.nome
                             enderecoSupermercado = dto.mercado?.endereco
                             latitude = dto.mercado?.latitude
@@ -128,6 +140,11 @@ class Mapa : BaseClienteActivity() {
                         }
                     })
                     adicionarMarcadores()
+                    if (listaOfertas.none { it.latitude != null && it.longitude != null }) {
+                        Toast.makeText(this@Mapa, "Nenhuma oferta ativa com localizacao no mapa.", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    Toast.makeText(this@Mapa, "Erro ao carregar ofertas (${resp.code()}).", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(this@Mapa, "Erro de conexão", Toast.LENGTH_SHORT).show()
@@ -151,7 +168,7 @@ class Mapa : BaseClienteActivity() {
                 marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
 
                 marker.setOnMarkerClickListener { _, _ ->
-                    abrirOferta(principal)
+                    abrirEncarteDoMercado(principal)
                     true
                 }
                 mapView.overlays.add(marker)
@@ -160,14 +177,45 @@ class Mapa : BaseClienteActivity() {
         mapView.invalidate()
     }
 
-    private fun abrirOferta(oferta: Oferta) {
-        val intent = Intent(this, VerPDF::class.java).apply {
-            putExtra("pdfUrl", oferta.imagemOferta)
-            putExtra("oferta_id", oferta.ofertaId)
-            putExtra("oferta_nome", oferta.nome)
-            putExtra("mercado_nome", oferta.nomeSupermercado)
+    private fun abrirEncarteDoMercado(oferta: Oferta) {
+        val mercadoId = oferta.mercadoId
+        if (mercadoId.isNullOrBlank()) {
+            Toast.makeText(this, "Mercado da oferta nao identificado.", Toast.LENGTH_SHORT).show()
+            return
         }
-        startActivity(intent)
+
+        lifecycleScope.launch {
+            try {
+                Toast.makeText(this@Mapa, "Carregando encarte...", Toast.LENGTH_SHORT).show()
+                val resp = api.getEncartesByMercado(mercadoId)
+                if (!resp.isSuccessful) {
+                    Toast.makeText(this@Mapa, "Erro ao carregar encartes (${resp.code()}).", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+
+                val encarte = resp.body()?.firstOrNull()
+                if (encarte == null) {
+                    Toast.makeText(this@Mapa, "Este mercado ainda nao tem encarte publicado.", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+
+                startActivity(Intent(this@Mapa, VerPDF::class.java).apply {
+                    putExtra("pdfUrl", normalizarUrlEncarte(encarte.urlPdf))
+                    putExtra("oferta_id", encarte.id)
+                    putExtra("oferta_nome", encarte.titulo)
+                    putExtra("mercado_nome", oferta.nomeSupermercado ?: "Mercado")
+                })
+            } catch (e: Exception) {
+                Toast.makeText(this@Mapa, "Falha ao abrir encarte.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun normalizarUrlEncarte(urlPdf: String): String {
+        if (urlPdf.startsWith("http", ignoreCase = true)) return urlPdf
+        val baseUrl = ApiClient.getCurrentBaseUrl().removeSuffix("/")
+        val path = if (urlPdf.startsWith("/")) urlPdf else "/$urlPdf"
+        return baseUrl + path
     }
 
     private fun configurarBotoes() {

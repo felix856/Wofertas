@@ -115,7 +115,7 @@ class EncartesActivity : AppCompatActivity() {
         var urlFinal = encarte.urlPdf
 
         // CORREÇÃO: Garante URL completa para o VerPDF
-        if (urlFinal != null && (urlFinal.startsWith("/") || !urlFinal.startsWith("http"))) {
+        if (urlFinal.startsWith("/") || !urlFinal.startsWith("http")) {
             val baseUrl = ApiClient.getCurrentBaseUrl().removeSuffix("/")
             val path = if (urlFinal.startsWith("/")) urlFinal else "/$urlFinal"
             urlFinal = baseUrl + path
