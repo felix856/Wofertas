@@ -1,10 +1,11 @@
 // ── Configuração de Base URL ─────────────────────────────────────
 const BASE_URL_CADASTRO = (() => {
+  if (window.AppConfig?.API_URL) return window.AppConfig.API_URL;
   const stored = localStorage.getItem("wof_base_url");
   if (stored) return stored;
   return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
     ? "http://localhost:8080"
-    : "https://wofertas.onrender.com";
+    : "https://wofertas-production.up.railway.app";
 })();
 
 // ── Estado global ────────────────────────────────────────────────
