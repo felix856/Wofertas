@@ -23,7 +23,7 @@ async function carregarDashboard() {
     const ofertas = Array.isArray(res.data) ? res.data : [];
 
     document.getElementById("statTotal").textContent = ofertas.length;
-document.getElementById("statAtivas").textContent =
+    document.getElementById("statAtivas").textContent =
         ofertas.filter(o => (o.status || "ATIVO") === "ATIVO").length;
     document.getElementById("statSuspensas").textContent =
         ofertas.filter(o => (o.status || "ATIVO") !== "ATIVO").length;

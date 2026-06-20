@@ -1,8 +1,10 @@
 const BASE_URL = window.AppConfig?.API_URL || "https://wofertas-production.up.railway.app";
 const token    = localStorage.getItem("token");
-const mercId   = localStorage.getItem("id");
+let mercId     = obterMercadoId();
 
-if (!token || !mercId) { window.location.href = "login.html"; }
+if (!token) {
+    window.location.href = "login.html";
+}
 
 let mercadoAtual = null;
 
@@ -15,11 +17,11 @@ let lonPerfilTemp    = null;
 // ── Carrega o perfil da API ──────────────────────────────────────
 async function carregarPerfil() {
     try {
-        const res  = await fetch(`${BASE_URL}/mercados/${mercId}`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        const m = await res.json();
+        const m = await buscarPerfilMercado();
+        if (!m) return;
+
         mercadoAtual = m;
+        persistirMercadoLocal(m);
 
         document.getElementById("nome").value      = m.nome     || "";
         document.getElementById("telefone").value  = m.telefone || "";
@@ -56,7 +58,107 @@ async function carregarPerfil() {
         }
 
     } catch (e) {
+        console.error("Erro ao carregar perfil:", e);
         toast("Erro ao carregar perfil.", "error");
+    }
+}
+
+async function buscarPerfilMercado() {
+    const authHeaders = { "Authorization": `Bearer ${token}` };
+    const tentativas = [
+        { url: `${BASE_URL}/mercado/perfil`, precisaId: false },
+        { url: `${BASE_URL}/mercados/${mercId}`, precisaId: true }
+    ];
+
+    for (const tentativa of tentativas) {
+        if (tentativa.precisaId && !mercId) continue;
+
+        const res = await fetch(tentativa.url, { headers: authHeaders });
+
+        if (res.status === 401 || res.status === 403) {
+            toast("Sessao sem permissao para carregar o perfil. Use Sair apenas se quiser entrar novamente.", "error");
+            return null;
+        }
+
+        if (res.ok) {
+            return await res.json();
+        }
+
+        if (!tentativa.precisaId) {
+            console.warn("Falha em /mercado/perfil, tentando fallback por ID. Status:", res.status);
+        } else {
+            toast("Erro ao carregar perfil. Codigo " + res.status, "error");
+        }
+    }
+
+    toast("Nao foi possivel identificar o mercado logado. Use Sair e entre novamente se o problema continuar.", "error");
+    return null;
+}
+
+function persistirMercadoLocal(mercado) {
+    if (!mercado) return;
+
+    if (mercado.id) {
+        mercId = mercado.id;
+        localStorage.setItem("id", mercado.id);
+        localStorage.setItem("mercadoId", mercado.id);
+    }
+
+    localStorage.setItem("mercado", JSON.stringify(mercado));
+
+    const authUser = parseJson(localStorage.getItem("authUser")) || {};
+    localStorage.setItem("authUser", JSON.stringify({
+        ...authUser,
+        ...mercado,
+        tipo: authUser.tipo || "MERCADO"
+    }));
+}
+
+function obterMercadoId() {
+    const directId = localStorage.getItem("id") || localStorage.getItem("mercadoId");
+    if (directId) return directId;
+
+    const mercado = parseJson(localStorage.getItem("mercado"));
+    if (mercado?.id) {
+        localStorage.setItem("id", mercado.id);
+        localStorage.setItem("mercadoId", mercado.id);
+        return mercado.id;
+    }
+
+    const authUser = parseJson(localStorage.getItem("authUser"));
+    if (authUser?.id) {
+        localStorage.setItem("id", authUser.id);
+        localStorage.setItem("mercadoId", authUser.id);
+        return authUser.id;
+    }
+
+    const tokenUserId = extrairUserIdDoToken(token);
+    if (tokenUserId) {
+        localStorage.setItem("id", tokenUserId);
+        localStorage.setItem("mercadoId", tokenUserId);
+        return tokenUserId;
+    }
+
+    return "";
+}
+
+function parseJson(value) {
+    if (!value) return null;
+    try {
+        return JSON.parse(value);
+    } catch {
+        return null;
+    }
+}
+
+function extrairUserIdDoToken(jwt) {
+    if (!jwt || !jwt.includes(".")) return "";
+    try {
+        const payload = jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+        const decoded = JSON.parse(atob(payload));
+        return decoded.userId || decoded.id || "";
+    } catch {
+        return "";
     }
 }
 
@@ -120,7 +222,8 @@ async function salvarPerfil() {
     btn.innerHTML = "Salvando...";
 
     try {
-        const res = await fetch(`${BASE_URL}/mercados/${mercId}`, {
+        const endpoint = mercId ? `${BASE_URL}/mercados/${mercId}` : `${BASE_URL}/mercado/atualizar`;
+        const res = await fetch(endpoint, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
