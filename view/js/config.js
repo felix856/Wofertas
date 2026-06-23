@@ -1,23 +1,32 @@
-/**
- * Configuração Global de Ambiente (Vercel + Koyeb)
- * Resolve automaticamente para onde o frontend deve apontar a API.
- */
-const AppConfig = (() => {
-  // Define a URL base da API
- const getApiUrl = () => {
+(function () {
+  if (window.AppConfig) return;
 
-  const stored = localStorage.getItem("wof_base_url");
-  if (stored) return stored;
+  function getApiUrl() {
+    const stored = localStorage.getItem("wof_base_url");
+    if (stored) return stored.replace(/\/+$/, "");
 
-  return "https://wofertas-production.up.railway.app";
-};
+    return "https://wofertas-production.up.railway.app";
+  }
 
   const API_URL = getApiUrl();
 
-  // Utilitário de fetch resiliente (Nunca crasha a tela, sempre retorna um formato previsível)
-  const safeFetch = async (endpoint, options = {}) => {
+  function getEndpointUrl(endpoint) {
+    if (/^https?:\/\//i.test(endpoint)) return endpoint;
+    return `${API_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
+  }
+
+  function getErrorMessage(data) {
+    if (data?.fieldErrors && typeof data.fieldErrors === "object") {
+      return Object.values(data.fieldErrors).filter(Boolean).join("\n");
+    }
+
+    return data?.message ||
+      data?.error ||
+      (typeof data === "string" ? data : "Erro interno no servidor");
+  }
+
+  async function safeFetch(endpoint, options = {}) {
     try {
-      // Configurações padrão
       const defaultOptions = {
         headers: {
           "Content-Type": "application/json",
@@ -25,62 +34,63 @@ const AppConfig = (() => {
         }
       };
 
-      // Mescla os headers e options
       const finalOptions = {
         ...defaultOptions,
         ...options,
         headers: { ...defaultOptions.headers, ...(options.headers || {}) }
       };
 
-      // Se for FormData, remove o Content-Type para o browser gerar o boundary
       if (options.body instanceof FormData) {
         delete finalOptions.headers["Content-Type"];
       }
 
-      // Se Authorization ficou vazio, remove
       if (!finalOptions.headers.Authorization) {
         delete finalOptions.headers.Authorization;
       }
 
-      const response = await fetch(`${API_URL}${endpoint}`, finalOptions);
+      const response = await fetch(getEndpointUrl(endpoint), finalOptions);
+      const text = await response.text();
 
       let data;
-      const text = await response.text();
-      try { data = text ? JSON.parse(text) : null; } catch (e) { data = text; }
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = text;
+      }
 
       if (!response.ok) {
         return {
           ok: false,
           status: response.status,
           data: null,
-          error: data?.message || data?.error || (typeof data === 'string' ? data : "Erro interno no servidor")
+          error: getErrorMessage(data)
         };
       }
 
       return {
         ok: true,
         status: response.status,
-        data: data,
+        data,
         error: null
       };
-
     } catch (err) {
-      console.error(`[Network Error] API indisponível ou erro de CORS em: ${endpoint}`, err);
+      console.error(`[Network Error] API indisponivel ou erro de CORS em: ${endpoint}`, err);
       return {
         ok: false,
         status: 0,
         data: null,
-        error: "Falha de conexão com a nuvem. O serviço pode estar indisponível ou sem internet."
+        error: "Falha de conexao com a nuvem. O servico pode estar indisponivel ou sem internet."
       };
     }
-  };
+  }
 
-  return {
+  window.AppConfig = {
     API_URL,
     safeFetch,
     toast: (msg, type = "success") => {
       const container = document.getElementById("toastContainer");
-      if(!container) return;
+      if (!container) return;
+
       const el = document.createElement("div");
       el.className = `toast toast-${type}`;
       el.textContent = msg;
@@ -89,5 +99,3 @@ const AppConfig = (() => {
     }
   };
 })();
-
-window.AppConfig = AppConfig;
