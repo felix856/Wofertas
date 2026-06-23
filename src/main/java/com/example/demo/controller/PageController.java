@@ -85,6 +85,21 @@ public String dashboardAnalytics() {
     return "forward:/dashboard-analytics.html";
 }
 
+@GetMapping("/privacy-policy")
+public String privacyPolicy() {
+    return "forward:/privacy-policy.html";
+}
+
+@GetMapping("/termos")
+public String termos() {
+    return "forward:/termos.html";
+}
+
+@GetMapping("/excluir-conta")
+public String excluirConta() {
+    return "forward:/excluir-conta.html";
+}
+
 // Corrige o favicon (500 error)
 @GetMapping("/favicon.ico")
 @ResponseBody

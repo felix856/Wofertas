@@ -14,6 +14,9 @@ object Constants {
     val BASE_URL: String
         get() = "https://wofertas-production.up.railway.app/"
 
+    const val PRIVACY_POLICY_URL = "https://wofertas.vercel.app/privacy-policy.html"
+    const val ACCOUNT_DELETION_URL = "https://wofertas.vercel.app/excluir-conta.html"
+
     const val CONNECT_TIMEOUT = 30L
     const val READ_TIMEOUT = 30L
     const val WRITE_TIMEOUT = 30L

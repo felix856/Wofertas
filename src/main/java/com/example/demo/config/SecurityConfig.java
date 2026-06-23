@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,12 +30,21 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
 
+    @Value("${app.cors.allowed-origins:*}")
+    private String allowedOrigins;
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .headers(headers -> headers
+                .contentTypeOptions(contentType -> {})
+                .frameOptions(frame -> frame.sameOrigin())
+                .referrerPolicy(referrer -> referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                .httpStrictTransportSecurity(hsts -> hsts.includeSubDomains(true).maxAgeInSeconds(31536000))
+            )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
 
@@ -42,6 +53,7 @@ public class SecurityConfig {
 
                 // autenticação
                 .requestMatchers("/auth/**", "/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/**").permitAll()
 
                 // páginas HTML públicas
                 .requestMatchers(
@@ -56,7 +68,13 @@ public class SecurityConfig {
                     "/dashboard-analytics.html",
                     "/dashboard-pro.html",
                     "/historico.html",
-                    "/perfil_mercado.html"
+                    "/perfil_mercado.html",
+                    "/privacy-policy",
+                    "/privacy-policy.html",
+                    "/termos",
+                    "/termos.html",
+                    "/excluir-conta",
+                    "/excluir-conta.html"
                 ).permitAll()
 
                 // arquivos estáticos
@@ -81,7 +99,9 @@ public class SecurityConfig {
                     "/mercados",
                     "/api/mercados",
                     "/api/mercado/cadastro",
-                    "/mercado/cadastro"
+                    "/mercado/cadastro",
+                    "/privacy/public/deletion-request",
+                    "/api/privacy/public/deletion-request"
                 ).permitAll()
 
                 // endpoints públicos GET
@@ -92,7 +112,9 @@ public class SecurityConfig {
                     "/encartes/**",
                     "/api/ofertas/**",
                     "/api/mercados/**",
-                    "/api/encartes/**"
+                    "/api/encartes/**",
+                    "/privacy/legal",
+                    "/api/privacy/legal"
                 ).permitAll()
 
                 // JWT obrigatório para o resto
@@ -106,15 +128,26 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedOriginPatterns(parseAllowedOrigins());
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));
-        config.setAllowCredentials(true);
+        config.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
+    }
+
+    private List<String> parseAllowedOrigins() {
+        if (allowedOrigins == null || allowedOrigins.isBlank()) {
+            return List.of("*");
+        }
+        return List.of(allowedOrigins.split(","))
+                .stream()
+                .map(String::trim)
+                .filter(origin -> !origin.isBlank())
+                .toList();
     }
 
     @Bean

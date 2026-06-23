@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <title>Wofertas - Excluir conta</title>
+  <script src="js/config.js"></script>
+  <style>
+    .legal-page { max-width: 760px; margin: 0 auto; padding: 32px 20px 56px; color: var(--text); }
+    .legal-page h1 { margin: 24px 0 8px; color: #fff; }
+    .legal-page p, .legal-page li { color: var(--muted); line-height: 1.7; }
+    .legal-page a { color: #93c5fd; }
+    .legal-card { border: 1px solid rgba(255,255,255,.1); background: rgba(15,23,42,.55); border-radius: 16px; padding: 20px; margin-top: 18px; }
+    .legal-card label { display: block; margin: 14px 0 6px; color: #b8c7e6; font-weight: 800; font-size: 12px; text-transform: uppercase; }
+    .legal-card input, .legal-card select, .legal-card textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      min-height: 46px;
+      padding: 10px 12px;
+      outline: none;
+    }
+    .legal-card select option { color: #0f172a; }
+    .legal-card textarea { min-height: 92px; resize: vertical; }
+    .legal-card button {
+      width: 100%;
+      margin-top: 16px;
+      min-height: 48px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .legal-card button:disabled { opacity: .6; cursor: wait; }
+    #resultBox { margin-top: 14px; color: #86efac; font-weight: 700; }
+    #resultBox.error { color: #fca5a5; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo-container">
+      <img src="/imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
+      <a href="/index.html"><div class="logo"><span class="w">W</span><span class="rest">ofertas</span></div></a>
+    </div>
+    <nav class="header-nav">
+      <a href="/privacy-policy.html">Privacidade</a>
+      <a href="/termos.html">Termos</a>
+    </nav>
+  </header>
+
+  <main class="legal-page">
+    <h1>Solicitar exclusao de conta</h1>
+    <p>Use este canal para solicitar a exclusao da sua conta e dos dados associados. Voce tambem pode abrir a solicitacao pelo app, em Perfil.</p>
+
+    <div class="legal-card">
+      <p>A solicitacao sera registrada para atendimento. Dados necessarios para seguranca, prevencao de fraude, cumprimento legal ou defesa de direitos podem ser retidos pelo prazo aplicavel.</p>
+
+      <form id="deleteAccountForm">
+        <label for="requesterType">Tipo de conta</label>
+        <select id="requesterType" required>
+          <option value="USUARIO">Cliente</option>
+          <option value="MERCADO">Supermercado</option>
+        </select>
+
+        <label for="email">E-mail da conta</label>
+        <input id="email" type="email" autocomplete="email" required placeholder="voce@email.com">
+
+        <label for="reason">Motivo ou observacao</label>
+        <textarea id="reason" placeholder="Opcional"></textarea>
+
+        <button id="submitButton" type="submit">Solicitar exclusao</button>
+      </form>
+
+      <div id="resultBox" role="status"></div>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById("deleteAccountForm");
+    const button = document.getElementById("submitButton");
+    const resultBox = document.getElementById("resultBox");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      resultBox.className = "";
+      resultBox.textContent = "Enviando solicitacao...";
+
+      const payload = {
+        requesterType: document.getElementById("requesterType").value,
+        email: document.getElementById("email").value.trim(),
+        reason: document.getElementById("reason").value.trim(),
+        source: "WEB"
+      };
+
+      try {
+        const baseUrl = window.AppConfig?.API_URL || "https://wofertas-production.up.railway.app";
+        const urls = [
+          `${baseUrl}/api/privacy/public/deletion-request`,
+          `${baseUrl}/privacy/public/deletion-request`
+        ];
+        let response = null;
+        for (const url of urls) {
+          response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          if (response.status !== 404) break;
+        }
+
+        if (!response || !response.ok) {
+          throw new Error(await response?.text() || "Erro ao registrar solicitacao.");
+        }
+
+        resultBox.textContent = "Solicitacao registrada. Guarde este e-mail para acompanhamento do atendimento.";
+        form.reset();
+      } catch (error) {
+        resultBox.className = "error";
+        resultBox.textContent = "Nao foi possivel registrar agora. Tente novamente ou envie e-mail para privacidade@wofertas.com.br.";
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

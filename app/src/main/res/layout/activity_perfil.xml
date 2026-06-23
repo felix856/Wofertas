@@ -125,6 +125,31 @@
                     app:cornerRadius="10dp"
                     android:stateListAnimator="@null" />
 
+                <Button
+                    android:id="@+id/btnPrivacidade"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Privacidade e LGPD"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/wofertas_blue_primary"
+                    app:cornerRadius="10dp"
+                    android:stateListAnimator="@null" />
+
+                <Button
+                    android:id="@+id/btnSolicitarExclusao"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Solicitar exclusao da conta"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/status_suspenso"
+                    app:cornerRadius="10dp"
+                    android:stateListAnimator="@null" />
+
             </LinearLayout>
 
             <LinearLayout

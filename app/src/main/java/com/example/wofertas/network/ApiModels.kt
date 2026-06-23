@@ -224,6 +224,24 @@ data class FcmTokenRequest(
     val fcmToken: String
 )
 
+data class PrivacyDeletionRequest(
+    val email: String? = null,
+    val requesterType: String? = null,
+    val reason: String? = null,
+    val source: String = "ANDROID"
+)
+
+data class DataPrivacyRequestDto(
+    val id: String? = null,
+    val requesterId: String? = null,
+    val requesterType: String? = null,
+    val email: String? = null,
+    val requestType: String? = null,
+    val status: String? = null,
+    val source: String? = null,
+    val requestedAt: String? = null
+)
+
 // ALIASES PARA COMPATIBILIDADE ABSOLUTA
 typealias UsuarioDto = UsuarioResponse
 typealias MercadoDto = MercadoResponse

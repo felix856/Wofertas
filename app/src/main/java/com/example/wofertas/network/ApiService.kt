@@ -275,4 +275,9 @@ interface ApiService {
 
     @POST("usuarios/fcm-token")
     suspend fun registrarFcmToken(@Body body: FcmTokenRequest): Response<Void>
+
+    // =============== PRIVACIDADE / LGPD ===============
+
+    @POST("privacy/me/deletion-request")
+    suspend fun solicitarExclusaoConta(@Body body: PrivacyDeletionRequest): Response<DataPrivacyRequestDto>
 }

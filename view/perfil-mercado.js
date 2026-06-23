@@ -1,4 +1,5 @@
 const BASE_URL = window.AppConfig?.API_URL || "https://wofertas-production.up.railway.app";
+const API_ROOT = BASE_URL.replace(/\/$/, "");
 const token    = localStorage.getItem("token");
 let mercId     = obterMercadoId();
 
@@ -7,6 +8,7 @@ if (!token) {
 }
 
 let mercadoAtual = null;
+let planoStatusAtual = null;
 
 // ── Estado do mapa de perfil ─────────────────────────────────────
 let leafletMapPerfil = null;
@@ -43,6 +45,7 @@ async function carregarPerfil() {
 
         // Exibe status da localização
         atualizarStatusLocalizacao(m.latitude, m.longitude);
+        carregarPlanoTeste();
 
         // Pré-carrega as coordenadas atuais
         if (m.latitude != null && m.longitude != null) {
@@ -93,6 +96,137 @@ async function buscarPerfilMercado() {
 
     toast("Nao foi possivel identificar o mercado logado. Use Sair e entre novamente se o problema continuar.", "error");
     return null;
+}
+
+async function monetizationFetch(endpoint, options = {}) {
+    const headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+        ...(options.headers || {})
+    };
+    const requestOptions = { ...options, headers };
+    const urls = [
+        `${API_ROOT}/api/monetization${endpoint}`,
+        `${API_ROOT}/monetization${endpoint}`
+    ];
+
+    let ultimoResultado = null;
+    for (const url of urls) {
+        const res = await fetch(url, requestOptions);
+        ultimoResultado = res;
+        if (res.status !== 404) return res;
+    }
+    return ultimoResultado;
+}
+
+async function carregarPlanoTeste() {
+    const usageEl = document.getElementById("planoUsoResumo");
+    if (!usageEl || !token) return;
+
+    try {
+        usageEl.textContent = "Carregando status do plano...";
+        const res = await monetizationFetch("/me/status");
+
+        if (!res || !res.ok) {
+            usageEl.textContent = "Nao foi possivel carregar o plano agora. O perfil continua funcionando normalmente.";
+            return;
+        }
+
+        const status = await res.json();
+        planoStatusAtual = status;
+        renderizarPlanoTeste(status);
+    } catch (e) {
+        console.warn("Erro ao carregar plano de teste:", e);
+        usageEl.textContent = "Plano indisponivel no momento. Tente novamente depois.";
+    }
+}
+
+async function salvarPlanoTeste() {
+    const select = document.getElementById("planoSelect");
+    const btn = document.getElementById("btnSalvarPlanoTeste");
+    if (!select || !btn) return;
+
+    btn.disabled = true;
+    btn.textContent = "Salvando...";
+
+    try {
+        const res = await monetizationFetch("/me/plan", {
+            method: "PUT",
+            body: JSON.stringify({
+                planName: select.value,
+                status: "trial",
+                autoRenew: false
+            })
+        });
+
+        if (!res || !res.ok) {
+            const erro = await res.text().catch(() => "");
+            toast(erro || "Nao foi possivel salvar o plano.", "error");
+            return;
+        }
+
+        const status = await res.json();
+        planoStatusAtual = status;
+        renderizarPlanoTeste(status);
+        toast(`Plano ${select.value} aplicado em modo teste.`);
+    } catch (e) {
+        console.error("Erro ao salvar plano:", e);
+        toast("Falha ao conectar para salvar o plano.", "error");
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "Salvar plano";
+    }
+}
+
+function renderizarPlanoTeste(status) {
+    const plano = status?.plan?.name || status?.subscription?.planName || "FREE";
+    const select = document.getElementById("planoSelect");
+    const badge = document.getElementById("planoAtualBadge");
+    const usageEl = document.getElementById("planoUsoResumo");
+    const permissionsEl = document.getElementById("planoPermissoes");
+
+    if (select) select.value = plano;
+    if (badge) badge.textContent = plano;
+
+    const plan = status?.plan || {};
+    const usage = status?.usage || {};
+    const flyersLimit = formatarLimite(plan.weeklyFlyerLimit);
+    const offersLimit = formatarLimite(plan.monthlyOfferLimit);
+    const boostsLimit = formatarLimite(plan.boostCredits);
+
+    if (usageEl) {
+        usageEl.innerHTML = [
+            `Modo: <strong>${status?.mode || "OBSERVE_ONLY_NO_BILLING"}</strong>`,
+            `Encartes semanais: <strong>${usage.flyersCreatedThisWeek ?? 0}/${flyersLimit}</strong>`,
+            `Ofertas mensais: <strong>${usage.offersCreatedThisMonth ?? 0}/${offersLimit}</strong>`,
+            `Boosts semanais: <strong>${usage.boostsUsedThisWeek ?? 0}/${boostsLimit}</strong>`
+        ].join(" &bull; ");
+    }
+
+    if (permissionsEl) {
+        permissionsEl.innerHTML = "";
+        (status?.permissions || []).forEach(permission => {
+            const chip = document.createElement("span");
+            chip.className = `plan-permission-chip${permission.wouldAllowByPlan ? "" : " warn"}`;
+            chip.textContent = `${nomePermissao(permission.permission)}: ${permission.allowed ? "liberado" : "bloqueado"}`;
+            permissionsEl.appendChild(chip);
+        });
+    }
+}
+
+function nomePermissao(permission) {
+    const nomes = {
+        create_flyer: "Encartes",
+        create_offer: "Ofertas",
+        use_boost: "Boost",
+        advanced_analytics: "Analytics avancado"
+    };
+    return nomes[permission] || permission;
+}
+
+function formatarLimite(limite) {
+    if (limite === undefined || limite === null) return "--";
+    return Number(limite) < 0 ? "ilimitado" : limite;
 }
 
 function persistirMercadoLocal(mercado) {

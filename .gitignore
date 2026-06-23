@@ -1,109 +1,81 @@
-<<<<<<< HEAD
-HELP.md
+# Maven / Spring Boot
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-### Credenciais & Secrets ###
-.env
-.env.local
-.env.*.local
-*.key
-*.pem
-secret.properties
-
-### IDE Local Settings ###
-.DS_Store
-*.swp
-*.swo
-
-### Uploads (dados locais, não vão para prod) ###
-uploads/
-
-### Logs & PIDs ###
-*.log
-server.pid
-
-### Misc ###
-.openclaw/
-memory/
-AC
-=======
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
-
-# Android/Gradle generated outputs
+# Gradle / Android
+.gradle/
 build/
 */build/
 outputs/
 tmp/
 captures/
+.externalNativeBuild/
+.cxx/
 *.apk
 *.aab
 *.ap_
 *.dex
 *.class
 
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.apt_generated/
+.factorypath
+.vscode/
+.sts4-cache/
+springBeans
+
 # Local/private configuration
-*.env
+local.properties
 .env
+.env.local
+.env.*.local
+*.env
+*.key
+*.pem
+secret.properties
 service-account.json
 *-firebase-adminsdk-*.json
+google-services.json
+
+# Local data and uploads
+uploads/
 database.sqlite
 *.sqlite
 *.db
 
-# Archives and reports generated locally
-*.zip
-problems-report.html
+# Logs and PIDs
+*.log
+server.pid
 
-# Node/runtime artifacts not required by the Android app
+# Node/runtime artifacts
 node_modules/
 npm-debug.log*
 
-# Stray files copied outside the Android module
+# Archives and generated reports
+*.zip
+problems-report.html
+
+# OS/editor noise
+.DS_Store
+*.swp
+*.swo
+
+# Local assistant/workspace notes
+HELP.md
+.openclaw/
+memory/
+AC
+
+# Stray files copied outside modules
 /main/
 /androidTest/
 /test/
@@ -116,6 +88,4 @@ npm-debug.log*
 /gradle-wrapper.properties
 /libs.versions.toml
 /proguard-rules.pro
-/google-services.json
 /.env.example
->>>>>>> f493123585e4c68ca236493080c7eb79a0086d7f

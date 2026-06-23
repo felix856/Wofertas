@@ -1,69 +1,70 @@
-<<<<<<< HEAD
-# Wofertas - API (Backend) e Dashboard Web
+# Wofertas
 
-Este repositório contém a infraestrutura do backend do aplicativo **Wofertas**, construído em **Spring Boot (Java)** com banco de dados **MongoDB**.
-Além disso, esta aplicação já serve o Frontend (Dashboard Web HTML/JS/CSS) nativamente.
+Wofertas e uma plataforma com aplicativo Android, backend Spring Boot/MongoDB e painel web para conectar clientes a ofertas, encartes e supermercados proximos.
+
+## Componentes
+
+- `app/`: aplicativo Android em Kotlin.
+- `src/main/java/`: backend Spring Boot com API REST, JWT e MongoDB.
+- `view/`: frontend web estatico usado no Vercel e tambem copiado para deploy Docker.
+- `PLAY_STORE_LGPD_CHECKLIST.md`: checklist de privacidade, LGPD e Play Store.
 
 ## Tecnologias
-* **Java 21**
-* **Spring Boot 3**
-* **MongoDB** (Spring Data MongoDB)
-* **Spring Security + JWT** (Autenticação)
 
-## Como rodar localmente
-1. Tenha o JDK 21 e o Maven instalados.
-2. Certifique-se de que o MongoDB está rodando ou adicione sua URL local.
-3. Configure as variáveis de ambiente necessárias ou apenas modifique o arquivo `application-dev.properties` para testes locais.
-4. Execute:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-5. O Web Dashboard estará acessível em `http://localhost:8080/`.
+- Android Kotlin, Retrofit, Room, WorkManager, OSMDroid, ML Kit OCR.
+- Java 21, Spring Boot, Spring Security, JWT e Spring Data MongoDB.
+- Frontend HTML/CSS/JavaScript.
 
-## Hospedagem e Deploy (Render)
+## Rodar backend localmente
 
-Esta API possui um `Dockerfile` preparado para deploy rápido na plataforma **Render.com**.
+1. Instale JDK 21.
+2. Rode MongoDB local em `mongodb://localhost:27017/wofertas` ou ajuste `src/main/resources/application-dev.properties`.
+3. Execute:
 
-**Atenção:** Como este repositório possui a API em uma branch específica, **configure a opção `Branch` no painel do Render para `backend`**.
-
-### Variáveis de Ambiente Necessárias (Production):
-No painel do Render (Environment Variables), adicione:
-- `SPRING_PROFILES_ACTIVE`: `prod`
-- `MONGODB_URI`: Sua string de conexão do MongoDB Atlas (ex: `mongodb+srv://...`)
-- `MONGODB_DATABASE`: Opcional (Padrão: `wofertas`)
-- `JWT_SECRET`: Senha forte gerada aleatoriamente para criptografia de tokens.
-
-> [!WARNING]
-> O plano gratuito do Render não possui persistência de disco (arquivos salvos localmente).
-> Como a pasta de `uploads` salva imagens em disco, a cada deploy ou restart do servidor, as imagens enviadas anteriormente serão apagadas temporariamente (com exceção das imagens hospedadas remotamente). Para resolver isso futuramente, considere hospedar as imagens em S3 ou Cloudinary.
-=======
-# Wofertas - Aplicativo Android
-
-Este é o aplicativo Android oficial para a plataforma Wofertas, projetado para permitir que clientes e supermercados interajam, visualizem ofertas, gerenciem listas de compras e publiquem encartes.
-
-## Tecnologias Usadas
-* **Kotlin** (Linguagem Principal)
-* **Retrofit** (Cliente HTTP para comunicação com a API)
-* **Coroutines** (Para processamento assíncrono)
-* **Glide / Coil** (Para carregamento de imagens)
-* **OSMDroid** (Mapas)
-
-## Configuração do Ambiente
-
-1. Abra o projeto no **Android Studio**.
-2. O aplicativo consome a API REST que precisa estar rodando (localmente ou no Render).
-3. Vá no arquivo `app/src/main/java/com/example/wofertas/network/ApiEnvironment.kt` e defina o ambiente correto na função `default()`.
-   * Para Produção (Render): `PRODUCTION`
-   * Para Testes Locais no PC (Emulador): `EMULATOR`
-   * Para Testes no Celular Físico: `PHYSICAL_DEVICE` (Atualize o IP local).
-
-## Integração com o Backend (Render)
-
-Quando o backend for implantado no [Render](https://render.com/), atualize a URL de produção na classe `ApiEnvironment.kt`:
-
-```kotlin
-PRODUCTION("https://SEU-APP-RENDER.onrender.com/", "Production Server")
+```bash
+./mvnw spring-boot:run
 ```
 
-Após alterar, sincronize o Gradle e clique em **Run** ou **Build APK**.
->>>>>>> f493123585e4c68ca236493080c7eb79a0086d7f
+No Windows:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+## Rodar Android
+
+1. Abra o projeto no Android Studio.
+2. Confirme o SDK local em `local.properties`:
+
+```properties
+sdk.dir=C\:\\Users\\Felix\\AppData\\Local\\Android\\Sdk
+```
+
+3. Para testes locais, o build `debug` permite HTTP/local network.
+4. Para producao, o build `release` usa HTTPS e bloqueia cleartext.
+
+## Deploy
+
+Backend:
+
+- Configure `SPRING_PROFILES_ACTIVE=prod`.
+- Configure `MONGODB_URI`, `JWT_SECRET` e, se necessario, `CORS_ALLOWED_ORIGINS`.
+
+Frontend web:
+
+- Publique a pasta `view/` no Vercel.
+- As URLs de privacidade esperadas estao em `PLAY_STORE_LGPD_CHECKLIST.md`.
+
+## Validacao local
+
+```powershell
+.\mvnw.cmd test
+.\gradlew.bat :app:assembleDebug
+.\gradlew.bat :app:assembleRelease
+```
+
+## Observacoes Play Store
+
+- Gere um AAB assinado para publicar; o APK unsigned e apenas artefato local.
+- Antes da primeira publicacao, considere trocar `applicationId = "com.example.wofertas"` por um identificador definitivo.
+- Mantenha o formulario Data Safety coerente com as praticas reais do app.

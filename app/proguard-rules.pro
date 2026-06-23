@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Retrofit/Gson models used by the API layer.
+-keepattributes Signature, InnerClasses, EnclosingMethod, RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+-keep class com.example.wofertas.network.** { *; }
+-keep class com.example.wofertas.data.local.** { *; }
+-keep class * extends androidx.room.RoomDatabase
+-dontwarn javax.annotation.**
+-dontwarn kotlin.Unit

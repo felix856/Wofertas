@@ -2,6 +2,8 @@ package com.example.wofertas
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.wofertas.utils.AppLogger
 import com.example.wofertas.utils.Constants
 
@@ -11,8 +13,25 @@ import com.example.wofertas.utils.Constants
  */
 object AuthManager {
 
-    private fun prefs(ctx: Context): SharedPreferences =
-        ctx.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
+    private fun prefs(ctx: Context): SharedPreferences {
+        val appContext = ctx.applicationContext
+        return try {
+            val masterKey = MasterKey.Builder(appContext)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+
+            EncryptedSharedPreferences.create(
+                appContext,
+                Constants.PREFS_NAME,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: Exception) {
+            AppLogger.error("Encrypted preferences unavailable; using private fallback", e)
+            appContext.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
+        }
+    }
 
     // ── Salvar sessão após login ──────────────────────────────────────────────
 

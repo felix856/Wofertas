@@ -6,12 +6,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.dto.AnalyticsEventRequest;
 import com.example.demo.dto.EncarteDTO;
 import com.example.demo.model.Encarte;
 import com.example.demo.repository.EncarteRepository;
@@ -23,10 +25,17 @@ public class EncarteService {
 
     private final EncarteRepository encarteRepository;
     private final MercadoService mercadoService;
+    private final UsageService usageService;
+    private final AnalyticsEventService analyticsEventService;
 
-    public EncarteService(EncarteRepository encarteRepository, MercadoService mercadoService) {
+    public EncarteService(EncarteRepository encarteRepository,
+                          MercadoService mercadoService,
+                          UsageService usageService,
+                          AnalyticsEventService analyticsEventService) {
         this.encarteRepository = encarteRepository;
         this.mercadoService = mercadoService;
+        this.usageService = usageService;
+        this.analyticsEventService = analyticsEventService;
     }
 
     public EncarteDTO salvar(String mercadoId, String titulo, MultipartFile pdf) {
@@ -62,7 +71,10 @@ public class EncarteService {
                     originalName
             );
 
-            return toDTO(encarteRepository.save(encarte));
+            Encarte salvo = encarteRepository.save(encarte);
+            registrarCriacaoEncarte(salvo);
+
+            return toDTO(salvo);
         } catch (IOException e) {
             throw new RuntimeException("Erro ao salvar encarte", e);
         }
@@ -102,6 +114,22 @@ public class EncarteService {
             throw new IllegalArgumentException("ID do mercado e obrigatorio");
         }
         mercadoService.buscarPorId(mercadoId);
+    }
+
+    private void registrarCriacaoEncarte(Encarte encarte) {
+        try {
+            usageService.recordFlyerCreated(encarte.getMercadoId());
+            analyticsEventService.track(new AnalyticsEventRequest(
+                    "flyer_created",
+                    encarte.getMercadoId(),
+                    encarte.getMercadoId(),
+                    null,
+                    encarte.getId(),
+                    Map.of("titulo", encarte.getTitulo())
+            ));
+        } catch (RuntimeException ignored) {
+            // Monetizacao/analytics ficam em observacao e nunca impedem o upload do encarte.
+        }
     }
 
     private EncarteDTO toDTO(Encarte encarte) {
