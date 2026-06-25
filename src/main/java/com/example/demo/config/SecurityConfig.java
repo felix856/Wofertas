@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,13 @@ import com.example.demo.security.JwtAuthFilter;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    private static final List<String> DEFAULT_ALLOWED_ORIGIN_PATTERNS = List.of(
+            "https://wofertas.vercel.app",
+            "https://backend-s8by1200-felix856s-projects.vercel.app",
+            "https://*.vercel.app",
+            "https://wofertas-production.up.railway.app"
+    );
 
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
@@ -140,13 +148,20 @@ public class SecurityConfig {
     }
 
     private List<String> parseAllowedOrigins() {
-        if (allowedOrigins == null || allowedOrigins.isBlank()) {
-            return List.of("*");
-        }
-        return List.of(allowedOrigins.split(","))
+        List<String> configuredOrigins = allowedOrigins == null || allowedOrigins.isBlank()
+                ? List.of()
+                : List.of(allowedOrigins.split(","))
                 .stream()
                 .map(String::trim)
                 .filter(origin -> !origin.isBlank())
+                .toList();
+
+        if (configuredOrigins.contains("*")) {
+            return configuredOrigins;
+        }
+
+        return Stream.concat(configuredOrigins.stream(), DEFAULT_ALLOWED_ORIGIN_PATTERNS.stream())
+                .distinct()
                 .toList();
     }
 
