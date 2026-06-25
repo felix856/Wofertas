@@ -38,6 +38,11 @@ abstract class BaseMercadoActivity : AppCompatActivity() {
         if (!AuthManager.isLoggedIn(this)) irParaLogin()
     }
 
+    override fun setContentView(layoutResID: Int) {
+        super.setContentView(layoutResID)
+        ChatbotLauncher.install(this)
+    }
+
     private fun irParaLogin() {
         startActivity(Intent(this, LoginActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

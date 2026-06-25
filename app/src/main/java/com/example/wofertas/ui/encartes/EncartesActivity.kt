@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wofertas.AuthManager
+import com.example.wofertas.ChatbotLauncher
 import com.example.wofertas.R
 import com.example.wofertas.VerPDF
 import com.example.wofertas.data.repository.EncarteRepository
@@ -56,6 +57,8 @@ class EncartesActivity : AppCompatActivity() {
 
         mercadoId = intent.getStringExtra("mercado_id") ?: run { finish(); return }
         mercadoNome = intent.getStringExtra("mercado_nome") ?: "Encartes"
+
+        ChatbotLauncher.install(this)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar_encartes)
         setSupportActionBar(toolbar)

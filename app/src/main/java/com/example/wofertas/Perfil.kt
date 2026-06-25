@@ -61,6 +61,8 @@ class Perfil : AppCompatActivity() {
             return
         }
 
+        ChatbotLauncher.install(this)
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar_perfil)
         setSupportActionBar(toolbar)
         supportActionBar?.apply {

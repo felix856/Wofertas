@@ -38,7 +38,9 @@
         <activity android:name=".GerenciarOfertasSupermercadoActivity" android:exported="false" />
         <activity android:name=".MinhasOfertas" android:exported="false" />
         <activity android:name=".EditarPerfilActivity" android:exported="false" />
+        <activity android:name=".TrocarSenhaActivity" android:exported="false" />
         <activity android:name=".Perfil" android:exported="false" />
+        <activity android:name=".ChatbotActivity" android:exported="false" android:label="@string/chatbot_title" />
         <activity android:name=".Mapa" android:exported="false" />
         <activity android:name=".ResetPasswordActivity" android:exported="false" />
         <activity android:name=".VerPDF" android:exported="false" />

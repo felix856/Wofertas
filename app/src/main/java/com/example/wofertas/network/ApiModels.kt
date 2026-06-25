@@ -66,6 +66,12 @@ data class OfertaRequest(
 
 data class ItemCarrinhoRequest(val idOferta: String, val quantidade: Int)
 
+data class ChatbotRequest(
+    val mensagem: String,
+    val pagina: String? = null,
+    val contextoTela: String? = null
+)
+
 // ANALYTICS REQUEST
 data class InteracaoRequest(
     val ofertaId: String,
@@ -191,6 +197,15 @@ data class DashboardAnalyticsDto(
     val produtosComMaiorCarrinho: Map<String, Long> = emptyMap(),
     val visualizacoesPorOrigem: Map<String, Long> = emptyMap(),
     val insight: InsightEstrategicoDto? = null
+)
+
+data class ChatbotResponse(
+    val resposta: String,
+    val tipoUsuario: String? = null,
+    val modo: String? = null,
+    val modelo: String? = null,
+    val contextoAnaliticoUsado: Boolean = false,
+    val respondidoEm: String? = null
 )
 
 data class MercadoRankingDto(

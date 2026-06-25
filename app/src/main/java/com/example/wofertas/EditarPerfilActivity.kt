@@ -1,5 +1,6 @@
 package com.example.wofertas
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -56,6 +57,13 @@ class EditarPerfilActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editar_perfil)
+
+        if (!AuthManager.isLoggedIn(this)) {
+            irParaLogin()
+            return
+        }
+
+        ChatbotLauncher.install(this)
 
         configurarInterface()
         carregarDadosAtuais()
@@ -199,6 +207,13 @@ class EditarPerfilActivity : AppCompatActivity() {
         progressBar.visibility = if (loading) View.VISIBLE else View.GONE
         btnSalvar.isEnabled = !loading
         btnTrocarFoto.isEnabled = !loading
+    }
+
+    private fun irParaLogin() {
+        startActivity(Intent(this, LoginActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        })
+        finish()
     }
 
     companion object { private const val TAG = "EditarPerfil" }

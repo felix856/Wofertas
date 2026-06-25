@@ -273,6 +273,11 @@ interface ApiService {
     @GET("analytics/ranking-mercados")
     suspend fun getRankingMercados(): Response<List<MercadoRankingDto>>
 
+    // =============== CHATBOT ===============
+
+    @POST("chatbot/mensagem")
+    suspend fun enviarMensagemChatbot(@Body request: ChatbotRequest): Response<ChatbotResponse>
+
     @POST("usuarios/fcm-token")
     suspend fun registrarFcmToken(@Body body: FcmTokenRequest): Response<Void>
 

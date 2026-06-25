@@ -48,6 +48,8 @@ class TrocarSenhaActivity : AppCompatActivity() {
             finish(); return
         }
 
+        ChatbotLauncher.install(this)
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar_trocar_senha)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

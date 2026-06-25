@@ -108,4 +108,30 @@
     <string name="previous">Previous</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- CHATBOT -->
+    <string name="chatbot_title">Assistente Wofertas</string>
+    <string name="chatbot_open_content_description">Abrir assistente Wofertas</string>
+    <string name="chatbot_quick_questions_content_description">Perguntas rapidas do assistente</string>
+    <string name="chatbot_quick_one_default">Como uso o app?</string>
+    <string name="chatbot_quick_two_default">Ver minhas ofertas</string>
+    <string name="chatbot_quick_three_default">Ajuda com conta</string>
+    <string name="chatbot_quick_market_one">Como publico uma oferta?</string>
+    <string name="chatbot_quick_market_two">Como vejo meu dashboard?</string>
+    <string name="chatbot_quick_market_three">Como melhoro meus resultados?</string>
+    <string name="chatbot_quick_user_one">Como encontro ofertas?</string>
+    <string name="chatbot_quick_user_two">Como salvo supermercados?</string>
+    <string name="chatbot_quick_user_three">Como uso a lista de compras?</string>
+    <string name="chatbot_welcome_market">Ola! Sou o assistente Wofertas para supermercados.</string>
+    <string name="chatbot_welcome_user">Ola! Sou o assistente Wofertas para clientes.</string>
+    <string name="chatbot_empty_message">Digite uma mensagem.</string>
+    <string name="chatbot_empty_response">Nao consegui montar uma resposta agora.</string>
+    <string name="chatbot_error_response">Nao consegui responder agora. Tente novamente em instantes.</string>
+    <string name="chatbot_network_error">Falha de conexao com o assistente.</string>
+    <string name="chatbot_progress_content_description">Assistente respondendo</string>
+    <string name="chatbot_input_hint">Digite sua duvida</string>
+    <string name="chatbot_input_content_description">Mensagem para o assistente</string>
+    <string name="chatbot_send">Enviar</string>
+    <string name="chatbot_send_content_description">Enviar mensagem para o assistente</string>
+    <string name="session_expired">Sessao expirada. Faca login novamente.</string>
+
 </resources>
