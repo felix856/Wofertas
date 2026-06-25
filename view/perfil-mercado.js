@@ -1,29 +1,25 @@
 const BASE_URL = window.AppConfig?.API_URL || "https://wofertas-production.up.railway.app";
-const API_ROOT = BASE_URL.replace(/\/$/, "");
 const token    = localStorage.getItem("token");
-let mercId     = obterMercadoId();
+const mercId   = localStorage.getItem("id");
 
-if (!token) {
-    window.location.href = "login.html";
-}
+if (!token || !mercId) { window.location.href = "login.html"; }
 
 let mercadoAtual = null;
-let planoStatusAtual = null;
 
-// ── Estado do mapa de perfil ─────────────────────────────────────
+// â”€â”€ Estado do mapa de perfil â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let leafletMapPerfil = null;
 let pinAtualPerfil   = null;
 let latPerfilTemp    = null;
 let lonPerfilTemp    = null;
 
-// ── Carrega o perfil da API ──────────────────────────────────────
+// â”€â”€ Carrega o perfil da API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function carregarPerfil() {
     try {
-        const m = await buscarPerfilMercado();
-        if (!m) return;
-
+        const res  = await fetch(`${BASE_URL}/mercados/${mercId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const m = await res.json();
         mercadoAtual = m;
-        persistirMercadoLocal(m);
 
         document.getElementById("nome").value      = m.nome     || "";
         document.getElementById("telefone").value  = m.telefone || "";
@@ -33,7 +29,7 @@ async function carregarPerfil() {
         if(document.getElementById("senha")) document.getElementById("senha").value = "";
 
         document.getElementById("nomeDisplay").textContent  = m.nome || "Mercado";
-        document.getElementById("emailDisplay").textContent = m.email || "—";
+        document.getElementById("emailDisplay").textContent = m.email || "â€”";
         document.getElementById("avatarLetter").textContent = (m.nome || "S")[0].toUpperCase();
 
         if (m.imagemLogo && m.imagemLogo.trim() !== "") {
@@ -43,256 +39,24 @@ async function carregarPerfil() {
             document.getElementById("avatarLetter").style.display = "none";
         }
 
-        // Exibe status da localização
+        // Exibe status da localizaÃ§Ã£o
         atualizarStatusLocalizacao(m.latitude, m.longitude);
-        carregarPlanoTeste();
 
-        // Pré-carrega as coordenadas atuais
+        // PrÃ©-carrega as coordenadas atuais
         if (m.latitude != null && m.longitude != null) {
             latPerfilTemp = m.latitude;
             lonPerfilTemp = m.longitude;
             document.getElementById("latitudePerfil").value  = m.latitude;
             document.getElementById("longitudePerfil").value = m.longitude;
 
-            // Atualiza botão para refletir que já tem localização
+            // Atualiza botÃ£o para refletir que jÃ¡ tem localizaÃ§Ã£o
             const btn = document.getElementById("btnAbrirMapaPerfil");
             btn.classList.add("confirmed");
-            btn.innerHTML = `✅ Localização salva — clique para ajustar`;
+            btn.innerHTML = `âœ… LocalizaÃ§Ã£o salva â€” clique para ajustar`;
         }
 
     } catch (e) {
-        console.error("Erro ao carregar perfil:", e);
         toast("Erro ao carregar perfil.", "error");
-    }
-}
-
-async function buscarPerfilMercado() {
-    const authHeaders = { "Authorization": `Bearer ${token}` };
-    const tentativas = [
-        { url: `${BASE_URL}/mercado/perfil`, precisaId: false },
-        { url: `${BASE_URL}/mercados/${mercId}`, precisaId: true }
-    ];
-
-    for (const tentativa of tentativas) {
-        if (tentativa.precisaId && !mercId) continue;
-
-        const res = await fetch(tentativa.url, { headers: authHeaders });
-
-        if (res.status === 401 || res.status === 403) {
-            toast("Sessao sem permissao para carregar o perfil. Use Sair apenas se quiser entrar novamente.", "error");
-            return null;
-        }
-
-        if (res.ok) {
-            return await res.json();
-        }
-
-        if (!tentativa.precisaId) {
-            console.warn("Falha em /mercado/perfil, tentando fallback por ID. Status:", res.status);
-        } else {
-            toast("Erro ao carregar perfil. Codigo " + res.status, "error");
-        }
-    }
-
-    toast("Nao foi possivel identificar o mercado logado. Use Sair e entre novamente se o problema continuar.", "error");
-    return null;
-}
-
-async function monetizationFetch(endpoint, options = {}) {
-    const headers = {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        ...(options.headers || {})
-    };
-    const requestOptions = { ...options, headers };
-    const urls = [
-        `${API_ROOT}/api/monetization${endpoint}`,
-        `${API_ROOT}/monetization${endpoint}`
-    ];
-
-    let ultimoResultado = null;
-    for (const url of urls) {
-        const res = await fetch(url, requestOptions);
-        ultimoResultado = res;
-        if (res.status !== 404) return res;
-    }
-    return ultimoResultado;
-}
-
-async function carregarPlanoTeste() {
-    const usageEl = document.getElementById("planoUsoResumo");
-    if (!usageEl || !token) return;
-
-    try {
-        usageEl.textContent = "Carregando status do plano...";
-        const res = await monetizationFetch("/me/status");
-
-        if (!res || !res.ok) {
-            usageEl.textContent = "Nao foi possivel carregar o plano agora. O perfil continua funcionando normalmente.";
-            return;
-        }
-
-        const status = await res.json();
-        planoStatusAtual = status;
-        renderizarPlanoTeste(status);
-    } catch (e) {
-        console.warn("Erro ao carregar plano de teste:", e);
-        usageEl.textContent = "Plano indisponivel no momento. Tente novamente depois.";
-    }
-}
-
-async function salvarPlanoTeste() {
-    const select = document.getElementById("planoSelect");
-    const btn = document.getElementById("btnSalvarPlanoTeste");
-    if (!select || !btn) return;
-
-    btn.disabled = true;
-    btn.textContent = "Salvando...";
-
-    try {
-        const res = await monetizationFetch("/me/plan", {
-            method: "PUT",
-            body: JSON.stringify({
-                planName: select.value,
-                status: "trial",
-                autoRenew: false
-            })
-        });
-
-        if (!res || !res.ok) {
-            const erro = await res.text().catch(() => "");
-            toast(erro || "Nao foi possivel salvar o plano.", "error");
-            return;
-        }
-
-        const status = await res.json();
-        planoStatusAtual = status;
-        renderizarPlanoTeste(status);
-        toast(`Plano ${select.value} aplicado em modo teste.`);
-    } catch (e) {
-        console.error("Erro ao salvar plano:", e);
-        toast("Falha ao conectar para salvar o plano.", "error");
-    } finally {
-        btn.disabled = false;
-        btn.textContent = "Salvar plano";
-    }
-}
-
-function renderizarPlanoTeste(status) {
-    const plano = status?.plan?.name || status?.subscription?.planName || "FREE";
-    const select = document.getElementById("planoSelect");
-    const badge = document.getElementById("planoAtualBadge");
-    const usageEl = document.getElementById("planoUsoResumo");
-    const permissionsEl = document.getElementById("planoPermissoes");
-
-    if (select) select.value = plano;
-    if (badge) badge.textContent = plano;
-
-    const plan = status?.plan || {};
-    const usage = status?.usage || {};
-    const flyersLimit = formatarLimite(plan.weeklyFlyerLimit);
-    const offersLimit = formatarLimite(plan.monthlyOfferLimit);
-    const boostsLimit = formatarLimite(plan.boostCredits);
-
-    if (usageEl) {
-        usageEl.innerHTML = [
-            `Modo: <strong>${status?.mode || "OBSERVE_ONLY_NO_BILLING"}</strong>`,
-            `Encartes semanais: <strong>${usage.flyersCreatedThisWeek ?? 0}/${flyersLimit}</strong>`,
-            `Ofertas mensais: <strong>${usage.offersCreatedThisMonth ?? 0}/${offersLimit}</strong>`,
-            `Boosts semanais: <strong>${usage.boostsUsedThisWeek ?? 0}/${boostsLimit}</strong>`
-        ].join(" &bull; ");
-    }
-
-    if (permissionsEl) {
-        permissionsEl.innerHTML = "";
-        (status?.permissions || []).forEach(permission => {
-            const chip = document.createElement("span");
-            chip.className = `plan-permission-chip${permission.wouldAllowByPlan ? "" : " warn"}`;
-            chip.textContent = `${nomePermissao(permission.permission)}: ${permission.allowed ? "liberado" : "bloqueado"}`;
-            permissionsEl.appendChild(chip);
-        });
-    }
-}
-
-function nomePermissao(permission) {
-    const nomes = {
-        create_flyer: "Encartes",
-        create_offer: "Ofertas",
-        use_boost: "Boost",
-        advanced_analytics: "Analytics avancado"
-    };
-    return nomes[permission] || permission;
-}
-
-function formatarLimite(limite) {
-    if (limite === undefined || limite === null) return "--";
-    return Number(limite) < 0 ? "ilimitado" : limite;
-}
-
-function persistirMercadoLocal(mercado) {
-    if (!mercado) return;
-
-    if (mercado.id) {
-        mercId = mercado.id;
-        localStorage.setItem("id", mercado.id);
-        localStorage.setItem("mercadoId", mercado.id);
-    }
-
-    localStorage.setItem("mercado", JSON.stringify(mercado));
-
-    const authUser = parseJson(localStorage.getItem("authUser")) || {};
-    localStorage.setItem("authUser", JSON.stringify({
-        ...authUser,
-        ...mercado,
-        tipo: authUser.tipo || "MERCADO"
-    }));
-}
-
-function obterMercadoId() {
-    const directId = localStorage.getItem("id") || localStorage.getItem("mercadoId");
-    if (directId) return directId;
-
-    const mercado = parseJson(localStorage.getItem("mercado"));
-    if (mercado?.id) {
-        localStorage.setItem("id", mercado.id);
-        localStorage.setItem("mercadoId", mercado.id);
-        return mercado.id;
-    }
-
-    const authUser = parseJson(localStorage.getItem("authUser"));
-    if (authUser?.id) {
-        localStorage.setItem("id", authUser.id);
-        localStorage.setItem("mercadoId", authUser.id);
-        return authUser.id;
-    }
-
-    const tokenUserId = extrairUserIdDoToken(token);
-    if (tokenUserId) {
-        localStorage.setItem("id", tokenUserId);
-        localStorage.setItem("mercadoId", tokenUserId);
-        return tokenUserId;
-    }
-
-    return "";
-}
-
-function parseJson(value) {
-    if (!value) return null;
-    try {
-        return JSON.parse(value);
-    } catch {
-        return null;
-    }
-}
-
-function extrairUserIdDoToken(jwt) {
-    if (!jwt || !jwt.includes(".")) return "";
-    try {
-        const payload = jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-        const decoded = JSON.parse(atob(payload));
-        return decoded.userId || decoded.id || "";
-    } catch {
-        return "";
     }
 }
 
@@ -300,20 +64,20 @@ function atualizarStatusLocalizacao(lat, lon) {
     const el = document.getElementById("locStatus");
     if (!el) return;
     if (lat != null && lon != null) {
-        el.textContent = `✅ Localização salva: (${parseFloat(lat).toFixed(4)}, ${parseFloat(lon).toFixed(4)})`;
+        el.textContent = `âœ… LocalizaÃ§Ã£o salva: (${parseFloat(lat).toFixed(4)}, ${parseFloat(lon).toFixed(4)})`;
         el.className = "loc-status ok";
     } else {
-        el.textContent = "⚠️ Sem localização — seus clientes não encontrarão você no mapa!";
+        el.textContent = "âš ï¸ Sem localizaÃ§Ã£o â€” seus clientes nÃ£o encontrarÃ£o vocÃª no mapa!";
         el.className = "loc-status";
         el.style.color = "#fca5a5";
     }
 }
 
-// ── Logo upload ──────────────────────────────────────────────────
+// â”€â”€ Logo upload â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function handleLogoUpload(input) {
     const file = input.files[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { toast("Imagem muito grande (máx 5MB)", "error"); return; }
+    if (file.size > 5 * 1024 * 1024) { toast("Imagem muito grande (mÃ¡x 5MB)", "error"); return; }
     const reader = new FileReader();
     reader.onload = e => {
         const b64 = e.target.result;
@@ -322,12 +86,12 @@ function handleLogoUpload(input) {
         img.src = b64;
         img.style.display = "block";
         document.getElementById("avatarLetter").style.display = "none";
-        toast("Logo selecionada — clique em Salvar para confirmar", "info");
+        toast("Logo selecionada â€” clique em Salvar para confirmar", "info");
     };
     reader.readAsDataURL(file);
 }
 
-// ── Salvar perfil ────────────────────────────────────────────────
+// â”€â”€ Salvar perfil â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function salvarPerfil() {
     const nome     = document.getElementById("nome").value.trim();
     const telefone = document.getElementById("telefone").value.trim();
@@ -340,14 +104,14 @@ async function salvarPerfil() {
     const senhaRaw   = senhaInput ? senhaInput.value.trim() : "";
     const senhaFinal = senhaRaw === "" ? null : senhaRaw;
 
-    if (!nome)     { toast("Nome da loja obrigatório", "error"); return; }
-    if (!endereco) { toast("Endereço obrigatório", "error");     return; }
+    if (!nome)     { toast("Nome da loja obrigatÃ³rio", "error"); return; }
+    if (!endereco) { toast("EndereÃ§o obrigatÃ³rio", "error");     return; }
     if (senhaFinal !== null && senhaFinal.length < 6) {
-        toast("A nova senha deve ter no mínimo 6 caracteres", "error");
+        toast("A nova senha deve ter no mÃ­nimo 6 caracteres", "error");
         return;
     }
 
-    // Coordenadas: prioriza o que o usuário selecionou no mapa, senão mantém o que veio da API
+    // Coordenadas: prioriza o que o usuÃ¡rio selecionou no mapa, senÃ£o mantÃ©m o que veio da API
     const latFinal = latInput ? parseFloat(latInput) : (mercadoAtual?.latitude || null);
     const lonFinal = lonInput ? parseFloat(lonInput) : (mercadoAtual?.longitude || null);
 
@@ -356,8 +120,7 @@ async function salvarPerfil() {
     btn.innerHTML = "Salvando...";
 
     try {
-        const endpoint = mercId ? `${BASE_URL}/mercados/${mercId}` : `${BASE_URL}/mercado/atualizar`;
-        const res = await fetch(endpoint, {
+        const res = await fetch(`${BASE_URL}/mercados/${mercId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -377,7 +140,7 @@ async function salvarPerfil() {
         });
 
         if (res.ok) {
-            toast("Perfil atualizado com sucesso! ✅");
+            toast("Perfil atualizado com sucesso! âœ…");
             if(senhaInput) senhaInput.value = "";
             await carregarPerfil();
         } else {
@@ -388,11 +151,11 @@ async function salvarPerfil() {
         toast("Falha ao conectar.", "error");
     } finally {
         btn.disabled = false;
-        btn.innerHTML = "Salvar alterações";
+        btn.innerHTML = "Salvar alteraÃ§Ãµes";
     }
 }
 
-// ── Modal do mapa (perfil) ───────────────────────────────────────
+// â”€â”€ Modal do mapa (perfil) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const modalMapaPerfil      = document.getElementById("modalMapaPerfil");
 const btnAbrirMapaPerfil   = document.getElementById("btnAbrirMapaPerfil");
 const btnCancelarMapaPerfil= document.getElementById("btnCancelarMapaPerfil");
@@ -403,7 +166,7 @@ const mapaSearchInputPerfil= document.getElementById("mapaSearchInputPerfil");
 btnAbrirMapaPerfil.addEventListener("click", () => {
     modalMapaPerfil.classList.add("open");
 
-    // Pré-preenche a busca com o endereço atual
+    // PrÃ©-preenche a busca com o endereÃ§o atual
     const enderecoAtual = document.getElementById("endereco")?.value.trim();
     if (enderecoAtual && mapaSearchInputPerfil && !mapaSearchInputPerfil.value) {
         mapaSearchInputPerfil.value = enderecoAtual;
@@ -415,7 +178,7 @@ btnAbrirMapaPerfil.addEventListener("click", () => {
         setTimeout(() => leafletMapPerfil.invalidateSize(), 100);
     }
 
-    // Se já tem coordenadas, posiciona o pin
+    // Se jÃ¡ tem coordenadas, posiciona o pin
     if (latPerfilTemp !== null && pinAtualPerfil === null) {
         setTimeout(() => {
             leafletMapPerfil.setView([latPerfilTemp, lonPerfilTemp], 16);
@@ -425,7 +188,7 @@ btnAbrirMapaPerfil.addEventListener("click", () => {
         atualizarDisplayCoordenadas(latPerfilTemp, lonPerfilTemp);
         btnConfirmarMapaPerfil.disabled = false;
     } else if (enderecoAtual) {
-        // Busca automática pelo endereço se não tiver coordenadas
+        // Busca automÃ¡tica pelo endereÃ§o se nÃ£o tiver coordenadas
         setTimeout(() => buscarEnderecoPerfil(enderecoAtual), 500);
     }
 });
@@ -440,12 +203,12 @@ btnConfirmarMapaPerfil.addEventListener("click", () => {
     document.getElementById("latitudePerfil").value  = latPerfilTemp;
     document.getElementById("longitudePerfil").value = lonPerfilTemp;
 
-    btnAbrirMapaPerfil.innerHTML = `✅ Localização selecionada (${latPerfilTemp.toFixed(4)}, ${lonPerfilTemp.toFixed(4)})`;
+    btnAbrirMapaPerfil.innerHTML = `âœ… LocalizaÃ§Ã£o selecionada (${latPerfilTemp.toFixed(4)}, ${lonPerfilTemp.toFixed(4)})`;
     btnAbrirMapaPerfil.classList.add("confirmed");
 
     const statusEl = document.getElementById("locStatus");
     if (statusEl) {
-        statusEl.textContent = `📍 Nova localização: (${latPerfilTemp.toFixed(4)}, ${lonPerfilTemp.toFixed(4)}) — salve para confirmar`;
+        statusEl.textContent = `ðŸ“ Nova localizaÃ§Ã£o: (${latPerfilTemp.toFixed(4)}, ${lonPerfilTemp.toFixed(4)}) â€” salve para confirmar`;
         statusEl.className = "loc-status ok";
     }
 
@@ -463,7 +226,7 @@ function inicializarMapaPerfil() {
     leafletMapPerfil = L.map("leafletMapPerfil").setView([latInicial, lonInicial], latPerfilTemp ? 16 : 14);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        attribution: 'Â© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19,
     }).addTo(leafletMapPerfil);
 
@@ -472,7 +235,7 @@ function inicializarMapaPerfil() {
         posicionarPinPerfil(lat, lng);
     });
 
-    // Se já tem coordenadas salvas, coloca o pin imediatamente
+    // Se jÃ¡ tem coordenadas salvas, coloca o pin imediatamente
     if (latPerfilTemp !== null) {
         posicionarPinPerfil(latPerfilTemp, lonPerfilTemp);
     }
@@ -501,7 +264,7 @@ function posicionarPinPerfil(lat, lng) {
 
     pinAtualPerfil = L.marker([lat, lng], { icon: icone, draggable: true })
         .addTo(leafletMapPerfil)
-        .bindPopup("📍 Localização do mercado")
+        .bindPopup("ðŸ“ LocalizaÃ§Ã£o do mercado")
         .openPopup();
 
     pinAtualPerfil.on("dragend", (e) => {
@@ -516,7 +279,7 @@ function posicionarPinPerfil(lat, lng) {
 }
 
 function atualizarDisplayCoordenadas(lat, lng) {
-    coordsDisplayPerfil.textContent = `📍 Lat: ${parseFloat(lat).toFixed(6)}  |  Lng: ${parseFloat(lng).toFixed(6)}`;
+    coordsDisplayPerfil.textContent = `ðŸ“ Lat: ${parseFloat(lat).toFixed(6)}  |  Lng: ${parseFloat(lng).toFixed(6)}`;
     coordsDisplayPerfil.classList.add("has-pin");
 }
 
@@ -535,10 +298,10 @@ async function buscarEnderecoPerfil(query) {
             leafletMapPerfil.setView([lat, lon], 17);
             posicionarPinPerfil(lat, lon);
         } else {
-            alert("Endereço não encontrado. Clique no mapa para marcar a localização.");
+            alert("EndereÃ§o nÃ£o encontrado. Clique no mapa para marcar a localizaÃ§Ã£o.");
         }
     } catch (e) {
-        alert("Erro ao buscar endereço. Clique diretamente no mapa.");
+        alert("Erro ao buscar endereÃ§o. Clique diretamente no mapa.");
     }
 }
 
@@ -551,7 +314,7 @@ mapaSearchInputPerfil.addEventListener("keydown", (e) => {
 });
 
 document.getElementById("btnMinhaLocalizacaoPerfil").addEventListener("click", () => {
-    if (!navigator.geolocation) { alert("Seu navegador não suporta geolocalização."); return; }
+    if (!navigator.geolocation) { alert("Seu navegador nÃ£o suporta geolocalizaÃ§Ã£o."); return; }
     navigator.geolocation.getCurrentPosition(
         (pos) => {
             const lat = pos.coords.latitude;
@@ -559,11 +322,11 @@ document.getElementById("btnMinhaLocalizacaoPerfil").addEventListener("click", (
             leafletMapPerfil.setView([lat, lng], 17);
             posicionarPinPerfil(lat, lng);
         },
-        () => { alert("Não foi possível obter sua localização. Permita o acesso e tente novamente."); }
+        () => { alert("NÃ£o foi possÃ­vel obter sua localizaÃ§Ã£o. Permita o acesso e tente novamente."); }
     );
 });
 
-// ── Toast ────────────────────────────────────────────────────────
+// â”€â”€ Toast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function toast(msg, type = "success") {
     const container = document.getElementById("toastContainer");
     if(!container) return;

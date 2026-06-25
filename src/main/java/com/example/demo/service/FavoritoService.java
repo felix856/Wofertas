@@ -1,10 +1,10 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +16,7 @@ public class FavoritoService {
 
     private static final Logger logger = LoggerFactory.getLogger(FavoritoService.class);
 
-    private final FavoritoRepository favoritoRepository;
-    private final AnalyticsEventService analyticsEventService;
-
-    public FavoritoService(FavoritoRepository favoritoRepository,
-                           AnalyticsEventService analyticsEventService) {
-        this.favoritoRepository = favoritoRepository;
-        this.analyticsEventService = analyticsEventService;
-    }
+    @Autowired private FavoritoRepository favoritoRepository;
 
     public boolean isFavorito(String idUsuario, String idMercado) {
         if (idUsuario == null || idUsuario.isBlank() || idMercado == null || idMercado.isBlank()) {
@@ -46,9 +39,7 @@ public class FavoritoService {
         try {
             logger.info("Favoritar: usuário {} marcou mercado {} como favorito", idUsuario, idMercado);
             Favorito novoFavorito = new Favorito(idUsuario, idMercado);
-            Favorito salvo = favoritoRepository.save(novoFavorito);
-            registrarEventoFavorito(idUsuario, idMercado);
-            return salvo;
+            return favoritoRepository.save(novoFavorito);
         } catch (Exception e) {
             logger.error("Erro ao favoritar mercado {} para usuário {}", idMercado, idUsuario, e);
             throw new RuntimeException("Erro ao adicionar aos favoritos: " + e.getMessage(), e);
@@ -83,14 +74,6 @@ public class FavoritoService {
         } catch (Exception e) {
             logger.error("Erro ao listar favoritos do usuário {}", idUsuario, e);
             throw new RuntimeException("Erro ao listar favoritos: " + e.getMessage(), e);
-        }
-    }
-
-    private void registrarEventoFavorito(String idUsuario, String idMercado) {
-        try {
-            analyticsEventService.trackStoreEvent("store_favorite", idMercado, idUsuario, Map.of());
-        } catch (RuntimeException ignored) {
-            // Analytics desacoplado para nao quebrar a experiencia do cliente.
         }
     }
 }

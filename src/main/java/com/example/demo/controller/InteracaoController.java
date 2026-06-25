@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.service.VisualizacaoService;
+import com.example.demo.model.Visualizacao;
+import com.example.demo.repository.VisualizacaoRepository;
 
 @RestController
 @RequestMapping("/api/interacoes")
 @CrossOrigin(origins = "*")
 public class InteracaoController {
 
-    @Autowired private VisualizacaoService visualizacaoService;
+    @Autowired private VisualizacaoRepository vizRepo;
 
     @PostMapping("/visualizar/{ofertaId}")
     public ResponseEntity<Void> registrarVisualizacao(
@@ -24,7 +25,7 @@ public class InteracaoController {
             @RequestParam(required = false) String idUsuario,
             @RequestParam(defaultValue = "DASHBOARD") String origem) {
         // Salva no banco que alguém viu a oferta X vindo da origem Y (Android/Web)
-        visualizacaoService.registrarVisualizacao(ofertaId, idUsuario, origem);
+        vizRepo.save(new Visualizacao(ofertaId, idUsuario, origem));
         return ResponseEntity.ok().build();
     }
 }

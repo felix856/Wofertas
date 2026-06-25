@@ -6,145 +6,30 @@
     <title>Wofertas · Analytics Dashboard</title>
     <link rel="stylesheet" href="/styles.css">
     <script src="/js/modules.js"></script>
-    <script src="/js/config.js"></script>
-
     <style>
-        :root {
-            --bg: #0b1220;
-            --panel: rgba(255,255,255,0.05);
-            --panel-strong: rgba(255,255,255,0.08);
-            --border: rgba(255,255,255,0.10);
-            --text: #ffffff;
-            --muted: rgba(255,255,255,0.55);
-            --muted-2: rgba(255,255,255,0.35);
-            --accent: #f97316;
-            --accent-2: #ef4444;
-            --success: #22c55e;
-            --info: #3b82f6;
-        }
-
-        body {
-            margin: 0;
-            background:
-                radial-gradient(circle at top left, rgba(59,130,246,0.10), transparent 28%),
-                radial-gradient(circle at top right, rgba(249,115,22,0.10), transparent 24%),
-                linear-gradient(180deg, #0b1220 0%, #08101b 100%);
-            color: var(--text);
-            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 28px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(10,16,28,0.82);
-            backdrop-filter: blur(12px);
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .icon-carrinho {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-        }
-
-        .logo .w {
-            color: #fbbf24;
-        }
-
-        .logo .rest {
-            color: #ffffff;
-        }
-
-        .header-nav {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .header-nav a,
-        .btn-sair {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 42px;
-            padding: 0 18px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,0.03);
-            color: rgba(255,255,255,0.78);
-            font-weight: 600;
-            font-size: 14px;
-            transition: 0.2s ease;
-            cursor: pointer;
-        }
-
-        .header-nav a:hover,
-        .btn-sair:hover {
-            transform: translateY(-1px);
-            background: rgba(255,255,255,0.07);
-            color: #fff;
-        }
-
-        .header-nav a.active {
-            background: linear-gradient(180deg, rgba(59,130,246,0.95), rgba(37,99,235,0.95));
-            border-color: transparent;
-            color: #fff;
-        }
-
-        .btn-sair {
-            background: rgba(239,68,68,0.10);
-            border-color: rgba(239,68,68,0.18);
-            color: #fecaca;
-        }
-
         .analytics-container {
             max-width: 1400px;
-            margin: 32px auto 60px;
+            margin: 40px auto;
             padding: 0 20px;
         }
 
         .analytics-header {
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
         .analytics-header h1 {
-            font-size: 34px;
-            font-weight: 800;
-            margin: 0 0 8px;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 6px;
             color: #ffffff;
-            letter-spacing: -0.03em;
         }
 
         .analytics-header p {
             color: rgba(255,255,255,0.45);
             font-size: 15px;
-            margin: 0;
         }
 
-        /* MÉTRICAS */
+        /* ─ MÉTRICAS ─ */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -153,26 +38,24 @@
         }
 
         .metric-card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.05);
+            border: 0.5px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
             padding: 22px 24px;
-            transition: background 0.2s, transform 0.2s, border-color 0.2s;
-            box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+            transition: background 0.2s, transform 0.2s;
         }
 
         .metric-card:hover {
-            background: var(--panel-strong);
+            background: rgba(255,255,255,0.08);
             transform: translateY(-2px);
-            border-color: rgba(255,255,255,0.16);
         }
 
         .metric-label {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 0.8px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.45);
+            color: rgba(255,255,255,0.4);
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -181,64 +64,60 @@
 
         .metric-value {
             font-size: 38px;
-            font-weight: 800;
+            font-weight: 600;
             color: #ffffff;
             line-height: 1;
             margin-bottom: 8px;
-            letter-spacing: -0.04em;
         }
 
         .metric-subtext {
             font-size: 12px;
-            color: rgba(255,255,255,0.35);
+            color: rgba(255,255,255,0.3);
         }
 
         .metric-badge {
             display: inline-block;
-            background: rgba(34,197,94,0.15);
-            color: #86efac;
-            padding: 4px 10px;
-            border-radius: 999px;
+            background: rgba(52,211,153,0.15);
+            color: #6ee7b7;
+            padding: 3px 10px;
+            border-radius: 20px;
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             margin-top: 10px;
         }
 
-        /* INSIGHT */
+        /* ─ INSIGHT BOX ─ */
         .insight-box {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.05);
+            border: 0.5px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
             padding: 24px;
             margin-bottom: 24px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 18px 40px rgba(0,0,0,0.12);
         }
 
         .insight-box::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: linear-gradient(180deg, var(--accent), var(--accent-2));
-            border-radius: 16px 0 0 16px;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #f97316, #ef4444);
+            border-radius: 14px 0 0 14px;
         }
 
         .insight-title {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 0.8px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.45);
+            color: rgba(255,255,255,0.4);
             margin-bottom: 10px;
         }
 
         .insight-main {
             font-size: 18px;
-            font-weight: 700;
+            font-weight: 600;
             color: #ffffff;
             margin-bottom: 8px;
             line-height: 1.4;
@@ -246,33 +125,33 @@
 
         .insight-text {
             font-size: 14px;
-            line-height: 1.7;
-            color: rgba(255,255,255,0.62);
+            line-height: 1.6;
+            color: rgba(255,255,255,0.55);
         }
 
         .insight-clients {
             margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid var(--border);
+            border-top: 0.5px solid rgba(255,255,255,0.10);
             font-size: 13px;
-            color: rgba(255,255,255,0.45);
+            color: rgba(255,255,255,0.4);
         }
 
         .insight-clients strong {
-            color: rgba(255,255,255,0.88);
+            color: rgba(255,255,255,0.85);
         }
 
-        /* SECTIONS */
+        /* ─ SECTIONS ─ */
         .section {
             margin-bottom: 24px;
         }
 
         .section-title {
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 0.6px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.45);
+            color: rgba(255,255,255,0.4);
             margin-bottom: 14px;
             display: flex;
             align-items: center;
@@ -285,21 +164,20 @@
             gap: 16px;
         }
 
-        /* RANKING CARD */
+        /* ─ RANKING CARD ─ */
         .ranking-card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.05);
+            border: 0.5px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 18px 40px rgba(0,0,0,0.12);
         }
 
         .ranking-header {
             padding: 14px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 0.5px solid rgba(255,255,255,0.08);
             font-size: 13px;
-            font-weight: 700;
-            color: rgba(255,255,255,0.75);
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
             background: rgba(255,255,255,0.03);
         }
 
@@ -311,12 +189,11 @@
 
         .ranking-item {
             padding: 14px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 0.5px solid rgba(255,255,255,0.06);
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: background 0.15s;
-            gap: 16px;
         }
 
         .ranking-item:last-child {
@@ -329,317 +206,81 @@
 
         .ranking-item-label {
             font-size: 13px;
-            color: rgba(255,255,255,0.78);
+            color: rgba(255,255,255,0.75);
         }
 
         .ranking-item-value {
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 600;
             color: #ffffff;
-            white-space: nowrap;
         }
 
-        .ranking-position {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 28px;
-            height: 28px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 800;
-            background: rgba(255,255,255,0.08);
-            color: #fff;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .ranking-name {
-            font-size: 13px;
-            color: rgba(255,255,255,0.78);
-            line-height: 1.35;
-        }
-
-        .ranking-value {
-            font-size: 14px;
-            font-weight: 700;
-            color: #ffffff;
-            white-space: nowrap;
-        }
-
-        /* CHART PLACEHOLDER */
+        /* ─ CHART PLACEHOLDER ─ */
         .chart-placeholder {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.05);
+            border: 0.5px solid rgba(255,255,255,0.10);
+            border-radius: 14px;
             padding: 40px;
             text-align: center;
             color: rgba(255,255,255,0.4);
             font-size: 14px;
-            box-shadow: 0 18px 40px rgba(0,0,0,0.12);
-        }
-
-        /* PROGRESS */
-        .progress-wrap {
-            padding: 20px;
-        }
-
-        .progress-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .progress-top .label {
-            font-size: 13px;
-            color: rgba(255,255,255,0.78);
-            font-weight: 600;
-        }
-
-        .progress-top .value {
-            font-size: 14px;
-            color: #fff;
-            font-weight: 800;
-        }
-
-        .progress {
-            width: 100%;
-            height: 8px;
-            background: rgba(255,255,255,0.10);
-            border-radius: 999px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            border-radius: 999px;
-            transition: width 0.35s ease;
-        }
-
-        .progress-fill.likes {
-            background: linear-gradient(90deg, #22c55e, #16a34a);
-        }
-
-        .progress-fill.cart {
-            background: linear-gradient(90deg, #3b82f6, #2563eb);
-        }
-
-        /* CONTENT STATE */
-        #loading, #error-box, #content {
-            width: 100%;
-        }
-
-        #content {
-            display: none;
-        }
-
-        /* RESPONSIVO */
-        @media (max-width: 900px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 14px;
-            }
-
-            .header-nav {
-                width: 100%;
-            }
-
-            .analytics-header h1 {
-                font-size: 28px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .analytics-container {
-                padding: 0 14px;
-                margin-top: 22px;
-            }
-
-            .metric-value {
-                font-size: 32px;
-            }
-
-            .ranking-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
         }
     </style>
+<script src="/js/config.js"></script>
 </head>
 <body>
-    <header class="header">
-        <div class="logo-container">
-            <img src="/imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
-            <a href="/mercadoHome.html">
-                <div class="logo">
-                    <span class="w">W</span><span class="rest">ofertas</span>
-                </div>
-            </a>
-        </div>
+  <header class="header">
+    <div class="logo-container">
+      <img src="/imagens/imagemLogo.png" alt="Logo do Wofertas" class="icon-carrinho">
+      <a href="/mercadoHome.html">
+        <div class="logo"><span class="w">W</span><span class="rest">ofertas</span></div>
+      </a>
+    </div>
+    <nav class="header-nav">
+      <a href="/mercadoHome.html">Painel</a>
+      <a href="/dashboard-analytics.html" class="active">📊 Analytics</a>
+      <a href="/criar-oferta.html">Nova Oferta</a>
+      <a href="/historico.html">Histórico</a>
+      <a href="/perfil_mercado.html">Perfil</a>
+      <button onclick="logout()" class="btn-sair">Sair</button>
+    </nav>
+  </header>
 
-        <nav class="header-nav">
-            <a href="/mercadoHome.html">Painel</a>
-            <a href="/dashboard-analytics.html" class="active">📊 Analytics</a>
-            <a href="/criar-oferta.html">Nova Oferta</a>
-            <a href="/historico.html">Histórico</a>
-            <a href="/perfil_mercado.html">Perfil</a>
-            <button onclick="logout()" class="btn-sair">Sair</button>
-        </nav>
-    </header>
+  <div class="analytics-container">
+    <div class="analytics-header">
+      <h1>Dashboard Analytics</h1>
+      <p>Acompanhamento de performance e dados de suas ofertas</p>
+    </div>
 
-    <main class="analytics-container">
-        <div class="analytics-header">
-            <h1>Dashboard Analytics</h1>
-            <p>Acompanhamento de performance e dados de suas ofertas</p>
-        </div>
+    <div class="metrics-grid" id="metricsGrid">
+      <div class="metric-card">
+        <div class="metric-label">📦 Total de Ofertas</div>
+        <div class="metric-value" id="totalOfertas">—</div>
+        <div class="metric-subtext">Todas as publicações</div>
+      </div>
 
-        <div id="loading" style="display:none">
-            <div class="chart-placeholder">
-                <h3 id="loading-text">Carregando analytics...</h3>
-            </div>
-        </div>
+      <div class="metric-card">
+        <div class="metric-label">✅ Ativas</div>
+        <div class="metric-value" id="ofertasAtivas">—</div>
+        <div class="metric-subtext">Publicadas agora</div>
+      </div>
 
-        <div id="error-box" style="display:none">
-            <div class="insight-box">
-                <div class="insight-main" id="error-msg">Erro</div>
-                <div class="insight-text" id="error-detail"></div>
-            </div>
-        </div>
+      <div class="metric-card">
+        <div class="metric-label">⏳ Inativos</div>
+        <div class="metric-value" id="ofertasInativas">—</div>
+        <div class="metric-subtext">Pausadas ou expiradas</div>
+      </div>
 
-        <div id="content">
-            <!-- MÉTRICAS PRINCIPAIS -->
-            <section class="section">
-                <div class="section-title">📊 Métricas de Engajamento</div>
+      <div class="metric-card">
+        <div class="metric-label">📈 Taxa de Atividade</div>
+        <div class="metric-value" id="taxaAtividade">—</div>
+        <div class="metric-subtext">Última semana</div>
+      </div>
+    </div>
+  </div>
 
-                <div class="metrics-grid" id="metricsGrid">
-                    <div class="metric-card">
-                        <div class="metric-label">👁 Visualizações</div>
-                        <div class="metric-value" id="metricVisualizations">0</div>
-                        <div class="metric-subtext">Todas as publicações</div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-label">❤️ Curtidas + Favoritos</div>
-                        <div class="metric-value" id="metricLikes">0</div>
-                        <div class="metric-subtext">Reações acumuladas</div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-label">🛒 Carrinhos</div>
-                        <div class="metric-value" id="metricCart">0</div>
-                        <div class="metric-subtext">Adições ao carrinho</div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-label">📢 Encartes</div>
-                        <div class="metric-value" id="metricOffers">0</div>
-                        <div class="metric-subtext">Total de publicações</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- INSIGHT -->
-            <section class="section">
-                <div class="insight-box">
-                    <div class="insight-title">IA Analytics</div>
-                    <div class="insight-main" id="insightTitle">Carregando...</div>
-                    <div class="insight-text" id="insightText">Carregando...</div>
-                    <div class="insight-clients">
-                        Clientes ativos: <strong id="clientsActive">0</strong>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CONVERSÃO -->
-            <section class="section">
-                <div class="section-title">📈 Conversão</div>
-
-                <div class="section-grid">
-                    <div class="ranking-card">
-                        <div class="ranking-header">Curtidas</div>
-                        <div class="progress-wrap">
-                            <div class="progress-top">
-                                <span class="label">Taxa de curtidas</span>
-                                <span class="value" id="conversionLikesPercent">0%</span>
-                            </div>
-                            <div class="progress">
-                                <div id="conversionLikesFill" class="progress-fill likes"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ranking-card">
-                        <div class="ranking-header">Carrinho</div>
-                        <div class="progress-wrap">
-                            <div class="progress-top">
-                                <span class="label">Taxa de carrinho</span>
-                                <span class="value" id="conversionCartPercent">0%</span>
-                            </div>
-                            <div class="progress">
-                                <div id="conversionCartFill" class="progress-fill cart"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- RANKINGS -->
-            <section class="section">
-                <div class="section-title">🏆 Ranking dos Encartes</div>
-
-                <div class="section-grid">
-                    <div class="ranking-card">
-                        <div class="ranking-header">Melhor Performance</div>
-                        <ul id="rankingPerformance" class="ranking-list"></ul>
-                    </div>
-
-                    <div class="ranking-card">
-                        <div class="ranking-header">Mais Curtidos</div>
-                        <ul id="rankingLikes" class="ranking-list"></ul>
-                    </div>
-
-                    <div class="ranking-card">
-                        <div class="ranking-header">Mais Salvos no Carrinho</div>
-                        <ul id="rankingCart" class="ranking-list"></ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- PREFERÊNCIAS -->
-            <section class="section">
-                <div class="section-title">❤️ Preferências dos Clientes</div>
-
-                <div class="section-grid">
-                    <div class="ranking-card">
-                        <div class="ranking-header">Produtos Mais Curtidos</div>
-                        <ul id="topProductsLikes" class="ranking-list"></ul>
-                    </div>
-
-                    <div class="ranking-card">
-                        <div class="ranking-header">Produtos Mais Salvos</div>
-                        <ul id="topProductsCart" class="ranking-list"></ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CONCORRENTES -->
-            <section class="section">
-                <div class="section-title">🏪 Ranking de Mercados</div>
-
-                <div class="ranking-card">
-                    <div class="ranking-header">Competitividade Regional</div>
-                    <ul id="rankingConcorrentes" class="ranking-list"></ul>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <script src="/auth-check.js"></script>
-    <script src="/logout.js"></script>
-    <script src="/dashboard-analytics.js"></script>
+  <script src="/auth-check.js"></script>
+  <script src="/logout.js"></script>
+  <script src="/dashboard-analytics.js"></script>
 </body>
 </html>

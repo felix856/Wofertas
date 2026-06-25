@@ -26,14 +26,6 @@ public class Usuario {
     private String resetToken;
     private LocalDateTime resetTokenExpiration;
 
-    private String privacyPolicyVersion;
-    private String termsVersion;
-    private LocalDateTime privacyAcceptedAt;
-    private LocalDateTime termsAcceptedAt;
-    private Boolean marketingConsent;
-    private Boolean analyticsConsent;
-    private LocalDateTime deletionRequestedAt;
-
     public Usuario() {}
 
     public Usuario(String nome, String email, String senha) {
@@ -64,25 +56,4 @@ public class Usuario {
 
     public LocalDateTime getResetTokenExpiration() { return resetTokenExpiration; }
     public void setResetTokenExpiration(LocalDateTime resetTokenExpiration) { this.resetTokenExpiration = resetTokenExpiration; }
-
-    public String getPrivacyPolicyVersion() { return privacyPolicyVersion; }
-    public void setPrivacyPolicyVersion(String privacyPolicyVersion) { this.privacyPolicyVersion = privacyPolicyVersion; }
-
-    public String getTermsVersion() { return termsVersion; }
-    public void setTermsVersion(String termsVersion) { this.termsVersion = termsVersion; }
-
-    public LocalDateTime getPrivacyAcceptedAt() { return privacyAcceptedAt; }
-    public void setPrivacyAcceptedAt(LocalDateTime privacyAcceptedAt) { this.privacyAcceptedAt = privacyAcceptedAt; }
-
-    public LocalDateTime getTermsAcceptedAt() { return termsAcceptedAt; }
-    public void setTermsAcceptedAt(LocalDateTime termsAcceptedAt) { this.termsAcceptedAt = termsAcceptedAt; }
-
-    public Boolean getMarketingConsent() { return marketingConsent; }
-    public void setMarketingConsent(Boolean marketingConsent) { this.marketingConsent = marketingConsent; }
-
-    public Boolean getAnalyticsConsent() { return analyticsConsent; }
-    public void setAnalyticsConsent(Boolean analyticsConsent) { this.analyticsConsent = analyticsConsent; }
-
-    public LocalDateTime getDeletionRequestedAt() { return deletionRequestedAt; }
-    public void setDeletionRequestedAt(LocalDateTime deletionRequestedAt) { this.deletionRequestedAt = deletionRequestedAt; }
 }

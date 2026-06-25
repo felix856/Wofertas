@@ -183,104 +183,6 @@
     }
     .btn-confirmar-mapa:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(34,197,94,.28); }
     .btn-confirmar-mapa:disabled { opacity: .4; cursor: not-allowed; transform: none; }
-    .plan-test-section {
-      margin: 22px 0;
-      padding: 18px 0 6px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    .plan-test-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .plan-test-title {
-      margin: 0;
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 800;
-    }
-    .plan-test-subtitle {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-    .plan-badge {
-      min-width: 88px;
-      text-align: center;
-      border: 1px solid rgba(245,200,74,.35);
-      border-radius: 999px;
-      padding: 7px 12px;
-      color: #f5c84a;
-      background: rgba(245,200,74,.1);
-      font-weight: 900;
-      letter-spacing: .04em;
-      font-size: 12px;
-    }
-    .plan-actions {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 10px;
-      align-items: end;
-      margin-bottom: 10px;
-    }
-    .plan-actions select {
-      min-height: 46px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.1);
-      background: rgba(255,255,255,.05);
-      color: var(--text);
-      padding: 0 12px;
-      outline: none;
-      font-weight: 700;
-    }
-    .plan-actions select option { color: #0f172a; }
-    .btn-plan-test {
-      min-height: 46px;
-      padding: 0 18px;
-      border-radius: 12px;
-      border: none;
-      background: linear-gradient(135deg, #f5c84a, #e9b62f);
-      color: #0b1220;
-      font-weight: 900;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .btn-plan-test:disabled { opacity: .55; cursor: wait; }
-    .plan-usage {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
-    .plan-permissions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 10px 0 12px;
-    }
-    .plan-permission-chip {
-      border: 1px solid rgba(148,163,184,.2);
-      border-radius: 999px;
-      padding: 6px 10px;
-      color: #b8c7e6;
-      background: rgba(15,23,42,.45);
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .plan-permission-chip.warn {
-      color: #fcd34d;
-      border-color: rgba(252,211,77,.28);
-      background: rgba(252,211,77,.08);
-    }
-    @media (max-width: 640px) {
-      .plan-actions { grid-template-columns: 1fr; }
-      .btn-plan-test { width: 100%; }
-    }
   </style>
 </head>
 <body>
@@ -376,32 +278,6 @@
         </div>
       </div>
 
-      <section class="plan-test-section" aria-label="Plano de teste">
-        <div class="plan-test-head">
-          <div>
-            <h3 class="plan-test-title">Plano de teste</h3>
-            <p class="plan-test-subtitle">Escolha o plano deste mercado enquanto as cobrancas estao desativadas.</p>
-          </div>
-          <div class="plan-badge" id="planoAtualBadge">--</div>
-        </div>
-
-        <div class="plan-actions">
-          <div class="form-group" style="margin-bottom:0">
-            <label>Tipo de plano</label>
-            <select id="planoSelect">
-              <option value="FREE">FREE</option>
-              <option value="BASIC">BASIC</option>
-              <option value="PRO">PRO</option>
-              <option value="PREMIUM">PREMIUM</option>
-            </select>
-          </div>
-          <button type="button" class="btn-plan-test" id="btnSalvarPlanoTeste" onclick="salvarPlanoTeste()">Salvar plano</button>
-        </div>
-
-        <div class="plan-usage" id="planoUsoResumo">Carregando status do plano...</div>
-        <div class="plan-permissions" id="planoPermissoes"></div>
-      </section>
-
       <button class="btnLoginPage" id="btnSalvar" onclick="salvarPerfil()">Salvar alterações</button>
     </div>
   </main>
@@ -433,8 +309,8 @@
   <!-- ══════════════════════════════════════════════════════════ -->
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="auth-check.js"></script>
   <script src="logout.js"></script>
   <script src="perfil-mercado.js"></script>
+  <script src="js/pages/perfil.js"></script>
 </body>
 </html>

@@ -29,8 +29,7 @@
         "criar-oferta.html",
         "perfil_mercado.html",
         "historico.html",
-        "dashboard-pro.html",
-        "dashboard-analytics.html"
+        "dashboard-pro.html"
     ];
 
     // CORRIGIDO: USUARIO não possui páginas próprias neste view (painel é para mercados).

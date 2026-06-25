@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.AnalyticsEventRequest;
 import com.example.demo.dto.OfertaDTO;
 import com.example.demo.dto.OfertaRequest;
 import com.example.demo.model.Mercado;
@@ -12,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.Map;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -23,21 +21,15 @@ public class OfertaService {
     private final OfertaRepository ofertaRepository;
     private final MercadoService mercadoService;
     private final FavoritoRepository favoritoRepository;
-    private final UsageService usageService;
-    private final AnalyticsEventService analyticsEventService;
 
     private static final String UPLOAD_DIR = "uploads/ofertas/";
 
     public OfertaService(OfertaRepository ofertaRepository,
                          MercadoService mercadoService,
-                         FavoritoRepository favoritoRepository,
-                         UsageService usageService,
-                         AnalyticsEventService analyticsEventService) {
+                         FavoritoRepository favoritoRepository) {
         this.ofertaRepository = ofertaRepository;
         this.mercadoService = mercadoService;
         this.favoritoRepository = favoritoRepository;
-        this.usageService = usageService;
-        this.analyticsEventService = analyticsEventService;
     }
 
     public OfertaDTO criar(OfertaRequest dto, String mercadoIdLogado) {
@@ -55,10 +47,7 @@ public class OfertaService {
         oferta.setMercadoNome(mercado.getNome());
         oferta.setMercadoLogo(mercado.getImagemLogo());
 
-        Oferta salva = ofertaRepository.save(oferta);
-        registrarCriacaoOferta(salva, mercado.getId());
-
-        return toDTO(salva, mercado);
+        return toDTO(ofertaRepository.save(oferta), mercado);
     }
 
     public List<OfertaDTO> listar() {
@@ -266,22 +255,6 @@ public class OfertaService {
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return raioTerraKm * c;
-    }
-
-    private void registrarCriacaoOferta(Oferta oferta, String mercadoId) {
-        try {
-            usageService.recordOfferCreated(mercadoId);
-            analyticsEventService.track(new AnalyticsEventRequest(
-                    "offer_created",
-                    mercadoId,
-                    mercadoId,
-                    oferta.getId(),
-                    null,
-                    Map.of("nome", oferta.getNome())
-            ));
-        } catch (RuntimeException ignored) {
-            // Monetizacao/analytics estao em modo silencioso e nao podem bloquear a publicacao.
-        }
     }
 
     private OfertaDTO toDTO(Oferta o, Mercado m) {

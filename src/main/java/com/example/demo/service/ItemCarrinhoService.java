@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.ItemCarrinho;
@@ -10,20 +11,11 @@ import com.example.demo.repository.ItemCarrinhoRepository;
 @Service
 public class ItemCarrinhoService {
 
-    private final ItemCarrinhoRepository itemCarrinhoRepository;
-    private final AnalyticsEventService analyticsEventService;
-
-    public ItemCarrinhoService(ItemCarrinhoRepository itemCarrinhoRepository,
-                               AnalyticsEventService analyticsEventService) {
-        this.itemCarrinhoRepository = itemCarrinhoRepository;
-        this.analyticsEventService = analyticsEventService;
-    }
+    @Autowired private ItemCarrinhoRepository itemCarrinhoRepository;
 
     public ItemCarrinho adicionarAoCarrinho(String idUsuario, String idOferta, String nomeOferta, String mercadoId, int quantidade) {
         ItemCarrinho item = new ItemCarrinho(idUsuario, idOferta, nomeOferta, mercadoId, quantidade);
-        ItemCarrinho salvo = itemCarrinhoRepository.save(item);
-        registrarEventoCarrinho(idUsuario, idOferta);
-        return salvo;
+        return itemCarrinhoRepository.save(item);
     }
 
     public List<ItemCarrinho> listarPorMercado(String mercadoId) {
@@ -66,13 +58,5 @@ public class ItemCarrinhoService {
 
     public long contagemItensCarrinhoPorOferta(String idOferta) {
         return itemCarrinhoRepository.countByIdOferta(idOferta);
-    }
-
-    private void registrarEventoCarrinho(String idUsuario, String idOferta) {
-        try {
-            analyticsEventService.trackOfferEvent("cart_add", idOferta, idUsuario, "CARRINHO");
-        } catch (RuntimeException ignored) {
-            // Eventos de monetizacao/analytics nao devem bloquear o carrinho.
-        }
     }
 }

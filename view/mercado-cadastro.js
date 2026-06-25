@@ -1,4 +1,4 @@
-// ── Configuração de Base URL ─────────────────────────────────────
+// â”€â”€ ConfiguraÃ§Ã£o de Base URL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const BASE_URL_CADASTRO = (() => {
   if (window.AppConfig?.API_URL) return window.AppConfig.API_URL;
   const stored = localStorage.getItem("wof_base_url");
@@ -8,56 +8,21 @@ const BASE_URL_CADASTRO = (() => {
     : "https://wofertas-production.up.railway.app";
 })();
 
-const CNPJ_DIGITOS = 14;
-const TELEFONE_MIN_DIGITOS = 10;
-const TELEFONE_MAX_DIGITOS = 11;
-
-function apenasDigitos(value) {
-  return (value || "").replace(/\D/g, "");
-}
-
-function formatarCnpj(value) {
-  return apenasDigitos(value)
-    .slice(0, CNPJ_DIGITOS)
-    .replace(/^(\d{2})(\d)/, "$1.$2")
-    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-    .replace(/\.(\d{3})(\d)/, ".$1/$2")
-    .replace(/(\d{4})(\d)/, "$1-$2");
-}
-
-function formatarTelefone(value) {
-  const digits = apenasDigitos(value).slice(0, TELEFONE_MAX_DIGITOS);
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-  if (digits.length <= 10) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-  }
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-}
-
-function extrairMensagemErroCadastro(data, status) {
-  if (data?.fieldErrors && typeof data.fieldErrors === "object") {
-    return Object.values(data.fieldErrors).filter(Boolean).join("\n");
-  }
-
-  return data?.message || data?.error || `Codigo ${status}`;
-}
-
-// ── Estado global ────────────────────────────────────────────────
+// â”€â”€ Estado global â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let logoBase64 = null;
 let latSelecionada = null;
 let lonSelecionada = null;
 let leafletMap = null;
 let pinAtual = null;
 
-// ── Logo upload ──────────────────────────────────────────────────
+// â”€â”€ Logo upload â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const logoInput = document.getElementById("logoInput");
 if (logoInput) {
   logoInput.addEventListener("change", () => {
     const file = logoInput.files[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      alert("Imagem muito grande! Máximo permitido: 5 MB.");
+      alert("Imagem muito grande! MÃ¡ximo permitido: 5 MB.");
       logoInput.value = "";
       return;
     }
@@ -67,25 +32,7 @@ if (logoInput) {
   });
 }
 
-const cnpjInput = document.getElementById("cnpj");
-if (cnpjInput) {
-  cnpjInput.maxLength = 18;
-  cnpjInput.inputMode = "numeric";
-  cnpjInput.addEventListener("input", () => {
-    cnpjInput.value = formatarCnpj(cnpjInput.value);
-  });
-}
-
-const telefoneInput = document.getElementById("telefone");
-if (telefoneInput) {
-  telefoneInput.maxLength = 15;
-  telefoneInput.inputMode = "numeric";
-  telefoneInput.addEventListener("input", () => {
-    telefoneInput.value = formatarTelefone(telefoneInput.value);
-  });
-}
-
-// ── Modal do mapa ────────────────────────────────────────────────
+// â”€â”€ Modal do mapa â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const modalMapa = document.getElementById("modalMapa");
 const btnAbrirMapa = document.getElementById("btnAbrirMapa");
 const btnCancelarMapa = document.getElementById("btnCancelarMapa");
@@ -97,7 +44,7 @@ const mapaSearchInput = document.getElementById("mapaSearchInput");
 btnAbrirMapa.addEventListener("click", () => {
   modalMapa.classList.add("open");
 
-  // Pré-preenche o campo de busca com o endereço digitado
+  // PrÃ©-preenche o campo de busca com o endereÃ§o digitado
   const enderecoDigitado = document.getElementById("endereco")?.value.trim();
   if (enderecoDigitado && mapaSearchInput) {
     mapaSearchInput.value = enderecoDigitado;
@@ -110,15 +57,15 @@ btnAbrirMapa.addEventListener("click", () => {
     setTimeout(() => leafletMap.invalidateSize(), 100);
   }
 
-  // Se já tem pin, mostra as coordenadas
+  // Se jÃ¡ tem pin, mostra as coordenadas
   if (latSelecionada !== null) {
     atualizarDisplayCoordenadas(latSelecionada, lonSelecionada);
     btnConfirmarMapa.disabled = false;
   }
 
-  // Busca automática se o campo de endereço estiver preenchido e não há pin
+  // Busca automÃ¡tica se o campo de endereÃ§o estiver preenchido e nÃ£o hÃ¡ pin
   if (enderecoDigitado && latSelecionada === null) {
-    setTimeout(() => buscarEnderecоNoMapa(enderecoDigitado), 500);
+    setTimeout(() => buscarEnderecÐ¾NoMapa(enderecoDigitado), 500);
   }
 });
 
@@ -127,15 +74,15 @@ btnCancelarMapa.addEventListener("click", () => {
   modalMapa.classList.remove("open");
 });
 
-// Confirma a localização selecionada
+// Confirma a localizaÃ§Ã£o selecionada
 btnConfirmarMapa.addEventListener("click", () => {
   if (latSelecionada === null) return;
 
   document.getElementById("latitude").value = latSelecionada;
   document.getElementById("longitude").value = lonSelecionada;
 
-  // Atualiza o botão para mostrar que foi confirmado
-  btnAbrirMapa.innerHTML = `✅ Localização confirmada (${latSelecionada.toFixed(4)}, ${lonSelecionada.toFixed(4)})`;
+  // Atualiza o botÃ£o para mostrar que foi confirmado
+  btnAbrirMapa.innerHTML = `âœ… LocalizaÃ§Ã£o confirmada (${latSelecionada.toFixed(4)}, ${lonSelecionada.toFixed(4)})`;
   btnAbrirMapa.classList.add("confirmed");
 
   modalMapa.classList.remove("open");
@@ -148,9 +95,9 @@ modalMapa.addEventListener("click", (e) => {
   }
 });
 
-// ── Inicializar Leaflet ──────────────────────────────────────────
+// â”€â”€ Inicializar Leaflet â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function inicializarMapa() {
-  // Centro padrão: Brasil central (ajusta para Palhoça/SC se quiser)
+  // Centro padrÃ£o: Brasil central (ajusta para PalhoÃ§a/SC se quiser)
   const latInicial = -27.6453;
   const lonInicial = -48.6693;
 
@@ -158,7 +105,7 @@ function inicializarMapa() {
 
   // Tiles OpenStreetMap (gratuito, sem chave)
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    attribution: 'Â© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 19,
   }).addTo(leafletMap);
 
@@ -169,7 +116,7 @@ function inicializarMapa() {
   });
 }
 
-// ── Posicionar pin ───────────────────────────────────────────────
+// â”€â”€ Posicionar pin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function posicionarPin(lat, lng) {
   latSelecionada = parseFloat(lat.toFixed(6));
   lonSelecionada = parseFloat(lng.toFixed(6));
@@ -179,7 +126,7 @@ function posicionarPin(lat, lng) {
     leafletMap.removeLayer(pinAtual);
   }
 
-  // Ícone personalizado vermelho/amarelo
+  // Ãcone personalizado vermelho/amarelo
   const icone = L.divIcon({
     className: "",
     html: `<div style="
@@ -197,7 +144,7 @@ function posicionarPin(lat, lng) {
 
   pinAtual = L.marker([lat, lng], { icon: icone, draggable: true })
     .addTo(leafletMap)
-    .bindPopup("📍 Localização do mercado")
+    .bindPopup("ðŸ“ LocalizaÃ§Ã£o do mercado")
     .openPopup();
 
   // Permite arrastar o pin para ajuste fino
@@ -213,12 +160,12 @@ function posicionarPin(lat, lng) {
 }
 
 function atualizarDisplayCoordenadas(lat, lng) {
-  coordsDisplay.textContent = `📍 Lat: ${parseFloat(lat).toFixed(6)}  |  Lng: ${parseFloat(lng).toFixed(6)}`;
+  coordsDisplay.textContent = `ðŸ“ Lat: ${parseFloat(lat).toFixed(6)}  |  Lng: ${parseFloat(lng).toFixed(6)}`;
   coordsDisplay.classList.add("has-pin");
 }
 
-// ── Busca de endereço (Nominatim) ────────────────────────────────
-async function buscarEnderecоNoMapa(query) {
+// â”€â”€ Busca de endereÃ§o (Nominatim) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+async function buscarEnderecÐ¾NoMapa(query) {
   if (!query) return;
   try {
     const encoded = encodeURIComponent(query);
@@ -233,25 +180,25 @@ async function buscarEnderecоNoMapa(query) {
       leafletMap.setView([lat, lon], 17);
       posicionarPin(lat, lon);
     } else {
-      alert("Endereço não encontrado. Tente ser mais específico ou clique diretamente no mapa.");
+      alert("EndereÃ§o nÃ£o encontrado. Tente ser mais especÃ­fico ou clique diretamente no mapa.");
     }
   } catch (e) {
-    alert("Erro ao buscar endereço. Clique diretamente no mapa para posicionar.");
+    alert("Erro ao buscar endereÃ§o. Clique diretamente no mapa para posicionar.");
   }
 }
 
 document.getElementById("btnBuscarEndereco").addEventListener("click", () => {
-  buscarEnderecоNoMapa(mapaSearchInput.value.trim());
+  buscarEnderecÐ¾NoMapa(mapaSearchInput.value.trim());
 });
 
 mapaSearchInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") buscarEnderecоNoMapa(mapaSearchInput.value.trim());
+  if (e.key === "Enter") buscarEnderecÐ¾NoMapa(mapaSearchInput.value.trim());
 });
 
-// ── Botão: minha localização atual ──────────────────────────────
+// â”€â”€ BotÃ£o: minha localizaÃ§Ã£o atual â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.getElementById("btnMinhaLocalizacao").addEventListener("click", () => {
   if (!navigator.geolocation) {
-    alert("Seu navegador não suporta geolocalização.");
+    alert("Seu navegador nÃ£o suporta geolocalizaÃ§Ã£o.");
     return;
   }
   navigator.geolocation.getCurrentPosition(
@@ -262,44 +209,32 @@ document.getElementById("btnMinhaLocalizacao").addEventListener("click", () => {
       posicionarPin(lat, lng);
     },
     () => {
-      alert("Não foi possível obter sua localização. Permita o acesso e tente novamente.");
+      alert("NÃ£o foi possÃ­vel obter sua localizaÃ§Ã£o. Permita o acesso e tente novamente.");
     }
   );
 });
 
-// ── Cadastro ─────────────────────────────────────────────────────
+// â”€â”€ Cadastro â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const btnCadastrar = document.getElementById("btnCadastrar");
 if (btnCadastrar) {
   btnCadastrar.addEventListener("click", async () => {
 
     const nome     = document.getElementById("nome")?.value.trim() || "";
-    const cnpj     = apenasDigitos(document.getElementById("cnpj")?.value.trim() || "");
+    const cnpj     = (document.getElementById("cnpj")?.value.trim() || "").replace(/\D/g, "");
     const endereco = document.getElementById("endereco")?.value.trim() || "";
     const email    = document.getElementById("email")?.value.trim() || "";
     const senha    = document.getElementById("senha")?.value.trim() || "";
-    const telefone = apenasDigitos(document.getElementById("telefone")?.value.trim() || "");
+    const telefone = (document.getElementById("telefone")?.value.trim() || "").replace(/\D/g, "");
     const lat      = document.getElementById("latitude").value;
     const lon      = document.getElementById("longitude").value;
 
     if (!nome || !cnpj || !endereco || !email || !senha || !telefone) {
-      alert("Preencha todos os campos obrigatórios!");
-      return;
-    }
-
-    if (cnpj.length !== CNPJ_DIGITOS) {
-      alert("CNPJ incompleto. Digite os 14 numeros no formato 00.000.000/0000-00.");
-      document.getElementById("cnpj")?.focus();
-      return;
-    }
-
-    if (telefone.length < TELEFONE_MIN_DIGITOS || telefone.length > TELEFONE_MAX_DIGITOS) {
-      alert("Telefone incompleto. Digite DDD + numero com 10 ou 11 digitos.");
-      document.getElementById("telefone")?.focus();
+      alert("Preencha todos os campos obrigatÃ³rios!");
       return;
     }
 
     if (!lat || !lon) {
-      alert("Por favor, selecione a localização do seu mercado no mapa antes de cadastrar.\nClique no botão 'Selecionar localização no mapa'.");
+      alert("Por favor, selecione a localizaÃ§Ã£o do seu mercado no mapa antes de cadastrar.\nClique no botÃ£o 'Selecionar localizaÃ§Ã£o no mapa'.");
       return;
     }
 
@@ -327,11 +262,11 @@ if (btnCadastrar) {
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
-        alert("Erro ao cadastrar: " + extrairMensagemErroCadastro(err, response.status));
+        alert("Erro ao cadastrar: " + (err.message || response.status));
         return;
       }
 
-      alert("Mercado cadastrado com sucesso! ✅\nFaça login para acessar o painel.");
+      alert("Mercado cadastrado com sucesso! âœ…\nFaÃ§a login para acessar o painel.");
       window.location.href = "login.html";
 
     } catch (error) {

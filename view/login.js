@@ -1,7 +1,7 @@
 /**
  * Login Handler
  * Wofertas SPA + Spring + Mongo + JWT
- * Compatível Web + Mobile
+ * CompatÃ­vel Web + Mobile
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initLoginHandler() {
 
-    console.log("✓ Login Handler carregado");
+    console.log("âœ“ Login Handler carregado");
 
     const loginBtn =
         document.getElementById("login-btn");
@@ -42,7 +42,7 @@ function initLoginHandler() {
     ) {
 
         console.warn(
-            "Campos login não encontrados"
+            "Campos login nÃ£o encontrados"
         );
 
         return;
@@ -103,7 +103,7 @@ function initLoginHandler() {
             senhaInput.value.trim();
 
         /*
-         validações
+         validaÃ§Ãµes
         */
 
         if (!email || !senha) {
@@ -121,7 +121,7 @@ function initLoginHandler() {
         ) {
 
             notificationsService.warning(
-                "Email inválido"
+                "Email invÃ¡lido"
             );
 
             return;
@@ -163,7 +163,7 @@ function initLoginHandler() {
 
             /*
               Estrutura backend:
-              
+
               {
                  token:"",
                  usuario:{}
@@ -182,7 +182,7 @@ function initLoginHandler() {
             if (!token) {
 
                 notificationsService.error(
-                    "Token não recebido"
+                    "Token nÃ£o recebido"
                 );
 
                 resetButton();
@@ -216,7 +216,7 @@ function initLoginHandler() {
             }
 
             /*
-             salva usuário
+             salva usuÃ¡rio
             */
 
             try {
@@ -232,20 +232,6 @@ function initLoginHandler() {
                     "tipo",
                     usuario.tipo || ""
                 );
-
-                if (usuario.id) {
-
-                    localStorage.setItem(
-                        "id",
-                        usuario.id
-                    );
-
-                    localStorage.setItem(
-                        "mercadoId",
-                        usuario.id
-                    );
-
-                }
 
                 localStorage.setItem(
                     "mercado",
@@ -362,7 +348,7 @@ function initLoginHandler() {
     }
 
     /*
-      UI BOTÃO
+      UI BOTÃƒO
     */
 
     function loadingButton() {

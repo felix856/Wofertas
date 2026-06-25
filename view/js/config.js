@@ -1,32 +1,23 @@
-(function () {
-  if (window.AppConfig) return;
+/**
+ * Configuração Global de Ambiente (Vercel + Koyeb)
+ * Resolve automaticamente para onde o frontend deve apontar a API.
+ */
+const AppConfig = (() => {
+  // Define a URL base da API
+ const getApiUrl = () => {
 
-  function getApiUrl() {
-    const stored = localStorage.getItem("wof_base_url");
-    if (stored) return stored.replace(/\/+$/, "");
+  const stored = localStorage.getItem("wof_base_url");
+  if (stored) return stored;
 
-    return "https://wofertas-production.up.railway.app";
-  }
+  return "https://wofertas-production.up.railway.app";
+};
 
   const API_URL = getApiUrl();
 
-  function getEndpointUrl(endpoint) {
-    if (/^https?:\/\//i.test(endpoint)) return endpoint;
-    return `${API_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
-  }
-
-  function getErrorMessage(data) {
-    if (data?.fieldErrors && typeof data.fieldErrors === "object") {
-      return Object.values(data.fieldErrors).filter(Boolean).join("\n");
-    }
-
-    return data?.message ||
-      data?.error ||
-      (typeof data === "string" ? data : "Erro interno no servidor");
-  }
-
-  async function safeFetch(endpoint, options = {}) {
+  // Utilitário de fetch resiliente (Nunca crasha a tela, sempre retorna um formato previsível)
+  const safeFetch = async (endpoint, options = {}) => {
     try {
+      // Configurações padrão
       const defaultOptions = {
         headers: {
           "Content-Type": "application/json",
@@ -34,63 +25,62 @@
         }
       };
 
+      // Mescla os headers e options
       const finalOptions = {
         ...defaultOptions,
         ...options,
         headers: { ...defaultOptions.headers, ...(options.headers || {}) }
       };
 
+      // Se for FormData, remove o Content-Type para o browser gerar o boundary
       if (options.body instanceof FormData) {
         delete finalOptions.headers["Content-Type"];
       }
 
+      // Se Authorization ficou vazio, remove
       if (!finalOptions.headers.Authorization) {
         delete finalOptions.headers.Authorization;
       }
 
-      const response = await fetch(getEndpointUrl(endpoint), finalOptions);
-      const text = await response.text();
+      const response = await fetch(`${API_URL}${endpoint}`, finalOptions);
 
       let data;
-      try {
-        data = text ? JSON.parse(text) : null;
-      } catch {
-        data = text;
-      }
+      const text = await response.text();
+      try { data = text ? JSON.parse(text) : null; } catch (e) { data = text; }
 
       if (!response.ok) {
         return {
           ok: false,
           status: response.status,
           data: null,
-          error: getErrorMessage(data)
+          error: data?.message || data?.error || (typeof data === 'string' ? data : "Erro interno no servidor")
         };
       }
 
       return {
         ok: true,
         status: response.status,
-        data,
+        data: data,
         error: null
       };
+
     } catch (err) {
-      console.error(`[Network Error] API indisponivel ou erro de CORS em: ${endpoint}`, err);
+      console.error(`[Network Error] API indisponível ou erro de CORS em: ${endpoint}`, err);
       return {
         ok: false,
         status: 0,
         data: null,
-        error: "Falha de conexao com a nuvem. O servico pode estar indisponivel ou sem internet."
+        error: "Falha de conexão com a nuvem. O serviço pode estar indisponível ou sem internet."
       };
     }
-  }
+  };
 
-  window.AppConfig = {
+  return {
     API_URL,
     safeFetch,
     toast: (msg, type = "success") => {
       const container = document.getElementById("toastContainer");
-      if (!container) return;
-
+      if(!container) return;
       const el = document.createElement("div");
       el.className = `toast toast-${type}`;
       el.textContent = msg;
@@ -99,3 +89,5 @@
     }
   };
 })();
+
+window.AppConfig = AppConfig;
