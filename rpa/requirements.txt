@@ -1,7 +1,0 @@
-requests>=2.31.0
-anthropic>=0.25.0
-pymongo>=4.6.0
-python-dotenv>=1.0.0
-apscheduler>=3.10.4  # Para agendamento de tarefas
-fastapi>=0.104.0      # Opcional: para expor RPA como API REST
-uvicorn>=0.24.0       # Opcional: servidor web
