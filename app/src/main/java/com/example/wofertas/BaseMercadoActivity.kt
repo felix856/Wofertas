@@ -2,6 +2,8 @@ package com.example.wofertas
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -9,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
  * Classe base para todas as Activities exclusivas de SUPERMERCADOS (MERCADO).
  *
  * Qualquer Activity que herdar esta classe:
- *   - É automaticamente fechada se o usuário não estiver logado
- *   - É automaticamente fechada se o tipo for USUARIO (acesso indevido)
- *   - Não precisa repetir o guard inline
+ *   - E automaticamente fechada se o usuario nao estiver logado
+ *   - E automaticamente fechada se o tipo for USUARIO (acesso indevido)
+ *   - Nao precisa repetir o guard inline
  *
  * Activities que devem herdar:
  *   - DashboardSupermercadoActivity
@@ -28,18 +30,35 @@ abstract class BaseMercadoActivity : AppCompatActivity() {
         }
 
         if (!AuthManager.isMercado(this)) {
-            Toast.makeText(this, "Área exclusiva para supermercados.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Area exclusiva para supermercados.", Toast.LENGTH_SHORT).show()
             irParaListaOfertas(); return
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (!AuthManager.isLoggedIn(this)) irParaLogin()
+        when {
+            !AuthManager.isLoggedIn(this) -> irParaLogin()
+            !AuthManager.isMercado(this) -> irParaListaOfertas()
+        }
     }
 
     override fun setContentView(layoutResID: Int) {
         super.setContentView(layoutResID)
+        instalarAssistente()
+    }
+
+    override fun setContentView(view: View?) {
+        super.setContentView(view)
+        instalarAssistente()
+    }
+
+    override fun setContentView(view: View?, params: ViewGroup.LayoutParams?) {
+        super.setContentView(view, params)
+        instalarAssistente()
+    }
+
+    private fun instalarAssistente() {
         ChatbotLauncher.install(this)
     }
 

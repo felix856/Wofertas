@@ -132,6 +132,7 @@
     <string name="chatbot_input_content_description">Mensagem para o assistente</string>
     <string name="chatbot_send">Enviar</string>
     <string name="chatbot_send_content_description">Enviar mensagem para o assistente</string>
+    <string name="chatbot_wait">Aguarde</string>
     <string name="session_expired">Sessao expirada. Faca login novamente.</string>
 
 </resources>

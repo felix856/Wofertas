@@ -34,6 +34,10 @@
         <activity android:name=".MainActivity" android:exported="false" />
         <activity android:name=".Cadastro" android:exported="false" />
         <activity android:name=".ListaOfertas" android:exported="false" />
+        <activity
+            android:name=".ChatbotActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".DashboardSupermercadoActivity" android:exported="false" />
         <activity android:name=".GerenciarOfertasSupermercadoActivity" android:exported="false" />
         <activity android:name=".MinhasOfertas" android:exported="false" />

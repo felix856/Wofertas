@@ -273,7 +273,7 @@ interface ApiService {
     @GET("analytics/ranking-mercados")
     suspend fun getRankingMercados(): Response<List<MercadoRankingDto>>
 
-    // =============== CHATBOT ===============
+    // =============== ASSISTENTE VIRTUAL IA ===============
 
     @POST("chatbot/mensagem")
     suspend fun enviarMensagemChatbot(@Body request: ChatbotRequest): Response<ChatbotResponse>

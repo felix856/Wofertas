@@ -1,69 +1,79 @@
 package com.example.wofertas
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
+import android.view.inputmethod.EditorInfo
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.wofertas.network.ApiClient
+import com.example.wofertas.network.ApiErrorParser
 import com.example.wofertas.network.ChatbotRequest
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
 class ChatbotActivity : AppCompatActivity() {
 
-    private lateinit var scrollView: ScrollView
+    private lateinit var toolbar: MaterialToolbar
     private lateinit var messagesContainer: LinearLayout
-    private lateinit var input: EditText
-    private lateinit var sendButton: Button
-    private lateinit var progressBar: ProgressBar
-    private lateinit var quickOne: Button
-    private lateinit var quickTwo: Button
-    private lateinit var quickThree: Button
+    private lateinit var scrollView: ScrollView
+    private lateinit var inputMessage: TextInputEditText
+    private lateinit var sendButton: MaterialButton
+    private lateinit var progressChat: ProgressBar
+    private lateinit var quickOne: MaterialButton
+    private lateinit var quickTwo: MaterialButton
+    private lateinit var quickThree: MaterialButton
 
+    private val api get() = ApiClient.authService(this)
     private val pageContext: String by lazy {
         intent.getStringExtra(EXTRA_PAGE) ?: "App Android"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chatbot)
 
         if (!AuthManager.isLoggedIn(this)) {
             goToLogin()
             return
         }
 
-        findViewById<Toolbar>(R.id.toolbarChatbot).apply {
-            setNavigationOnClickListener { finish() }
-        }
+        setContentView(R.layout.activity_chatbot)
 
-        scrollView = findViewById(R.id.chatbotScroll)
-        messagesContainer = findViewById(R.id.chatbotMessages)
-        input = findViewById(R.id.chatbotInput)
-        sendButton = findViewById(R.id.chatbotSend)
-        progressBar = findViewById(R.id.chatbotProgress)
-        quickOne = findViewById(R.id.chatbotQuickOne)
-        quickTwo = findViewById(R.id.chatbotQuickTwo)
-        quickThree = findViewById(R.id.chatbotQuickThree)
+        toolbar = findViewById(R.id.toolbarChatbot)
+        messagesContainer = findViewById(R.id.messagesContainer)
+        scrollView = findViewById(R.id.chatScrollView)
+        inputMessage = findViewById(R.id.inputChatMessage)
+        sendButton = findViewById(R.id.btnSendChat)
+        progressChat = findViewById(R.id.progressChat)
+        quickOne = findViewById(R.id.btnQuickOne)
+        quickTwo = findViewById(R.id.btnQuickTwo)
+        quickThree = findViewById(R.id.btnQuickThree)
 
-        configureQuickQuestions()
-        sendButton.setOnClickListener { sendCurrentMessage() }
-
-        showWelcome()
+        configurarToolbar()
+        configurarAtalhos()
+        configurarEnvio()
+        mostrarBoasVindas()
     }
 
-    private fun configureQuickQuestions() {
-        val questions = if (AuthManager.isMercado(this)) {
+    private fun configurarToolbar() {
+        val mercado = AuthManager.isMercado(this)
+        toolbar.title = if (mercado) "Assistente do supermercado" else "Assistente do cliente"
+        toolbar.subtitle = "Ajuda interativa do Wofertas"
+        toolbar.setNavigationOnClickListener { finish() }
+    }
+
+    private fun configurarAtalhos() {
+        val perguntas = if (AuthManager.isMercado(this)) {
             listOf(
                 getString(R.string.chatbot_quick_market_one),
                 getString(R.string.chatbot_quick_market_two),
@@ -78,108 +88,155 @@ class ChatbotActivity : AppCompatActivity() {
         }
 
         listOf(quickOne, quickTwo, quickThree).forEachIndexed { index, button ->
-            button.text = questions[index]
-            button.setOnClickListener {
-                input.setText(questions[index])
-                input.setSelection(input.text.length)
-                sendCurrentMessage()
+            val pergunta = perguntas[index]
+            button.text = pergunta
+            button.contentDescription = "Perguntar: $pergunta"
+            button.setOnClickListener { enviar(pergunta) }
+        }
+    }
+
+    private fun configurarEnvio() {
+        sendButton.setOnClickListener {
+            enviar(inputMessage.text?.toString().orEmpty())
+        }
+
+        inputMessage.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                enviar(inputMessage.text?.toString().orEmpty())
+                true
+            } else {
+                false
             }
         }
     }
 
-    private fun showWelcome() {
-        val name = AuthManager.getNome(this)?.takeIf { it.isNotBlank() && it != "Usuario" }
-        val typeHint = if (AuthManager.isMercado(this)) {
+    private fun mostrarBoasVindas() {
+        val nome = AuthManager.getNome(this)
+            ?.takeIf { it.isNotBlank() && !it.equals("Usuario", ignoreCase = true) }
+        val textoBase = if (AuthManager.isMercado(this)) {
             getString(R.string.chatbot_welcome_market)
         } else {
             getString(R.string.chatbot_welcome_user)
         }
-        addMessage(
-            if (name == null) typeHint else "$typeHint\n\n$name, como posso ajudar agora?",
-            fromUser = false
-        )
+        val texto = if (nome == null) textoBase else "$textoBase\n\n$nome, como posso ajudar agora?"
+        adicionarMensagem(texto, remetenteUsuario = false)
     }
 
-    private fun sendCurrentMessage() {
-        val message = input.text.toString().trim()
-        if (message.isBlank()) {
+    private fun enviar(textoOriginal: String) {
+        val texto = textoOriginal.trim()
+        if (texto.isBlank()) {
             Toast.makeText(this, R.string.chatbot_empty_message, Toast.LENGTH_SHORT).show()
             return
         }
 
-        input.setText("")
-        addMessage(message, fromUser = true)
-        setLoading(true)
+        inputMessage.setText("")
+        adicionarMensagem(texto, remetenteUsuario = true)
+        setCarregando(true)
 
         lifecycleScope.launch {
             try {
-                val response = ApiClient.authService(this@ChatbotActivity).enviarMensagemChatbot(
+                val response = api.enviarMensagemChatbot(
                     ChatbotRequest(
-                        mensagem = message,
+                        mensagem = texto,
                         pagina = pageContext,
-                        contextoTela = currentContext()
+                        contextoTela = if (AuthManager.isMercado(this@ChatbotActivity)) {
+                            "mobile-mercado"
+                        } else {
+                            "mobile-cliente"
+                        }
                     )
                 )
 
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    addMessage(
-                        body?.resposta?.takeIf { it.isNotBlank() }
-                            ?: getString(R.string.chatbot_empty_response),
-                        fromUser = false
-                    )
-                } else if (response.code() == 401) {
-                    AuthManager.clearSession(this@ChatbotActivity)
-                    Toast.makeText(this@ChatbotActivity, R.string.session_expired, Toast.LENGTH_LONG).show()
-                    goToLogin()
-                } else {
-                    addMessage(getString(R.string.chatbot_error_response), fromUser = false)
+                when {
+                    response.isSuccessful -> {
+                        val resposta = response.body()?.resposta.orEmpty()
+                        adicionarMensagem(
+                            resposta.ifBlank { respostaLocal(texto) },
+                            remetenteUsuario = false
+                        )
+                    }
+                    response.code() == 401 -> {
+                        AuthManager.clearSession(this@ChatbotActivity)
+                        Toast.makeText(this@ChatbotActivity, R.string.session_expired, Toast.LENGTH_LONG).show()
+                        goToLogin()
+                    }
+                    else -> {
+                        val erro = ApiErrorParser.parse(response).ifBlank {
+                            getString(R.string.chatbot_error_response)
+                        }
+                        adicionarMensagem(erro, remetenteUsuario = false)
+                    }
                 }
             } catch (e: Exception) {
-                addMessage(getString(R.string.chatbot_network_error), fromUser = false)
+                adicionarMensagem(respostaLocal(texto), remetenteUsuario = false)
             } finally {
-                setLoading(false)
+                setCarregando(false)
             }
         }
     }
 
-    private fun currentContext(): String {
-        val tipo = AuthManager.getTipo(this) ?: "ANONIMO"
-        return "tipo=$tipo; tela=$pageContext"
+    private fun setCarregando(carregando: Boolean) {
+        sendButton.isEnabled = !carregando
+        inputMessage.isEnabled = !carregando
+        progressChat.visibility = if (carregando) View.VISIBLE else View.GONE
+        sendButton.text = getString(if (carregando) R.string.chatbot_wait else R.string.chatbot_send)
+        if (!carregando) inputMessage.requestFocus()
     }
 
-    private fun addMessage(text: String, fromUser: Boolean) {
+    private fun adicionarMensagem(texto: String, remetenteUsuario: Boolean) {
         val bubble = TextView(this).apply {
-            this.text = text
+            text = texto
             textSize = 15f
-            setLineSpacing(2f, 1f)
-            setPadding(dp(14), dp(10), dp(14), dp(10))
-            maxWidth = (resources.displayMetrics.widthPixels * 0.78f).toInt()
+            setLineSpacing(2f, 1.05f)
             setTextColor(
                 ContextCompat.getColor(
                     this@ChatbotActivity,
-                    if (fromUser) R.color.white else R.color.text_primary
+                    if (remetenteUsuario) R.color.white else R.color.text_primary
                 )
             )
-            setBackgroundResource(if (fromUser) R.drawable.bg_chat_user else R.drawable.bg_chat_assistant)
+            setBackgroundResource(if (remetenteUsuario) R.drawable.bg_chat_user else R.drawable.bg_chat_assistant)
+            setPadding(dp(14), dp(10), dp(14), dp(10))
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+            contentDescription = if (remetenteUsuario) {
+                "Voce perguntou: $texto"
+            } else {
+                "Assistente respondeu: $texto"
+            }
+            if (!remetenteUsuario && messagesContainer.childCount == 0) {
+                typeface = Typeface.DEFAULT_BOLD
+            }
         }
 
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply {
-            gravity = if (fromUser) Gravity.END else Gravity.START
-            setMargins(dp(12), dp(6), dp(12), dp(6))
+            gravity = if (remetenteUsuario) Gravity.END else Gravity.START
+            setMargins(dp(16), dp(6), dp(16), dp(6))
+            width = (resources.displayMetrics.widthPixels * 0.82f).toInt()
         }
 
         messagesContainer.addView(bubble, params)
-        scrollView.post { scrollView.fullScroll(View.FOCUS_DOWN) }
+        scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
 
-    private fun setLoading(loading: Boolean) {
-        progressBar.visibility = if (loading) View.VISIBLE else View.GONE
-        sendButton.isEnabled = !loading
-        input.isEnabled = !loading
+    private fun respostaLocal(pergunta: String): String {
+        val msg = pergunta.lowercase()
+        return if (AuthManager.isMercado(this)) {
+            when {
+                "oferta" in msg || "public" in msg -> "Para publicar, abra o dashboard do supermercado e toque em Publicar Oferta. Preencha nome, validade, imagem ou encarte e confirme."
+                "ranking" in msg -> "O ranking mostra a posicao do mercado conforme o engajamento das ofertas, principalmente curtidas e favoritos."
+                "dashboard" in msg || "metric" in msg -> "No dashboard voce acompanha visualizacoes, curtidas, favoritos, carrinhos e recomendacoes para melhorar suas campanhas."
+                else -> "Posso ajudar com ofertas, encartes, dashboard, ranking, perfil do mercado e publicacoes."
+            }
+        } else {
+            when {
+                "mapa" in msg || "proxima" in msg -> "No mapa, permita a localizacao e toque nos marcadores para ver ofertas de mercados proximos."
+                "lista" in msg || "compra" in msg -> "Na lista de compras voce organiza produtos desejados e recebe ajuda para identificar promocoes relacionadas."
+                "favorit" in msg || "salv" in msg -> "Toque no botao de favorito para salvar mercados e ofertas que voce quer acompanhar depois."
+                else -> "Posso ajudar com mapa, ofertas, favoritos, lista de compras, perfil e notificacoes."
+            }
+        }
     }
 
     private fun goToLogin() {
@@ -189,7 +246,8 @@ class ChatbotActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+    private fun dp(value: Int): Int =
+        (value * resources.displayMetrics.density).toInt()
 
     companion object {
         const val EXTRA_PAGE = "extra_page"

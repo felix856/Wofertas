@@ -2,4 +2,5 @@
 <resources>
     <item name="progressBarEditar" type="id" />
     <item name="editEndereco" type="id" />
+    <item name="progressChat" type="id" />
 </resources>

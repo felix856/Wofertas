@@ -2,32 +2,38 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_screen">
+    android:fitsSystemWindows="true">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarChatbot"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/wofertas_blue_primary"
+        android:minHeight="?attr/actionBarSize"
+        app:contentInsetEnd="16dp"
+        app:contentInsetStartWithNavigation="16dp"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/chatbot_title"
-        app:titleTextColor="@color/wofertas_yellow"
+        app:navigationIconTint="@color/white"
+        app:subtitleTextColor="@color/wofertas_yellow_light"
+        app:titleTextColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <HorizontalScrollView
-        android:id="@+id/chatbotQuickScroll"
+        android:id="@+id/quickActionsScroll"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fillViewport="false"
-        android:overScrollMode="never"
-        android:paddingVertical="8dp"
-        android:paddingHorizontal="8dp"
         android:contentDescription="@string/chatbot_quick_questions_content_description"
+        android:fadeScrollbars="false"
+        android:fillViewport="false"
+        android:paddingStart="12dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp"
+        android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/toolbarChatbot"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -37,100 +43,138 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/chatbotQuickOne"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnQuickOne"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:minWidth="0dp"
+                android:minHeight="48dp"
                 android:text="@string/chatbot_quick_one_default"
                 android:textAllCaps="false"
-                android:textSize="13sp"
-                app:cornerRadius="20dp" />
+                android:textColor="@color/wofertas_blue_primary"
+                app:cornerRadius="18dp"
+                app:strokeColor="@color/wofertas_blue_primary" />
 
-            <Button
-                android:id="@+id/chatbotQuickTwo"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnQuickTwo"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:minWidth="0dp"
+                android:minHeight="48dp"
                 android:text="@string/chatbot_quick_two_default"
                 android:textAllCaps="false"
-                android:textSize="13sp"
-                app:cornerRadius="20dp" />
+                android:textColor="@color/wofertas_blue_primary"
+                app:cornerRadius="18dp"
+                app:strokeColor="@color/wofertas_blue_primary" />
 
-            <Button
-                android:id="@+id/chatbotQuickThree"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnQuickThree"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
+                android:layout_height="48dp"
+                android:minWidth="0dp"
+                android:minHeight="48dp"
                 android:text="@string/chatbot_quick_three_default"
                 android:textAllCaps="false"
-                android:textSize="13sp"
-                app:cornerRadius="20dp" />
+                android:textColor="@color/wofertas_blue_primary"
+                app:cornerRadius="18dp"
+                app:strokeColor="@color/wofertas_blue_primary" />
         </LinearLayout>
     </HorizontalScrollView>
 
     <ScrollView
-        android:id="@+id/chatbotScroll"
+        android:id="@+id/chatScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/chatbotQuickScroll"
-        app:layout_constraintBottom_toTopOf="@id/chatbotInputBar"
+        android:importantForAccessibility="no"
+        android:overScrollMode="ifContentScrolls"
+        android:paddingTop="4dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintTop_toBottomOf="@id/quickActionsScroll"
+        app:layout_constraintBottom_toTopOf="@id/inputContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
-            android:id="@+id/chatbotMessages"
+            android:id="@+id/messagesContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="12dp" />
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp" />
     </ScrollView>
 
-    <ProgressBar
-        android:id="@+id/chatbotProgress"
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:visibility="gone"
-        android:contentDescription="@string/chatbot_progress_content_description"
-        app:layout_constraintBottom_toTopOf="@id/chatbotInputBar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible" />
-
     <LinearLayout
-        android:id="@+id/chatbotInputBar"
+        android:id="@+id/inputContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:background="@color/wofertas_surface"
-        android:padding="10dp"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/chatbotInput"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/rounded_edittext_background"
             android:hint="@string/chatbot_input_hint"
-            android:inputType="textMultiLine|textCapSentences"
-            android:maxLines="4"
-            android:paddingHorizontal="14dp"
-            android:contentDescription="@string/chatbot_input_content_description" />
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="@color/wofertas_blue_primary"
+            app:hintTextColor="@color/text_primary"
+            app:placeholderTextColor="@color/text_primary">
 
-        <Button
-            android:id="@+id/chatbotSend"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputChatMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSend"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLength="800"
+                android:maxLines="4"
+                android:minHeight="48dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_primary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ProgressBar
+            android:id="@id/progressChat"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/chatbot_progress_content_description"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSendChat"
+            style="@style/Widget.Material3.Button"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
+            android:layout_height="54dp"
+            android:contentDescription="@string/chatbot_send_content_description"
+            android:minWidth="78dp"
             android:text="@string/chatbot_send"
             android:textAllCaps="false"
-            android:contentDescription="@string/chatbot_send_content_description"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/wofertas_blue_primary"
             app:cornerRadius="12dp" />
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
