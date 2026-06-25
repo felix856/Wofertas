@@ -16,6 +16,10 @@ public class Encarte {
     private String urlPdf;
     private String nomeArquivoOriginal;
     private LocalDateTime dataCriacao;
+    private boolean boosted;
+    private int boostLevel;
+    private String boostSource;
+    private LocalDateTime boostExpiresAt;
 
     public Encarte() {}
 
@@ -44,4 +48,16 @@ public class Encarte {
 
     public LocalDateTime getDataCriacao() { return dataCriacao; }
     public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
+
+    public boolean isBoosted() { return boosted; }
+    public void setBoosted(boolean boosted) { this.boosted = boosted; }
+
+    public int getBoostLevel() { return boostLevel; }
+    public void setBoostLevel(int boostLevel) { this.boostLevel = boostLevel; }
+
+    public String getBoostSource() { return boostSource; }
+    public void setBoostSource(String boostSource) { this.boostSource = boostSource; }
+
+    public LocalDateTime getBoostExpiresAt() { return boostExpiresAt; }
+    public void setBoostExpiresAt(LocalDateTime boostExpiresAt) { this.boostExpiresAt = boostExpiresAt; }
 }
