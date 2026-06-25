@@ -94,11 +94,23 @@ object AuthManager {
     // ── Logout ────────────────────────────────────────────────────────────────
 
     fun clearSession(context: Context) {
+        val appContext = context.applicationContext
         try {
-            prefs(context).edit().clear().apply()
-            AppLogger.debug("Session cleared")
+            val cleared = prefs(appContext).edit().clear().commit()
+            AppLogger.debug("Encrypted session cleared: $cleared")
         } catch (e: Exception) {
-            AppLogger.error("Error clearing session", e)
+            AppLogger.error("Error clearing encrypted session", e)
+        }
+
+        try {
+            val fallbackCleared = appContext
+                .getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .clear()
+                .commit()
+            AppLogger.debug("Fallback session cleared: $fallbackCleared")
+        } catch (e: Exception) {
+            AppLogger.error("Error clearing fallback session", e)
         }
     }
 }

@@ -23,7 +23,7 @@ enum class ApiEnvironment(val baseUrl: String, val description: String) {
     /**
      * Servidor em produção (mudar para seu domínio real).
      */
-    PRODUCTION("https://wofertas-api.com/", "Production Server"),
+    PRODUCTION("https://wofertas-production.up.railway.app/", "Production Server"),
 
     /**
      * Localhost (apenas para testes no desktop).
@@ -39,7 +39,7 @@ enum class ApiEnvironment(val baseUrl: String, val description: String) {
         /**
          * Ambiente padrão (alterar conforme necessário).
          */
-        fun default(): ApiEnvironment = EMULATOR
+        fun default(): ApiEnvironment = PRODUCTION
 
         /**
          * Obter ambiente pela URL.

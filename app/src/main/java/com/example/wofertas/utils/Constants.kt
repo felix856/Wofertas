@@ -9,7 +9,7 @@ object Constants {
 
     /**
      * URL Automática:
-     * Conectando diretamente na nuvem (Render) para todos os dispositivos.
+     * Conectando diretamente na nuvem (Railway) para todos os dispositivos.
      */
     val BASE_URL: String
         get() = "https://wofertas-production.up.railway.app/"
