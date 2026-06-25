@@ -306,6 +306,84 @@ function renderPreferencias(products, elementId) {
         });
 }
 
+function appendAiMessage(role, text) {
+    const list = byId("aiChatMessages");
+    if (!list) return;
+
+    const message = document.createElement("div");
+    message.className = `ai-chat-message ${role}`;
+    message.textContent = text || "";
+    list.appendChild(message);
+    list.scrollTop = list.scrollHeight;
+}
+
+function setAiStatus(text) {
+    setText("aiAssistantStatus", text || "");
+}
+
+async function postAssistantMessage(payload) {
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+    };
+
+    const primary = await fetchComTimeout(`${BASE_URL}/api/chatbot/mensagem`, options, 30000);
+    if (primary.status !== 404) return primary;
+
+    return fetchComTimeout(`${BASE_URL}/chatbot/mensagem`, options, 30000);
+}
+
+async function enviarMensagemAssistente(event) {
+    event.preventDefault();
+
+    const input = byId("aiChatInput");
+    const button = byId("aiChatButton");
+    if (!input || !button) return;
+
+    const mensagem = input.value.trim();
+    if (!mensagem) return;
+
+    appendAiMessage("user", mensagem);
+    input.value = "";
+    button.disabled = true;
+    setAiStatus("Pensando...");
+
+    try {
+        const response = await postAssistantMessage({
+            mensagem,
+            pagina: window.location.pathname,
+            contextoTela: "dashboard-analytics"
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            appendAiMessage("assistant", "Sua sessao expirou. Faca login novamente para usar o assistente.");
+            setAiStatus("Sessao expirada");
+            return;
+        }
+
+        if (!response.ok) {
+            appendAiMessage("assistant", `Nao consegui responder agora. HTTP ${response.status}.`);
+            setAiStatus("Indisponivel");
+            return;
+        }
+
+        const data = await response.json();
+        appendAiMessage("assistant", data.resposta || "Nao consegui montar uma resposta agora.");
+        setAiStatus(data.modo === "ANTHROPIC" ? "Respondido com IA" : "Respondido em modo seguro");
+    } catch (err) {
+        console.error("[assistente] Falha:", err);
+        appendAiMessage("assistant", "Falha ao conectar com o assistente. Verifique a API e tente novamente.");
+        setAiStatus("Falha de conexao");
+    } finally {
+        button.disabled = false;
+        input.focus();
+    }
+}
+
 function recarregar() {
     loadDashboard();
 }
@@ -320,6 +398,11 @@ window.logout = logout;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadDashboard();
+
+    const aiChatForm = byId("aiChatForm");
+    if (aiChatForm) {
+        aiChatForm.addEventListener("submit", enviarMensagemAssistente);
+    }
 
     if (!refreshTimer) {
         refreshTimer = setInterval(loadDashboard, 60000);

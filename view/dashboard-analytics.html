@@ -427,6 +427,108 @@
             background: linear-gradient(90deg, #3b82f6, #2563eb);
         }
 
+        .ai-assistant-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+            margin-bottom: 24px;
+        }
+
+        .ai-assistant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.03);
+        }
+
+        .ai-assistant-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .ai-assistant-status {
+            color: rgba(255,255,255,0.45);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .ai-chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 150px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding: 18px 20px;
+        }
+
+        .ai-chat-message {
+            max-width: 86%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.55;
+            color: rgba(255,255,255,0.86);
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .ai-chat-message.user {
+            align-self: flex-end;
+            color: #ffffff;
+            background: rgba(59,130,246,0.26);
+            border-color: rgba(59,130,246,0.30);
+        }
+
+        .ai-chat-message.assistant {
+            align-self: flex-start;
+        }
+
+        .ai-chat-form {
+            display: flex;
+            gap: 10px;
+            padding: 16px 20px 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            min-width: 0;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.05);
+            color: #ffffff;
+            padding: 0 14px;
+            outline: none;
+        }
+
+        .ai-chat-input:focus {
+            border-color: rgba(59,130,246,0.60);
+        }
+
+        .ai-chat-button {
+            height: 44px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(59,130,246,0.95), rgba(37,99,235,0.95));
+            color: #ffffff;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .ai-chat-button:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+
         /* CONTENT STATE */
         #loading, #error-box, #content {
             width: 100%;
@@ -466,6 +568,14 @@
             .ranking-item {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+
+            .ai-chat-form {
+                flex-direction: column;
+            }
+
+            .ai-chat-button {
+                width: 100%;
             }
         }
     </style>
@@ -539,6 +649,26 @@
                         <div class="metric-value" id="metricOffers">0</div>
                         <div class="metric-subtext">Total de publicações</div>
                     </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="ai-assistant-card">
+                    <div class="ai-assistant-header">
+                        <div>
+                            <div class="ai-assistant-title">Assistente virtual Wofertas</div>
+                            <div class="ai-assistant-status" id="aiAssistantStatus">Pronto para ajudar</div>
+                        </div>
+                    </div>
+                    <div class="ai-chat-messages" id="aiChatMessages">
+                        <div class="ai-chat-message assistant">
+                            Ola! Posso orientar voce sobre ofertas, encartes, dashboard analytics, ranking e proximos passos do painel.
+                        </div>
+                    </div>
+                    <form class="ai-chat-form" id="aiChatForm">
+                        <input class="ai-chat-input" id="aiChatInput" maxlength="800" autocomplete="off" placeholder="Pergunte sobre o painel, metricas ou ofertas">
+                        <button class="ai-chat-button" id="aiChatButton" type="submit">Enviar</button>
+                    </form>
                 </div>
             </section>
 

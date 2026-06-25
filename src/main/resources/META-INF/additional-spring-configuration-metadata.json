@@ -7,7 +7,12 @@
   {
     "name": "anthropic.api.key",
     "type": "java.lang.String",
-    "description": "A description for 'anthropic.api.key'"
+    "description": "API key da Anthropic usada pelo assistente virtual do Wofertas."
+  },
+  {
+    "name": "anthropic.model",
+    "type": "java.lang.String",
+    "description": "Modelo Claude usado pelo assistente virtual do Wofertas."
   },
   {
     "name": "jwt.secret",
