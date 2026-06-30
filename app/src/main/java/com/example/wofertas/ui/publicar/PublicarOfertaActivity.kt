@@ -29,9 +29,9 @@ class PublicarOfertaActivity : BaseMercadoActivity() {
     private lateinit var etNome: EditText
     private lateinit var etStatus: EditText
     private lateinit var tvDataFim: TextView
-    private lateinit var btnDataFim: Button
+    private lateinit var btnDataFim: View
     private lateinit var tvImagemNome: TextView
-    private lateinit var btnSelecionarImagem: Button
+    private lateinit var btnSelecionarImagem: View
     private lateinit var btnPublicar: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var ivPreview: ImageView

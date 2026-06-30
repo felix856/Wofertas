@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     IDs preservados: toolbar_publicar_oferta | etNomeOfertaPublicar | etStatusOfertaPublicar
-    tvDataInicioPublicar | tvDataFimPublicar | btnSelecionarDataInicio | btnSelecionarDataFim
+    tvDataFimPublicar | btnSelecionarDataFim
     tvImagemNomePublicar | btnSelecionarImagemPublicar | ivPreviewPublicar
     progressBarPublicar | btnPublicarOfertaSubmit
 -->
@@ -104,61 +104,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PERÍODO"
+                    android:text="VALIDADE DA OFERTA"
                     style="@style/SectionLabel"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp" />
 
-                <!-- Linha: Data de Início -->
-                <LinearLayout
-                    android:id="@+id/btnSelecionarDataInicio"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="16dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Data de Início *"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_secondary" />
-
-                        <TextView
-                            android:id="@+id/tvDataInicioPublicar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Não selecionada"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_hint"
-                            android:layout_marginTop="1dp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="📅"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider"
-                    android:layout_marginHorizontal="16dp" />
-
-                <!-- Linha: Data de Fim -->
+                <!-- Linha: Data de validade -->
                 <LinearLayout
                     android:id="@+id/btnSelecionarDataFim"
                     android:layout_width="match_parent"
@@ -179,7 +130,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Data de Fim"
+                            android:text="Data de validade *"
                             android:textSize="13sp"
                             android:textStyle="bold"
                             android:textColor="@color/text_secondary" />

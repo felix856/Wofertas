@@ -58,7 +58,7 @@ fun ImageView.loadImage(path: String?, placeholder: Int = 0, skipCache: Boolean 
     }
 
     val glideRequest = Glide.with(this.context)
-    val builder = when {
+    var builder = when {
         // Caso 1: Imagem em Base64
         path.startsWith("data:image") && path.contains("base64,") -> {
             try {
@@ -83,16 +83,16 @@ fun ImageView.loadImage(path: String?, placeholder: Int = 0, skipCache: Boolean 
         }
     }
 
-    builder.placeholder(placeholder)
+    builder = builder.placeholder(placeholder)
         .error(placeholder)
         .circleCrop()
         
     if (skipCache) {
-        builder.diskCacheStrategy(DiskCacheStrategy.NONE)
+        builder = builder.diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
             .signature(ObjectKey(System.currentTimeMillis().toString())) // Garante unicidade
     } else {
-        builder.diskCacheStrategy(DiskCacheStrategy.ALL)
+        builder = builder.diskCacheStrategy(DiskCacheStrategy.ALL)
     }
 
     builder.into(this)
