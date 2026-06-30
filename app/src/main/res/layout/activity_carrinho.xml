@@ -1,75 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/color_salvos_bg">
+    android:background="@color/bg_screen">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_carrinho"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/wofertas_blue_primary"
         app:title="Lista de Compras"
-        app:titleTextColor="@color/wofertas_yellow"
-        app:navigationIcon="@drawable/ic_arrow_back" />
+        app:titleTextColor="@color/white"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationIconTint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/headerCarrinho"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@color/wofertas_blue_primary"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="12dp"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="14dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_carrinho"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/etNovoProduto"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_search_bar"
-            android:hint="Adicionar produto..."
-            android:textColorHint="@color/text_hint"
-            android:textColor="@color/text_primary"
-            android:textSize="14sp"
-            android:paddingHorizontal="14dp"
-            android:inputType="textCapSentences"
-            android:imeOptions="actionDone"
-            android:singleLine="true" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCarrinhoResumo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/wofertas_surface"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp">
 
-        <ImageButton
-            android:id="@+id/btnAdicionarProduto"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:src="@android:drawable/ic_input_add"
-            android:background="@color/wofertas_yellow"
-            app:tint="@color/text_primary"
-            android:contentDescription="Adicionar"
-            android:scaleType="center" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:id="@+id/tvResumoTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Resumo inteligente"
+                    android:textColor="@color/wofertas_blue_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvResumoItens"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/text_primary"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            tools:text="8" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="itens"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvResumoEncontrados"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/status_ativo"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            tools:text="3" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="em oferta"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvResumoMelhorPreco"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="--"
+                            android:textColor="@color/wofertas_blue_primary"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="R$ 9,99" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="menor preço"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvResumoDica"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Adicione produtos para receber alertas quando uma promoção aparecer."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="2dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:id="@+id/inputCarrinhoContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etNovoProduto"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_search_bar"
+                android:hint="Adicionar produto..."
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences"
+                android:paddingHorizontal="14dp"
+                android:singleLine="true"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/btnAdicionarProduto"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/wofertas_yellow"
+                android:contentDescription="Adicionar produto"
+                android:scaleType="center"
+                android:src="@android:drawable/ic_input_add"
+                app:tint="@color/text_primary" />
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvCarrinhoVazio"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginHorizontal="32dp"
         android:gravity="center"
-        android:text="Sua lista está vazia.\nDigite um produto acima para começar!"
+        android:lineSpacingExtra="4dp"
+        android:text="Sua lista está vazia.\nDigite um produto acima para começar."
         android:textColor="@color/text_secondary"
         android:textSize="15sp"
-        android:lineSpacingExtra="4dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerCarrinho"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerCarrinho"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="16dp" />
+        android:paddingTop="10dp"
+        android:paddingBottom="18dp"
+        app:layout_constraintTop_toBottomOf="@id/headerCarrinho"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_carrinho" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
