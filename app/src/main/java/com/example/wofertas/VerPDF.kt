@@ -3,6 +3,7 @@ package com.example.wofertas
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
@@ -28,6 +29,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Locale
 import androidx.core.graphics.createBitmap
+import kotlin.math.min
 
 class VerPDF : AppCompatActivity() {
 
@@ -190,9 +192,18 @@ class VerPDF : AppCompatActivity() {
         try {
             currentPage?.close()
             currentPage = renderer.openPage(index)
-            val bitmap = createBitmap(currentPage!!.width, currentPage!!.height)
+            val page = currentPage!!
+            val targetWidth = min(resources.displayMetrics.widthPixels.coerceAtLeast(1), 1800)
+            val ratio = page.height.toFloat() / page.width.toFloat()
+            val targetHeight = (targetWidth * ratio).toInt().coerceIn(1, 2600)
+            val bitmap = createBitmap(targetWidth, targetHeight)
             bitmap.eraseColor(Color.WHITE)
-            currentPage!!.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+            page.render(
+                bitmap,
+                Rect(0, 0, targetWidth, targetHeight),
+                null,
+                PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
+            )
             imageViewPdfPage.setImageBitmap(bitmap)
             currentPageIndex = index
             atualizarBotoes(renderer.pageCount)
@@ -266,6 +277,8 @@ class VerPDF : AppCompatActivity() {
 
     private fun handleError(msg: String) {
         progressBar.visibility = View.GONE
+        tvOcrStatus.visibility = View.VISIBLE
+        tvOcrStatus.text = msg
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 

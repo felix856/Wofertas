@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.wofertas.network.ApiClient
@@ -58,6 +59,7 @@ class Mapa : BaseClienteActivity() {
         fabLocalizacao = findViewById(R.id.fabMinhaLocalizacao)
         fabLista = findViewById(R.id.fabListaOfertas)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
+        findViewById<Toolbar>(R.id.toolbar_mapa).setNavigationOnClickListener { finish() }
 
         configurarMapa()
         verificarPermissoesEConfigurarLocalizacao()
@@ -196,6 +198,10 @@ class Mapa : BaseClienteActivity() {
                 val encarte = resp.body()?.firstOrNull()
                 if (encarte == null) {
                     Toast.makeText(this@Mapa, "Este mercado ainda nao tem encarte publicado.", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+                if (encarte.urlPdf.isBlank()) {
+                    Toast.makeText(this@Mapa, "Encarte sem arquivo publicado.", Toast.LENGTH_LONG).show()
                     return@launch
                 }
 

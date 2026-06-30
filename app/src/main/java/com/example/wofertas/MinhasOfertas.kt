@@ -78,11 +78,11 @@ class MinhasOfertas : BaseMercadoActivity(), SupermercadoOfertaAdapter.OnItemAct
                     listaOfertas.addAll(dtos.map { dto ->
                         Oferta().apply {
                             ofertaId         = dto.id
-                            mercadoId        = dto.mercado?.id
+                            mercadoId        = dto.mercado?.id ?: dto.mercadoId
                             nome             = dto.nome
                             status           = dto.status
                             dataValidade     = dto.data
-                            imagemOferta     = dto.imagemOferta
+                            imagemOferta     = dto.imagemOferta ?: dto.imagem
                             nomeSupermercado = dto.mercado?.nome
                         }
                     })
@@ -181,6 +181,7 @@ class MinhasOfertas : BaseMercadoActivity(), SupermercadoOfertaAdapter.OnItemAct
                     startActivity(Intent(this, PublicarOfertaActivity::class.java))
                     true
                 }
+                R.id.navigation_gerenciar_ofertas_supermercado -> true
                 R.id.navigation_encartes -> {
                     abrirMeusEncartes()
                     true

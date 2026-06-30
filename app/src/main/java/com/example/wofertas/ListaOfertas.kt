@@ -255,19 +255,20 @@ class ListaOfertas : BaseClienteActivity(), OnOfertaClickListener {
         listaOfertas.clear()
         listaOfertas.addAll(
             dtos.map { dto ->
+                val mercadoId = dto.mercado?.id ?: dto.mercadoId
                 Oferta().apply {
                     ofertaId = dto.id
-                    mercadoId = dto.mercado?.id
+                    this.mercadoId = mercadoId
                     nome = dto.nome
                     status = dto.status
                     dataValidade = dto.data
-                    imagemOferta = dto.imagemOferta
+                    imagemOferta = dto.imagemOferta ?: dto.imagem
                     nomeSupermercado = dto.mercado?.nome
                     enderecoSupermercado = dto.mercado?.endereco
                     imagemLogo = dto.mercado?.imagemLogo
                     latitude = dto.mercado?.latitude
                     longitude = dto.mercado?.longitude
-                    isSaved = dto.mercado?.id?.let { mercadosFavoritados.contains(it) } ?: false
+                    isSaved = mercadoId?.let { mercadosFavoritados.contains(it) } ?: false
                 }
             }
         )

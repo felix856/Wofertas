@@ -112,7 +112,7 @@ class GerenciarOfertasSupermercadoActivity : BaseMercadoActivity(),
         val novasOfertas = dtos.map { dto ->
             Oferta().apply {
                 ofertaId             = dto.id
-                mercadoId            = dto.mercado?.id
+                mercadoId            = dto.mercado?.id ?: dto.mercadoId
                 nome                 = dto.nome
                 status               = dto.status ?: "ATIVO"
                 dataValidade         = dto.data
