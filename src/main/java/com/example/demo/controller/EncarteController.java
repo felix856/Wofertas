@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,10 +37,8 @@ public class EncarteController {
             @RequestParam String titulo,
             @RequestParam("pdf") MultipartFile pdf,
             @AuthenticationPrincipal CustomUserDetails principal) {
-        if (principal != null && "MERCADO".equalsIgnoreCase(principal.getTipo())) {
-            mercadoId = principal.getId();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(encarteService.salvar(mercadoId, titulo, pdf));
+        String mercadoLogadoId = mercadoAutenticadoId(principal);
+        return ResponseEntity.status(HttpStatus.CREATED).body(encarteService.salvar(mercadoLogadoId, titulo, pdf));
     }
 
     @GetMapping("/mercado/{mercadoId}")
@@ -52,11 +51,27 @@ public class EncarteController {
         return encarteService.buscarPorId(id);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<EncarteDTO> atualizar(@PathVariable String id,
+                                                @RequestParam String titulo,
+                                                @RequestParam(value = "pdf", required = false) MultipartFile pdf,
+                                                @AuthenticationPrincipal CustomUserDetails principal) {
+        String mercadoLogadoId = mercadoAutenticadoId(principal);
+        return ResponseEntity.ok(encarteService.atualizar(id, titulo, pdf, mercadoLogadoId));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable String id,
                                         @AuthenticationPrincipal CustomUserDetails principal) {
-        String mercadoLogadoId = principal != null ? principal.getId() : null;
+        String mercadoLogadoId = mercadoAutenticadoId(principal);
         encarteService.deletar(id, mercadoLogadoId);
         return ResponseEntity.ok().build();
+    }
+
+    private String mercadoAutenticadoId(CustomUserDetails principal) {
+        if (principal == null || !"MERCADO".equalsIgnoreCase(principal.getTipo())) {
+            throw new RuntimeException("Permissao negada para gerenciar encartes");
+        }
+        return principal.getId();
     }
 }

@@ -40,35 +40,18 @@ public class EncarteService {
 
     public EncarteDTO salvar(String mercadoId, String titulo, MultipartFile pdf) {
         validarMercado(mercadoId);
-        
-        if (titulo == null || titulo.isBlank()) {
-            throw new IllegalArgumentException("Titulo do encarte e obrigatorio");
-        }
+        validarTitulo(titulo);
         if (pdf == null || pdf.isEmpty()) {
             throw new IllegalArgumentException("Arquivo PDF e obrigatorio");
         }
 
         try {
-            Path uploadPath = Paths.get(UPLOAD_DIR);
-            if (Files.notExists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            // O uso do Objects.requireNonNullElse resolve os alertas de forma limpa e nativa do Java
-            String originalName = Objects.requireNonNullElse(pdf.getOriginalFilename(), "encarte.pdf");
-            
-            String safeOriginal = originalName.replaceAll("[^a-zA-Z0-9._-]", "_");
-            String fileName = UUID.randomUUID() + "_" + safeOriginal;
-            Path filePath = uploadPath.resolve(fileName);
-
-            // Sem checagens redundantes de "pdf == null" aqui, pois já foi validado no topo do método
-            Files.copy(pdf.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
+            ArquivoEncarte arquivo = salvarArquivo(pdf);
             Encarte encarte = new Encarte(
                     mercadoId,
                     titulo.trim(),
-                    "/uploads/encartes/" + fileName,
-                    originalName
+                    arquivo.url(),
+                    arquivo.nomeOriginal()
             );
 
             Encarte salvo = encarteRepository.save(encarte);
@@ -78,6 +61,28 @@ public class EncarteService {
         } catch (IOException e) {
             throw new RuntimeException("Erro ao salvar encarte", e);
         }
+    }
+
+    public EncarteDTO atualizar(String id, String titulo, MultipartFile pdf, String mercadoLogadoId) {
+        validarTitulo(titulo);
+        Encarte encarte = buscarEntidade(id);
+        validarDono(encarte, mercadoLogadoId);
+
+        encarte.setTitulo(titulo.trim());
+
+        if (pdf != null && !pdf.isEmpty()) {
+            try {
+                ArquivoEncarte arquivo = salvarArquivo(pdf);
+                encarte.setUrlPdf(arquivo.url());
+                encarte.setNomeArquivoOriginal(arquivo.nomeOriginal());
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao atualizar arquivo do encarte", e);
+            }
+        }
+
+        Encarte salvo = encarteRepository.save(encarte);
+        registrarAtualizacaoEncarte(salvo);
+        return toDTO(salvo);
     }
 
     public List<EncarteDTO> listarPorMercado(String mercadoId) {
@@ -94,10 +99,7 @@ public class EncarteService {
 
     public void deletar(String id, String mercadoLogadoId) {
         Encarte encarte = buscarEntidade(id);
-        if (mercadoLogadoId != null && !mercadoLogadoId.isBlank()
-                && !mercadoLogadoId.equals(encarte.getMercadoId())) {
-            throw new RuntimeException("Acao nao permitida");
-        }
+        validarDono(encarte, mercadoLogadoId);
         encarteRepository.delete(encarte);
     }
 
@@ -116,6 +118,36 @@ public class EncarteService {
         mercadoService.buscarPorId(mercadoId);
     }
 
+    private void validarTitulo(String titulo) {
+        if (titulo == null || titulo.isBlank()) {
+            throw new IllegalArgumentException("Titulo do encarte e obrigatorio");
+        }
+    }
+
+    private void validarDono(Encarte encarte, String mercadoLogadoId) {
+        if (mercadoLogadoId == null || mercadoLogadoId.isBlank()) {
+            throw new RuntimeException("Permissao negada para gerenciar encartes");
+        }
+        if (!mercadoLogadoId.equals(encarte.getMercadoId())) {
+            throw new RuntimeException("Acao nao permitida");
+        }
+    }
+
+    private ArquivoEncarte salvarArquivo(MultipartFile pdf) throws IOException {
+        Path uploadPath = Paths.get(UPLOAD_DIR);
+        if (Files.notExists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        String originalName = Objects.requireNonNullElse(pdf.getOriginalFilename(), "encarte.pdf");
+        String safeOriginal = originalName.replaceAll("[^a-zA-Z0-9._-]", "_");
+        String fileName = UUID.randomUUID() + "_" + safeOriginal;
+        Path filePath = uploadPath.resolve(fileName);
+
+        Files.copy(pdf.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        return new ArquivoEncarte("/uploads/encartes/" + fileName, originalName);
+    }
+
     private void registrarCriacaoEncarte(Encarte encarte) {
         try {
             usageService.recordFlyerCreated(encarte.getMercadoId());
@@ -132,6 +164,21 @@ public class EncarteService {
         }
     }
 
+    private void registrarAtualizacaoEncarte(Encarte encarte) {
+        try {
+            analyticsEventService.track(new AnalyticsEventRequest(
+                    "flyer_updated",
+                    encarte.getMercadoId(),
+                    encarte.getMercadoId(),
+                    null,
+                    encarte.getId(),
+                    Map.of("titulo", encarte.getTitulo())
+            ));
+        } catch (RuntimeException ignored) {
+            // Analytics nao pode impedir a atualizacao do encarte.
+        }
+    }
+
     private EncarteDTO toDTO(Encarte encarte) {
         String data = encarte.getDataCriacao() != null ? encarte.getDataCriacao().toString() : "";
         return new EncarteDTO(
@@ -142,4 +189,6 @@ public class EncarteService {
                 data
         );
     }
+
+    private record ArquivoEncarte(String url, String nomeOriginal) {}
 }

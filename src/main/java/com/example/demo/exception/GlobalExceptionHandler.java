@@ -91,6 +91,9 @@ public class GlobalExceptionHandler {
         if (lower.contains("autentic") || lower.contains("credenciais")) {
             return HttpStatus.UNAUTHORIZED;
         }
+        if (lower.contains("permiss") || lower.contains("permitid") || lower.contains("forbidden") || lower.contains("acesso negado")) {
+            return HttpStatus.FORBIDDEN;
+        }
         // outras heurísticas podem ser adicionadas
         return HttpStatus.BAD_REQUEST;
     }
