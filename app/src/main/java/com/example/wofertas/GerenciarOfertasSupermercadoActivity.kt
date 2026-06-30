@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.wofertas.network.ApiClient
 import com.example.wofertas.network.OfertaDto
 import com.example.wofertas.network.OfertaRequest
+import com.example.wofertas.ui.publicar.PublicarOfertaActivity
 import kotlinx.coroutines.launch
 
 /**
@@ -151,8 +152,12 @@ class GerenciarOfertasSupermercadoActivity : BaseMercadoActivity(),
     }
 
     override fun onEditClick(oferta: Oferta) {
-        startActivity(Intent(this, DashboardSupermercadoActivity::class.java).apply {
-            putExtra("ofertaParaEditar", oferta)
+        startActivity(Intent(this, PublicarOfertaActivity::class.java).apply {
+            putExtra("oferta_id", oferta.ofertaId)
+            putExtra("oferta_nome", oferta.nome)
+            putExtra("oferta_status", oferta.status)
+            putExtra("oferta_data", oferta.dataValidade)
+            putExtra("oferta_imagem", oferta.imagemOferta)
         })
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -25,11 +26,6 @@ import com.example.wofertas.network.ApiClient
 import com.example.wofertas.network.EncarteDto
 import kotlinx.coroutines.launch
 
-/**
- * Tela de Encartes.
- * - Modo MERCADO: lista seus encartes com opção de upload e exclusão.
- * - Modo CLIENTE/VISITANTE: passa mercadoId via Intent extra "mercado_id" e vê os encartes.
- */
 class EncartesActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -43,11 +39,20 @@ class EncartesActivity : AppCompatActivity() {
     private var mercadoId: String = ""
     private var mercadoNome: String = ""
     private var pdfUri: Uri? = null
+    private var editPdfUri: Uri? = null
+    private var editPdfLabel: TextView? = null
 
     private val pickPdf = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             pdfUri = uri
             mostrarDialogTitulo()
+        }
+    }
+
+    private val pickEditPdf = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            editPdfUri = uri
+            editPdfLabel?.text = "Novo PDF selecionado"
         }
     }
 
@@ -69,9 +74,9 @@ class EncartesActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener { finish() }
 
         recyclerView = findViewById(R.id.recyclerEncartes)
-        progressBar  = findViewById(R.id.progressEncartes)
-        tvMensagem   = findViewById(R.id.tvEncartesVazio)
-        btnUpload    = findViewById(R.id.btnUploadEncarte)
+        progressBar = findViewById(R.id.progressEncartes)
+        tvMensagem = findViewById(R.id.tvEncartesVazio)
+        btnUpload = findViewById(R.id.btnUploadEncarte)
 
         repository = EncarteRepository(this)
 
@@ -80,6 +85,7 @@ class EncartesActivity : AppCompatActivity() {
 
         adapter = EncartesAdapter(
             onVerClick = { abrirEncarte(it) },
+            onEditClick = if (isMercadoOwner) { encarte -> mostrarDialogEditar(encarte) } else null,
             onDeleteClick = if (isMercadoOwner) { encarte -> confirmarExclusao(encarte) } else null
         )
 
@@ -94,21 +100,22 @@ class EncartesActivity : AppCompatActivity() {
 
     private fun carregarEncartes() {
         progressBar.visibility = View.VISIBLE
-        tvMensagem.visibility  = View.GONE
+        tvMensagem.visibility = View.GONE
 
         lifecycleScope.launch {
             val result = repository.fetchEncartes(mercadoId)
             progressBar.visibility = View.GONE
 
             result.onSuccess { lista ->
+                adapter.submitList(lista)
                 if (lista.isEmpty()) {
-                    tvMensagem.text       = "Nenhum encarte disponível"
+                    tvMensagem.text = "Nenhum encarte disponivel"
                     tvMensagem.visibility = View.VISIBLE
                 } else {
-                    adapter.submitList(lista)
+                    tvMensagem.visibility = View.GONE
                 }
             }.onFailure {
-                tvMensagem.text       = "Erro ao carregar encartes"
+                tvMensagem.text = "Erro ao carregar encartes"
                 tvMensagem.visibility = View.VISIBLE
             }
         }
@@ -116,8 +123,6 @@ class EncartesActivity : AppCompatActivity() {
 
     private fun abrirEncarte(encarte: EncarteDto) {
         var urlFinal = encarte.urlPdf
-
-        // CORREÇÃO: Garante URL completa para o VerPDF
         if (urlFinal.startsWith("/") || !urlFinal.startsWith("http")) {
             val baseUrl = ApiClient.getCurrentBaseUrl().removeSuffix("/")
             val path = if (urlFinal.startsWith("/")) urlFinal else "/$urlFinal"
@@ -136,7 +141,7 @@ class EncartesActivity : AppCompatActivity() {
 
     private fun mostrarDialogTitulo() {
         val input = EditText(this).apply {
-            hint = "Título do encarte (ex: Ofertas da Semana)"
+            hint = "Titulo do encarte (ex: Ofertas da Semana)"
             setPadding(40, 20, 40, 20)
         }
         AlertDialog.Builder(this)
@@ -144,11 +149,60 @@ class EncartesActivity : AppCompatActivity() {
             .setView(input)
             .setPositiveButton("Enviar") { _, _ ->
                 val titulo = input.text.toString().trim()
-                if (titulo.isBlank()) Toast.makeText(this, "Informe um título", Toast.LENGTH_SHORT).show()
+                if (titulo.isBlank()) Toast.makeText(this, "Informe um titulo", Toast.LENGTH_SHORT).show()
                 else fazerUpload(titulo)
             }
             .setNegativeButton("Cancelar", null)
             .show()
+    }
+
+    private fun mostrarDialogEditar(encarte: EncarteDto) {
+        editPdfUri = null
+
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(40, 16, 40, 0)
+        }
+        val inputTitulo = EditText(this).apply {
+            hint = "Titulo do encarte"
+            setText(encarte.titulo)
+            setSelection(text.length)
+        }
+        val btnTrocarPdf = Button(this).apply {
+            text = "Selecionar novo PDF (opcional)"
+            isAllCaps = false
+            setOnClickListener { pickEditPdf.launch("application/pdf") }
+        }
+        val tvPdfSelecionado = TextView(this).apply {
+            text = "Mantendo PDF atual"
+            setPadding(0, 8, 0, 0)
+        }
+        editPdfLabel = tvPdfSelecionado
+
+        container.addView(inputTitulo)
+        container.addView(btnTrocarPdf)
+        container.addView(tvPdfSelecionado)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Editar encarte")
+            .setView(container)
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Salvar", null)
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val titulo = inputTitulo.text.toString().trim()
+                if (titulo.isBlank()) {
+                    inputTitulo.error = "Informe um titulo"
+                    return@setOnClickListener
+                }
+                dialog.dismiss()
+                atualizarEncarte(encarte, titulo, editPdfUri)
+            }
+        }
+        dialog.setOnDismissListener { editPdfLabel = null }
+        dialog.show()
     }
 
     private fun fazerUpload(titulo: String) {
@@ -170,6 +224,24 @@ class EncartesActivity : AppCompatActivity() {
         }
     }
 
+    private fun atualizarEncarte(encarte: EncarteDto, titulo: String, novoPdf: Uri?) {
+        progressBar.visibility = View.VISIBLE
+        btnUpload.isEnabled = false
+
+        lifecycleScope.launch {
+            val result = repository.updateEncarte(encarte.id, titulo, novoPdf)
+            progressBar.visibility = View.GONE
+            btnUpload.isEnabled = true
+
+            result.onSuccess {
+                Toast.makeText(this@EncartesActivity, "Encarte atualizado!", Toast.LENGTH_SHORT).show()
+                carregarEncartes()
+            }.onFailure { e ->
+                Toast.makeText(this@EncartesActivity, "Erro ao atualizar: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     private fun confirmarExclusao(encarte: EncarteDto) {
         AlertDialog.Builder(this)
             .setTitle("Excluir encarte")
@@ -185,7 +257,7 @@ class EncartesActivity : AppCompatActivity() {
             val result = repository.deleteEncarte(encarte.id)
             progressBar.visibility = View.GONE
             result.onSuccess {
-                Toast.makeText(this@EncartesActivity, "Encarte excluído", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@EncartesActivity, "Encarte excluido", Toast.LENGTH_SHORT).show()
                 carregarEncartes()
             }.onFailure { e ->
                 Toast.makeText(this@EncartesActivity, "Erro: ${e.message}", Toast.LENGTH_LONG).show()

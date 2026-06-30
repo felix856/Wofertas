@@ -24,11 +24,11 @@
         android:id="@+id/tvEncartesVazio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nenhum encarte disponível"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"
         android:padding="32dp"
+        android:text="Nenhum encarte disponivel"
+        android:textAlignment="center"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -42,11 +42,11 @@
 
     <Button
         android:id="@+id/btnUploadEncarte"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="📄 Enviar Novo Encarte (PDF)"
         android:layout_margin="16dp"
-        android:visibility="gone"
-        style="@style/Widget.MaterialComponents.Button" />
+        android:text="Enviar novo encarte (PDF)"
+        android:visibility="gone" />
 
 </LinearLayout>

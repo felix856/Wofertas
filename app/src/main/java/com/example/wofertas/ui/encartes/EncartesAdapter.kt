@@ -13,13 +13,15 @@ import com.example.wofertas.network.EncarteDto
 
 class EncartesAdapter(
     private val onVerClick: (EncarteDto) -> Unit,
-    private val onDeleteClick: ((EncarteDto) -> Unit)? = null  // null = modo visualização
+    private val onEditClick: ((EncarteDto) -> Unit)? = null,
+    private val onDeleteClick: ((EncarteDto) -> Unit)? = null
 ) : ListAdapter<EncarteDto, EncartesAdapter.EncarteViewHolder>(DIFF) {
 
     inner class EncarteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvTitulo: TextView    = itemView.findViewById(R.id.tvEncarteTitulo)
-        val tvData: TextView      = itemView.findViewById(R.id.tvEncarteData)
-        val btnVer: View          = itemView.findViewById(R.id.btnVerEncarte)
+        val tvTitulo: TextView = itemView.findViewById(R.id.tvEncarteTitulo)
+        val tvData: TextView = itemView.findViewById(R.id.tvEncarteData)
+        val btnVer: View = itemView.findViewById(R.id.btnVerEncarte)
+        val btnEdit: ImageButton = itemView.findViewById(R.id.btnEditEncarte)
         val btnDelete: ImageButton = itemView.findViewById(R.id.btnDeleteEncarte)
     }
 
@@ -32,15 +34,23 @@ class EncartesAdapter(
     override fun onBindViewHolder(holder: EncarteViewHolder, position: Int) {
         val encarte = getItem(position)
         holder.tvTitulo.text = encarte.titulo
-        holder.tvData.text   = encarte.dataCriacao.take(10) // yyyy-MM-dd
-
+        holder.tvData.text = encarte.dataCriacao.take(10)
         holder.btnVer.setOnClickListener { onVerClick(encarte) }
+
+        if (onEditClick != null) {
+            holder.btnEdit.visibility = View.VISIBLE
+            holder.btnEdit.setOnClickListener { onEditClick.invoke(encarte) }
+        } else {
+            holder.btnEdit.visibility = View.GONE
+            holder.btnEdit.setOnClickListener(null)
+        }
 
         if (onDeleteClick != null) {
             holder.btnDelete.visibility = View.VISIBLE
             holder.btnDelete.setOnClickListener { onDeleteClick.invoke(encarte) }
         } else {
             holder.btnDelete.visibility = View.GONE
+            holder.btnDelete.setOnClickListener(null)
         }
     }
 

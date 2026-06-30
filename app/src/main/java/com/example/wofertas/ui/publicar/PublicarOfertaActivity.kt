@@ -39,6 +39,7 @@ class PublicarOfertaActivity : BaseMercadoActivity() {
     private var selectedImageUri: Uri? = null
     private var ofertaId: String?     = null
     private var dataFim: String       = ""
+    private var imagemAtual: String?  = null
 
     private val api get() = ApiClient.authService(this)
 
@@ -47,7 +48,7 @@ class PublicarOfertaActivity : BaseMercadoActivity() {
     ) { uri ->
         if (uri != null) {
             selectedImageUri = uri
-            tvImagemNome.text = "Imagem selecionada"
+            tvImagemNome.text = "Nova imagem selecionada"
             tvImagemNome.visibility = View.VISIBLE
             ivPreview.setImageURI(uri)
             ivPreview.visibility = View.VISIBLE
@@ -76,12 +77,20 @@ class PublicarOfertaActivity : BaseMercadoActivity() {
         ofertaId = intent.getStringExtra("oferta_id")
         if (ofertaId != null) {
             supportActionBar?.title = "Editar Oferta"
+            btnPublicar.text = "Salvar alteracoes"
             etNome.setText(intent.getStringExtra("oferta_nome") ?: "")
             etStatus.setText(intent.getStringExtra("oferta_status") ?: "ATIVO")
             dataFim = intent.getStringExtra("oferta_data") ?: ""
             tvDataFim.text = dataFim
+            imagemAtual = intent.getStringExtra("oferta_imagem")
+            tvImagemNome.text = if (imagemAtual.isNullOrBlank()) {
+                "Nenhuma imagem atual. Toque para escolher."
+            } else {
+                "Imagem atual mantida. Toque para trocar."
+            }
         } else {
             supportActionBar?.title = "Publicar Oferta"
+            btnPublicar.text = "Publicar Oferta"
             etStatus.setText("ATIVO")
         }
 
@@ -120,7 +129,7 @@ class PublicarOfertaActivity : BaseMercadoActivity() {
             nome   = nome,
             status = status,
             data   = dataFim,
-            imagemOferta = null 
+            imagemOferta = if (ofertaId != null) imagemAtual else null
         )
 
         setCarregando(true)

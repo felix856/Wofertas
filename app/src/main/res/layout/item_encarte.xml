@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -11,18 +12,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical">
+        android:padding="12dp">
 
-        <!-- Ícone PDF -->
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_pdf"
-            android:contentDescription="PDF" />
+            android:contentDescription="PDF"
+            android:src="@drawable/ic_pdf" />
 
-        <!-- Título e data -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,37 +34,49 @@
                 android:id="@+id/tvEncarteTitulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Título do encarte"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                android:textSize="15sp" />
+                tools:text="Encarte semanal" />
 
             <TextView
                 android:id="@+id/tvEncarteData"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2024-01-01"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp"
-                android:textColor="@android:color/darker_gray"
-                android:layout_marginTop="2dp"/>
+                tools:text="2026-06-29" />
         </LinearLayout>
 
-        <!-- Botão Ver -->
         <Button
             android:id="@+id/btnVerEncarte"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ver"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
+            android:text="Ver" />
 
-        <!-- Botão excluir (visível só para mercado dono) -->
+        <ImageButton
+            android:id="@+id/btnEditEncarte"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Editar encarte"
+            android:src="@drawable/ic_edit"
+            android:visibility="gone"
+            app:tint="@color/wofertas_blue_primary"
+            tools:visibility="visible" />
+
         <ImageButton
             android:id="@+id/btnDeleteEncarte"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:src="@drawable/ic_delete"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Excluir encarte"
-            android:visibility="gone" />
+            android:src="@drawable/ic_delete"
+            android:visibility="gone"
+            app:tint="@color/status_suspenso"
+            tools:visibility="visible" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

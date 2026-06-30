@@ -31,10 +31,7 @@ class EncarteRepository(private val context: Context) {
                 val response = api.getEncartesByMercado(mercadoId)
                 if (response.isSuccessful) {
                     val lista = response.body() ?: emptyList()
-                    
-                    // Analytics: Track visualização do mercado/encartes (fire and forget)
                     analytics.trackEvent(mercadoId, AnalyticsRepository.VISUALIZACAO)
-                    
                     dao.clearByMercado(mercadoId)
                     dao.insertAll(lista.map { it.toEntity() })
                     Result.success(lista)
@@ -48,29 +45,19 @@ class EncarteRepository(private val context: Context) {
             }
         }
 
-    /**
-     * Upload de encarte PDF via multipart/form-data.
-     */
     suspend fun uploadEncarte(
         mercadoId: String,
         titulo: String,
         pdfUri: Uri
     ): Result<EncarteDto> = withContext(Dispatchers.IO) {
+        var uploadFile: File? = null
         try {
-            val tmpFile = File(context.cacheDir, "encarte_upload_${System.currentTimeMillis()}.pdf")
-            context.contentResolver.openInputStream(pdfUri)?.use { input ->
-                FileOutputStream(tmpFile).use { output -> input.copyTo(output) }
-            } ?: return@withContext Result.failure(Exception("Não foi possível ler o arquivo PDF"))
-
-            val pdfBody = tmpFile.asRequestBody("application/pdf".toMediaTypeOrNull())
-            val pdfPart = MultipartBody.Part.createFormData("pdf", tmpFile.name, pdfBody)
+            uploadFile = copyPdfToCache(pdfUri, "encarte_upload")
+                ?: return@withContext Result.failure(Exception("Nao foi possivel ler o arquivo PDF"))
 
             val mercadoIdBody = mercadoId.toRequestBody("text/plain".toMediaTypeOrNull())
-            val tituloBody    = titulo.toRequestBody("text/plain".toMediaTypeOrNull())
-
-            val response = api.uploadEncarte(mercadoIdBody, tituloBody, pdfPart)
-
-            tmpFile.delete()
+            val tituloBody = titulo.toRequestBody("text/plain".toMediaTypeOrNull())
+            val response = api.uploadEncarte(mercadoIdBody, tituloBody, uploadFile.toPdfPart())
 
             if (response.isSuccessful && response.body() != null) {
                 val encarte = response.body()!!
@@ -81,13 +68,44 @@ class EncarteRepository(private val context: Context) {
             }
         } catch (e: Exception) {
             Result.failure(e)
+        } finally {
+            uploadFile?.delete()
+        }
+    }
+
+    suspend fun updateEncarte(
+        id: String,
+        titulo: String,
+        pdfUri: Uri? = null
+    ): Result<EncarteDto> = withContext(Dispatchers.IO) {
+        var uploadFile: File? = null
+        try {
+            val tituloBody = titulo.toRequestBody("text/plain".toMediaTypeOrNull())
+            val pdfPart = pdfUri?.let {
+                uploadFile = copyPdfToCache(it, "encarte_update")
+                    ?: return@withContext Result.failure(Exception("Nao foi possivel ler o novo PDF"))
+                uploadFile?.toPdfPart()
+            }
+
+            val response = api.atualizarEncarte(id, tituloBody, pdfPart)
+            if (response.isSuccessful && response.body() != null) {
+                val encarte = response.body()!!
+                dao.insert(encarte.toEntity())
+                Result.success(encarte)
+            } else {
+                Result.failure(Exception("Erro ao atualizar: ${response.code()} ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        } finally {
+            uploadFile?.delete()
         }
     }
 
     suspend fun deleteEncarte(id: String): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             val response = api.deleteEncarte(id)
-            return@withContext if (response.isSuccessful) {
+            if (response.isSuccessful) {
                 dao.deleteById(id)
                 Result.success(Unit)
             } else {
@@ -97,9 +115,21 @@ class EncarteRepository(private val context: Context) {
             Result.failure(e)
         }
     }
+
+    private fun copyPdfToCache(uri: Uri, prefix: String): File? {
+        val tmpFile = File(context.cacheDir, "${prefix}_${System.currentTimeMillis()}.pdf")
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            FileOutputStream(tmpFile).use { output -> input.copyTo(output) }
+        } ?: return null
+        return tmpFile
+    }
+
+    private fun File.toPdfPart(): MultipartBody.Part {
+        val pdfBody = asRequestBody("application/pdf".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData("pdf", name, pdfBody)
+    }
 }
 
-// ── Mapeamentos ───────────────────────────────────────────────────────────────
 fun EncarteDto.toEntity() = EncarteEntity(
     id = id,
     mercadoId = mercadoId,

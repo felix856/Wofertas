@@ -184,6 +184,14 @@ interface ApiService {
         @Part            pdf:       MultipartBody.Part
     ): Response<EncarteDto>
 
+    @Multipart
+    @PUT("encartes/{id}")
+    suspend fun atualizarEncarte(
+        @Path("id") id: String,
+        @Part("titulo") titulo: RequestBody,
+        @Part pdf: MultipartBody.Part?
+    ): Response<EncarteDto>
+
     @GET("encartes/mercado/{mercadoId}")
     suspend fun getEncartesByMercado(
         @Path("mercadoId") mercadoId: String
