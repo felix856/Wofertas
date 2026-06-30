@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.example.wofertas.network.ApiClient
 import com.example.wofertas.utils.AppLogger
 import com.example.wofertas.utils.Constants
+import java.util.Locale
 
 /**
  * Gerencia sessão do usuário usando SharedPreferences.
@@ -45,14 +47,16 @@ object AuthManager {
         foto:    String? = null     // Adicionado para cache local
     ) {
         try {
+            val tipoNormalizado = normalizeTipo(tipo) ?: tipo.trim().uppercase(Locale.ROOT)
             prefs(context).edit()
                 .putString(Constants.KEY_TOKEN,   token)
                 .putString(Constants.KEY_USER_ID, userId)
                 .putString(Constants.KEY_EMAIL,   email)
-                .putString(Constants.KEY_TIPO,    tipo)
+                .putString(Constants.KEY_TIPO,    tipoNormalizado)
                 .putString("user_name",           nome)
                 .putString("user_image",          foto)
                 .apply()
+            ApiClient.invalidateAuthService()
             AppLogger.debug("Session saved for user: $userId")
         } catch (e: Exception) {
             AppLogger.error("Error saving session", e)
@@ -81,13 +85,14 @@ object AuthManager {
     fun getToken(context: Context):  String? = prefs(context).getString(Constants.KEY_TOKEN,   null)
     fun getUserId(context: Context): String? = prefs(context).getString(Constants.KEY_USER_ID, null)
     fun getEmail(context: Context):  String? = prefs(context).getString(Constants.KEY_EMAIL,   null)
-    fun getTipo(context: Context):   String? = prefs(context).getString(Constants.KEY_TIPO,    null)
+    fun getTipo(context: Context):   String? = normalizeTipo(prefs(context).getString(Constants.KEY_TIPO, null))
     fun getNome(context: Context):   String? = prefs(context).getString("user_name",           "Usuário")
     fun getFoto(context: Context):   String? = prefs(context).getString("user_image",          null)
 
     // ── Estado ────────────────────────────────────────────────────────────────
 
-    fun isLoggedIn(context: Context): Boolean = !getToken(context).isNullOrEmpty()
+    fun isLoggedIn(context: Context): Boolean =
+        !getToken(context).isNullOrEmpty() && getTipo(context) != null
     fun isUsuario(context: Context):  Boolean = getTipo(context)?.equals(Constants.TIPO_USUARIO, true) == true
     fun isMercado(context: Context):  Boolean = getTipo(context)?.equals(Constants.TIPO_MERCADO, true) == true
 
@@ -111,6 +116,17 @@ object AuthManager {
             AppLogger.debug("Fallback session cleared: $fallbackCleared")
         } catch (e: Exception) {
             AppLogger.error("Error clearing fallback session", e)
+        }
+
+        ApiClient.invalidateAuthService()
+    }
+
+    private fun normalizeTipo(tipo: String?): String? {
+        val value = tipo?.trim()?.uppercase(Locale.ROOT) ?: return null
+        return when (value) {
+            Constants.TIPO_USUARIO, "CLIENTE", "USER" -> Constants.TIPO_USUARIO
+            Constants.TIPO_MERCADO, "SUPERMERCADO", "MARKET" -> Constants.TIPO_MERCADO
+            else -> null
         }
     }
 }

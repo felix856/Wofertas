@@ -77,10 +77,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun redirecionarPorTipo() {
-        val destino = if (AuthManager.isMercado(this))
-            DashboardSupermercadoActivity::class.java
-        else
-            ListaOfertas::class.java
+        val destino = when {
+            AuthManager.isMercado(this) -> DashboardSupermercadoActivity::class.java
+            AuthManager.isUsuario(this) -> ListaOfertas::class.java
+            else -> {
+                AuthManager.clearSession(this)
+                LoginActivity::class.java
+            }
+        }
 
         startActivity(Intent(this, destino).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

@@ -159,11 +159,23 @@ class Cadastro : AppCompatActivity() {
         try {
             val loginResp = ApiClient.publicService.login(LoginRequest(email, senha))
             if (loginResp.isSuccessful) {
-                val body = loginResp.body()!!
-                AuthManager.saveSession(this, body.token, body.id, body.email, body.tipo)
+                val body = loginResp.body()
+                if (body == null || body.token.isBlank() || body.id.isBlank() || body.tipo.isBlank()) {
+                    toast("Cadastro realizado. Faca login para continuar.")
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                    return
+                }
+                AuthManager.saveSession(this, body.token, body.id, body.email, body.tipo, body.nome)
                 toast("Cadastro realizado com sucesso!")
-                val destino = if (AuthManager.isMercado(this))
-                    DashboardSupermercadoActivity::class.java else ListaOfertas::class.java
+                val destino = when {
+                    AuthManager.isMercado(this) -> DashboardSupermercadoActivity::class.java
+                    AuthManager.isUsuario(this) -> ListaOfertas::class.java
+                    else -> {
+                        AuthManager.clearSession(this)
+                        LoginActivity::class.java
+                    }
+                }
                 startActivity(Intent(this, destino).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 })

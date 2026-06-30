@@ -138,14 +138,26 @@ class LoginActivity : AppCompatActivity() {
                 val response = ApiClient.publicService.login(LoginRequest(email, senha))
 
                 if (response.isSuccessful) {
-                    val body = response.body()!!
+                    val body = response.body()
+                    if (body == null || body.token.isBlank() || body.id.isBlank() || body.tipo.isBlank()) {
+                        Toast.makeText(this@LoginActivity, "Resposta de login invalida. Tente novamente.", Toast.LENGTH_LONG).show()
+                        setCarregando(false)
+                        return@launch
+                    }
                     AuthManager.saveSession(
                         context = this@LoginActivity,
                         token   = body.token,
                         userId  = body.id,
                         email   = body.email,
-                        tipo    = body.tipo
+                        tipo    = body.tipo,
+                        nome    = body.nome
                     )
+                    if (!AuthManager.isUsuario(this@LoginActivity) && !AuthManager.isMercado(this@LoginActivity)) {
+                        AuthManager.clearSession(this@LoginActivity)
+                        Toast.makeText(this@LoginActivity, "Tipo de perfil nao reconhecido.", Toast.LENGTH_LONG).show()
+                        setCarregando(false)
+                        return@launch
+                    }
                     Toast.makeText(this@LoginActivity, "Login efetuado com sucesso!", Toast.LENGTH_SHORT).show()
                     redirecionarPorTipo()
                 } else {
@@ -166,10 +178,15 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun redirecionarPorTipo() {
-        val destino = if (AuthManager.isMercado(this)) {
-            DashboardSupermercadoActivity::class.java
-        } else {
-            ListaOfertas::class.java
+        val destino = when {
+            AuthManager.isMercado(this) -> DashboardSupermercadoActivity::class.java
+            AuthManager.isUsuario(this) -> ListaOfertas::class.java
+            else -> {
+                AuthManager.clearSession(this)
+                Toast.makeText(this, "Sessao invalida. Faca login novamente.", Toast.LENGTH_LONG).show()
+                setCarregando(false)
+                return
+            }
         }
         startActivity(
             Intent(this, destino).apply {

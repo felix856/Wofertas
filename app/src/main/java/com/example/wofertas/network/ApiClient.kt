@@ -2,8 +2,8 @@ package com.example.wofertas.network
 
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import android.os.Handler
+import android.os.Looper
 import com.example.wofertas.AuthManager
 import com.example.wofertas.LoginActivity
 import com.example.wofertas.utils.AppLogger
@@ -91,10 +91,13 @@ object ApiClient {
                     if (response.code == 401) {
                         AppLogger.error("Sessão expirada (401). Limpando dados e redirecionando...")
                         AuthManager.clearSession(context)
-                        val intent = Intent(context, LoginActivity::class.java).apply {
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        Handler(Looper.getMainLooper()).post {
+                            val appContext = context.applicationContext
+                            val intent = Intent(appContext, LoginActivity::class.java).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            }
+                            appContext.startActivity(intent)
                         }
-                        context.startActivity(intent)
                     }
                     response
                 }
