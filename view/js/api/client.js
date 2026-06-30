@@ -129,7 +129,7 @@ console.log('[API] API_BASE_URL:', API_BASE_URL);
     postPublic: (url, data) =>
       request(url, {
         method: 'POST',
-        body: serializeBody(data),
+        ...(typeof data === 'undefined' ? {} : { body: serializeBody(data) }),
       }),
 
     put: (url, data) =>

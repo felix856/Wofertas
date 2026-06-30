@@ -40,15 +40,14 @@ const authAPI = {
 
   async requestPasswordReset(email) {
     // ✅ era /auth/solicitar-reset-senha → correto é /auth/forgot-password
-    return await apiClient.postPublic('/auth/forgot-password', { email });
+    return await apiClient.postPublic(`/auth/forgot-password?email=${encodeURIComponent(email)}`);
   },
 
-  async resetPassword(token, novaSenha, confirmacao) {
-    // ✅ esse estava correto
-    return await apiClient.postPublic('/auth/reset-senha', {
+  async resetPassword(email, token, novaSenha) {
+    return await apiClient.postPublic('/auth/reset-password', {
+      email,
       token,
       novaSenha,
-      confirmacao,
     });
   },
 
