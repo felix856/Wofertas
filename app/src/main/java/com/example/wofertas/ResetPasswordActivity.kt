@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import com.example.wofertas.network.ApiClient
+import com.example.wofertas.network.ApiErrorParser
 import com.example.wofertas.network.ResetPasswordRequest
 import com.example.wofertas.utils.ValidationUtils
 import kotlinx.coroutines.launch
@@ -84,10 +85,10 @@ class ResetPasswordActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this@ResetPasswordActivity, "Código inválido ou expirado.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@ResetPasswordActivity, ApiErrorParser.parse(response), Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@ResetPasswordActivity, "Erro de conexão.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ResetPasswordActivity, ApiErrorParser.fromException(e), Toast.LENGTH_LONG).show()
             } finally {
                 setCarregando(false)
             }

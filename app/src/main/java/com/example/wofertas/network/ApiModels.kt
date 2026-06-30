@@ -229,9 +229,22 @@ data class BackendErrorDto(
     val message: String? = null,
     val mensagem: String? = null,
     val codigo: String? = null,
-    val status: Int? = null
+    val status: Int? = null,
+    val fieldErrors: Map<String, String>? = null
 ) {
-    fun toUserMessage(): String = mensagem ?: message ?: "Erro desconhecido"
+    fun toUserMessage(): String {
+        val validationMessages = fieldErrors
+            ?.values
+            ?.map { it.trim() }
+            ?.filter { it.isNotBlank() }
+            ?.distinct()
+
+        if (!validationMessages.isNullOrEmpty()) {
+            return validationMessages.joinToString(separator = "\n")
+        }
+
+        return mensagem ?: message ?: "Erro desconhecido"
+    }
 }
 
 data class FcmTokenRequest(

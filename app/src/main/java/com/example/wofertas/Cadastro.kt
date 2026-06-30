@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.wofertas.network.ApiClient
+import com.example.wofertas.network.ApiErrorParser
 import com.example.wofertas.network.CadastroMercadoRequest
 import com.example.wofertas.network.CadastroUsuarioRequest
 import com.example.wofertas.network.LoginRequest
@@ -106,7 +107,7 @@ class Cadastro : AppCompatActivity() {
                     cadastrarUsuario(nome, email, senha)
                 }
             } catch (e: Exception) {
-                toast("Sem conexão com o servidor.")
+                toast(ApiErrorParser.fromException(e))
                 setLoading(false)
             }
         }
@@ -119,10 +120,7 @@ class Cadastro : AppCompatActivity() {
         if (resp.isSuccessful) {
             autoLoginERediredir(email, senha)
         } else {
-            val msg = when (resp.code()) {
-                409  -> "Este e-mail já está cadastrado."
-                else -> "Erro no cadastro (${resp.code()}). Tente novamente."
-            }
+            val msg = mensagemCadastroUsuario(resp.code(), ApiErrorParser.parse(resp))
             toast(msg)
             setLoading(false)
         }
@@ -145,13 +143,33 @@ class Cadastro : AppCompatActivity() {
         if (resp.isSuccessful) {
             autoLoginERediredir(email, senha)
         } else {
-            val msg = when (resp.code()) {
-                400  -> "Dados inválidos. Verifique o telefone e CNPJ."
-                409  -> "CNPJ ou e-mail já cadastrado."
-                else -> "Erro no cadastro (${resp.code()})."
-            }
+            val msg = mensagemCadastroMercado(resp.code(), ApiErrorParser.parse(resp))
             toast(msg)
             setLoading(false)
+        }
+    }
+
+    private fun mensagemCadastroUsuario(code: Int, apiMessage: String): String {
+        val normalized = apiMessage.lowercase()
+        return when {
+            code == 409 || normalized.contains("ja cadastrado") || normalized.contains("já cadastrado") ->
+                "Este e-mail ja esta cadastrado. Tente entrar ou recuperar a senha."
+            apiMessage.isNotBlank() && !apiMessage.startsWith("Erro $code") ->
+                apiMessage
+            else ->
+                "Nao foi possivel criar o cadastro. Verifique os dados e tente novamente."
+        }
+    }
+
+    private fun mensagemCadastroMercado(code: Int, apiMessage: String): String {
+        val normalized = apiMessage.lowercase()
+        return when {
+            code == 409 || normalized.contains("ja cadastrado") || normalized.contains("já cadastrado") ->
+                "CNPJ ou e-mail ja cadastrado. Tente entrar ou recuperar a senha."
+            apiMessage.isNotBlank() && !apiMessage.startsWith("Erro $code") ->
+                apiMessage
+            else ->
+                "Nao foi possivel cadastrar o mercado. Verifique CNPJ, telefone e endereco."
         }
     }
 

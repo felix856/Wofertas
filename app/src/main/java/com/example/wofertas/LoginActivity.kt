@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.wofertas.network.ApiClient
 import com.example.wofertas.network.ApiDebugActivity
+import com.example.wofertas.network.ApiErrorParser
 import com.example.wofertas.network.LoginRequest
 import kotlinx.coroutines.launch
 
@@ -102,10 +103,10 @@ class LoginActivity : AppCompatActivity() {
                     intent.putExtra("email", email)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this@LoginActivity, "Erro ao enviar código. Verifique o e-mail.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@LoginActivity, ApiErrorParser.parse(response), Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@LoginActivity, "Erro de conexão.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, ApiErrorParser.fromException(e), Toast.LENGTH_LONG).show()
             } finally {
                 setCarregando(false)
             }
