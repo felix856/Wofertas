@@ -257,21 +257,6 @@ data class DataPrivacyRequestDto(
     val requestedAt: String? = null
 )
 
-data class ChatbotRequest(
-    val mensagem: String,
-    val pagina: String? = null,
-    val contextoTela: String? = null
-)
-
-data class ChatbotResponse(
-    val resposta: String? = null,
-    val tipoUsuario: String? = null,
-    val modo: String? = null,
-    val modelo: String? = null,
-    val contextoAnaliticoUsado: Boolean = false,
-    val respondidoEm: String? = null
-)
-
 // ALIASES PARA COMPATIBILIDADE ABSOLUTA
 typealias UsuarioDto = UsuarioResponse
 typealias MercadoDto = MercadoResponse
