@@ -1,0 +1,24 @@
+package com.example.demo.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public class ForgotPasswordRequest {
+    @NotBlank(message = "Email e obrigatorio")
+    @Email(message = "Email deve ser valido")
+    private String email;
+
+    public ForgotPasswordRequest() {}
+
+    public ForgotPasswordRequest(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}

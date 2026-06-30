@@ -5,6 +5,7 @@ import java.util.Map;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.ForgotPasswordRequest;
 import com.example.demo.dto.ResetPasswordRequest;
 import com.example.demo.model.Mercado;
 import com.example.demo.model.Usuario;
@@ -82,8 +84,20 @@ public class AuthController {
         return ResponseEntity.ok(user != null ? "VALIDO" : "INVALIDO");
     }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@RequestParam String email) {
+    @PostMapping(value = "/forgot-password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> forgotPasswordJson(@Valid @RequestBody ForgotPasswordRequest req) {
+        authService.solicitarRecuperacaoSenha(req.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/forgot-password", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<Void> forgotPasswordForm(@RequestParam String email) {
+        authService.solicitarRecuperacaoSenha(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/forgot-password", params = "email")
+    public ResponseEntity<Void> forgotPasswordQuery(@RequestParam String email) {
         authService.solicitarRecuperacaoSenha(email);
         return ResponseEntity.ok().build();
     }

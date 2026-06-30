@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,14 +28,17 @@ public class AuthService {
     @Autowired private MercadoRepository mercadoRepository;
     @Autowired private PasswordEncoder   passwordEncoder;
     @Autowired(required = false) private JavaMailSender    mailSender;
+    @Value("${app.mail.enabled:true}") private boolean mailEnabled;
+    @Value("${app.mail.from:${spring.mail.username:no-reply@wofertas.com}}") private String mailFrom;
 
     public CustomUserDetails authenticateByEmailAndPassword(String email, String rawPassword) {
-        logger.debug("Tentando autenticar usuario com email: {}", email);
+        String normalizedEmail = normalizeEmail(email);
+        logger.debug("Tentando autenticar usuario com email: {}", normalizedEmail);
 
-        Usuario u = usuarioRepository.findByEmail(email);
+        Usuario u = findUsuarioByEmailFlexible(email);
         if (u != null) {
             if (matches(u.getSenha(), rawPassword)) {
-                logger.info("Usuario autenticado com sucesso: {}", email);
+                logger.info("Usuario autenticado com sucesso: {}", normalizedEmail);
                 return new CustomUserDetails(
                     Objects.requireNonNullElse(u.getId(), ""),
                     u.getEmail(),
@@ -40,14 +46,14 @@ public class AuthService {
                     "USUARIO"
                 );
             }
-            logger.warn("Senha incorreta para usuario: {}", email);
+            logger.warn("Senha incorreta para usuario: {}", normalizedEmail);
             throw new RuntimeException("Credenciais inválidas");
         }
 
-        Mercado m = mercadoRepository.findByEmail(email);
+        Mercado m = findMercadoByEmailFlexible(email);
         if (m != null) {
             if (matches(m.getSenha(), rawPassword)) {
-                logger.info("Mercado autenticado com sucesso: {}", email);
+                logger.info("Mercado autenticado com sucesso: {}", normalizedEmail);
                 return new CustomUserDetails(
                     Objects.requireNonNullElse(m.getId(), ""),
                     m.getEmail(),
@@ -55,7 +61,7 @@ public class AuthService {
                     "MERCADO"
                 );
             }
-            logger.warn("Senha incorreta para mercado: {}", email);
+            logger.warn("Senha incorreta para mercado: {}", normalizedEmail);
             throw new RuntimeException("Credenciais inválidas");
         }
 
@@ -63,24 +69,25 @@ public class AuthService {
     }
 
     public void solicitarRecuperacaoSenha(String email) {
+        String normalizedEmail = normalizeEmail(email);
         String token = String.format("%06d", (int) (Math.random() * 1000000));
         LocalDateTime expiration = LocalDateTime.now().plusMinutes(30);
 
-        Usuario u = usuarioRepository.findByEmail(email);
+        Usuario u = findUsuarioByEmailFlexible(email);
         if (u != null) {
             u.setResetToken(token);
             u.setResetTokenExpiration(expiration);
             usuarioRepository.save(u);
-            enviarEmail(email, token);
+            enviarEmail(resolveRecipientEmail(u.getEmail(), normalizedEmail), token);
             return;
         }
 
-        Mercado m = mercadoRepository.findByEmail(email);
+        Mercado m = findMercadoByEmailFlexible(email);
         if (m != null) {
             m.setResetToken(token);
             m.setResetTokenExpiration(expiration);
             mercadoRepository.save(m);
-            enviarEmail(email, token);
+            enviarEmail(resolveRecipientEmail(m.getEmail(), normalizedEmail), token);
             return;
         }
 
@@ -88,7 +95,7 @@ public class AuthService {
     }
 
     public void redefinirSenha(String email, String token, String novaSenha) {
-        Usuario u = usuarioRepository.findByEmail(email);
+        Usuario u = findUsuarioByEmailFlexible(email);
         if (u != null) {
             validarToken(u.getResetToken(), u.getResetTokenExpiration(), token);
             u.setSenha(passwordEncoder.encode(novaSenha));
@@ -98,7 +105,7 @@ public class AuthService {
             return;
         }
 
-        Mercado m = mercadoRepository.findByEmail(email);
+        Mercado m = findMercadoByEmailFlexible(email);
         if (m != null) {
             validarToken(m.getResetToken(), m.getResetTokenExpiration(), token);
             m.setSenha(passwordEncoder.encode(novaSenha));
@@ -121,19 +128,24 @@ public class AuthService {
     }
 
     private void enviarEmail(String email, String token) {
-        if (mailSender == null) {
-            System.out.println("Email não configurado. Token: " + token);
+        if (!mailEnabled || mailSender == null) {
+            logger.warn("Servico de e-mail desabilitado. Token de recuperacao gerado para {}: {}", email, token);
             return;
         }
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("wofertas1@gmail.com");
+        message.setFrom(mailFrom);
         message.setTo(email);
         message.setSubject("Código de Recuperação - Wofertas");
         message.setText("Olá!\n\nSeu código de recuperação de senha é:\n\n" +
                 token + "\n\n" +
                 "Este código expira em 30 minutos.\n\n" +
                 "Se você não solicitou isso, ignore este e-mail.");
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+        } catch (MailException e) {
+            logger.error("Falha ao enviar e-mail de recuperacao para {}", email, e);
+            throw new RuntimeException("Servico de e-mail indisponivel. Configure o SMTP e tente novamente.");
+        }
     }
 
     private boolean matches(String stored, String raw) {
@@ -142,5 +154,36 @@ public class AuthService {
             return passwordEncoder.matches(raw, stored);
         }
         return stored.equals(raw);
+    }
+
+    private String normalizeEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new RuntimeException("E-mail e obrigatorio.");
+        }
+        return email.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private Usuario findUsuarioByEmailFlexible(String email) {
+        String trimmed = email == null ? "" : email.trim();
+        String normalized = normalizeEmail(email);
+        Usuario usuario = usuarioRepository.findByEmail(normalized);
+        if (usuario == null && !normalized.equals(trimmed)) {
+            usuario = usuarioRepository.findByEmail(trimmed);
+        }
+        return usuario;
+    }
+
+    private Mercado findMercadoByEmailFlexible(String email) {
+        String trimmed = email == null ? "" : email.trim();
+        String normalized = normalizeEmail(email);
+        Mercado mercado = mercadoRepository.findByEmail(normalized);
+        if (mercado == null && !normalized.equals(trimmed)) {
+            mercado = mercadoRepository.findByEmail(trimmed);
+        }
+        return mercado;
+    }
+
+    private String resolveRecipientEmail(String storedEmail, String fallbackEmail) {
+        return storedEmail == null || storedEmail.isBlank() ? fallbackEmail : storedEmail.trim();
     }
 }

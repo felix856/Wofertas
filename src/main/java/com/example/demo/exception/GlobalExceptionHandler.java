@@ -94,6 +94,14 @@ public class GlobalExceptionHandler {
         if (lower.contains("permiss") || lower.contains("permitid") || lower.contains("forbidden") || lower.contains("acesso negado")) {
             return HttpStatus.FORBIDDEN;
         }
+        if (lower.contains("e-mail indisponivel") || lower.contains("email indisponivel")
+                || lower.contains("smtp") || lower.contains("mail server")) {
+            return HttpStatus.SERVICE_UNAVAILABLE;
+        }
+        if (lower.contains("ja cadastrado") || lower.contains("já cadastrado")
+                || lower.contains("duplicad") || lower.contains("duplicate")) {
+            return HttpStatus.CONFLICT;
+        }
         // outras heurísticas podem ser adicionadas
         return HttpStatus.BAD_REQUEST;
     }

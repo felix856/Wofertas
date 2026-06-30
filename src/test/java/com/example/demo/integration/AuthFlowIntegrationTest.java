@@ -1,5 +1,7 @@
 package com.example.demo.integration;
 
+import java.util.Map;
+
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.ResetPasswordRequest;
 import com.example.demo.model.Mercado;
@@ -21,6 +23,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,6 +94,35 @@ class AuthFlowIntegrationTest {
                 .andExpect(jsonPath("$.id").isNotEmpty())
                 .andExpect(jsonPath("$.email").value(MARKET_EMAIL))
                 .andExpect(jsonPath("$.tipo").value("MERCADO"));
+    }
+
+    @Test
+    void cadastroUsuarioDuplicadoRetornaConflict() throws Exception {
+        Map<String, String> request = Map.of(
+                "nome", "Cliente Login",
+                "email", USER_EMAIL,
+                "senha", "SenhaNova123"
+        );
+
+        mockMvc.perform(post("/usuarios")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value(containsString("cadastrado")));
+    }
+
+    @Test
+    void recuperacaoSenhaAceitaJsonEEmailComMaiusculas() throws Exception {
+        Map<String, String> request = Map.of("email", USER_EMAIL.toUpperCase());
+
+        mockMvc.perform(post("/auth/forgot-password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+
+        Usuario usuarioComToken = usuarioRepository.findByEmail(USER_EMAIL);
+        assertThat(usuarioComToken.getResetToken()).hasSize(6);
+        assertThat(usuarioComToken.getResetTokenExpiration()).isNotNull();
     }
 
     @Test
