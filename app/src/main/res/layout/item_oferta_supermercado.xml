@@ -40,7 +40,7 @@
             app:layout_constraintStart_toEndOf="@id/imgOfertaSupermercado"
             app:layout_constraintTop_toTopOf="@id/imgOfertaSupermercado"
             app:layout_constraintEnd_toStartOf="@+id/chipStatus"
-            tools:text="Encarte da Semana" />
+            tools:text="Frango a R$ 9,99/kg" />
 
         <!-- FIX: chipBackgroundColor → status_ativo (#00875A) para contraste suficiente;
                   text → @string; textColor branco mantém contraste ≥ 4.5:1 -->
@@ -113,7 +113,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="@string/cd_ver_encarte"
+            android:contentDescription="@string/cd_ver_imagem_oferta"
             android:src="@drawable/ic_pdf"
             android:padding="4dp"
             app:layout_constraintStart_toStartOf="parent"

@@ -42,7 +42,14 @@ class EditarPerfilActivity : AppCompatActivity() {
             // Processa a imagem em uma Coroutine para não travar a UI
             lifecycleScope.launch {
                 setLoading(true)
-                novaImagemBase64 = processarEComprimirImagem(uri)
+                val imagemProcessada = processarEComprimirImagem(uri)
+                if (imagemProcessada == null) {
+                    setLoading(false)
+                    Toast.makeText(this@EditarPerfilActivity, "Nao foi possivel ler esta imagem.", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
+
+                novaImagemBase64 = imagemProcessada
 
                 // Carrega a prévia usando Coil com efeito circular
                 imgPerfil.load(uri) {
@@ -136,9 +143,9 @@ class EditarPerfilActivity : AppCompatActivity() {
     // DESENVOLVIDO: Compressão de imagem para poupar banda e respeitar limite do servidor
     private suspend fun processarEComprimirImagem(uri: Uri): String? = withContext(Dispatchers.IO) {
         try {
-            val inputStream = contentResolver.openInputStream(uri)
-            val originalBitmap = BitmapFactory.decodeStream(inputStream)
-            inputStream?.close()
+            val originalBitmap = contentResolver.openInputStream(uri)?.use { inputStream ->
+                BitmapFactory.decodeStream(inputStream)
+            } ?: return@withContext null
 
             // Redimensiona se for maior que 1024px para manter performance
             val scale = 1024f / Math.max(originalBitmap.width, originalBitmap.height).coerceAtLeast(1)

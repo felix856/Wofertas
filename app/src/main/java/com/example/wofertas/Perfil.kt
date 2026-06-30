@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.wofertas.network.ApiClient
 import com.example.wofertas.network.PrivacyDeletionRequest
+import com.example.wofertas.ui.encartes.EncartesActivity
 import com.example.wofertas.utils.Constants
 import com.example.wofertas.utils.loadImage
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -122,10 +123,12 @@ class Perfil : AppCompatActivity() {
     }
 
     private fun uriToFile(uri: Uri): File {
-        val inputStream = contentResolver.openInputStream(uri)
         val file = File(cacheDir, "temp_profile_image.jpg")
-        val outputStream = FileOutputStream(file)
-        inputStream?.copyTo(outputStream)
+        contentResolver.openInputStream(uri)?.use { inputStream ->
+            FileOutputStream(file).use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        } ?: throw IllegalArgumentException("Nao foi possivel ler a imagem selecionada")
         return file
     }
 
@@ -180,6 +183,9 @@ class Perfil : AppCompatActivity() {
                 R.id.navigation_minhas_ofertas, R.id.navigation_gerenciar_ofertas_supermercado -> {
                     startActivity(Intent(this, GerenciarOfertasSupermercadoActivity::class.java)); true
                 }
+                R.id.navigation_encartes -> {
+                    abrirMeusEncartes(); true
+                }
                 R.id.navigation_perfil_supermercado -> true
                 else -> false
             }
@@ -203,6 +209,14 @@ class Perfil : AppCompatActivity() {
         btnSolicitarExclusao.setOnClickListener {
             confirmarSolicitacaoExclusao()
         }
+    }
+
+    private fun abrirMeusEncartes() {
+        val mercadoId = AuthManager.getUserId(this) ?: return
+        startActivity(Intent(this, EncartesActivity::class.java).apply {
+            putExtra("mercado_id", mercadoId)
+            putExtra("mercado_nome", AuthManager.getNome(this@Perfil) ?: "Meus encartes")
+        })
     }
 
     private fun confirmarSolicitacaoExclusao() {

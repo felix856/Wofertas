@@ -282,8 +282,9 @@ class DashboardSupermercadoActivity : BaseMercadoActivity() {
     }
 
     private fun prepararImagem(uri: Uri): File {
-        val inputStream = contentResolver.openInputStream(uri)
-        val bitmap = BitmapFactory.decodeStream(inputStream)
+        val bitmap = contentResolver.openInputStream(uri)?.use { inputStream ->
+            BitmapFactory.decodeStream(inputStream)
+        } ?: throw IllegalArgumentException("Nao foi possivel ler a imagem selecionada")
         val file = File(cacheDir, "oferta_${System.currentTimeMillis()}.jpg")
         FileOutputStream(file).use { out ->
             bitmap.compress(Bitmap.CompressFormat.JPEG, 70, out)

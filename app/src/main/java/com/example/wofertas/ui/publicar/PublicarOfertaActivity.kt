@@ -125,6 +125,11 @@ class PublicarOfertaActivity : BaseMercadoActivity() {
         }
 
         // imagemOferta vai null no JSON, pois o upload da imagem física é via multipart depois
+        if (selectedImageUri == null && imagemAtual.isNullOrBlank()) {
+            Toast.makeText(this, "Selecione uma imagem da oferta", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val body = OfertaRequest(
             nome   = nome,
             status = status,
@@ -196,7 +201,7 @@ class PublicarOfertaActivity : BaseMercadoActivity() {
             FileOutputStream(file).use { output ->
                 input.copyTo(output)
             }
-        }
+        } ?: throw IllegalArgumentException("Nao foi possivel ler a imagem selecionada")
         return file
     }
 

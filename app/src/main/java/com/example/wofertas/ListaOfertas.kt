@@ -246,7 +246,7 @@ class ListaOfertas : BaseClienteActivity(), OnOfertaClickListener {
     }
 
     private suspend fun carregarOfertas() {
-        val resp = api.listarOfertas()
+        val resp = api.listarOfertas(ativo = true)
         if (!resp.isSuccessful) {
             mostrarErro("Erro ao carregar ofertas (${resp.code()}).")
             return
@@ -289,7 +289,7 @@ class ListaOfertas : BaseClienteActivity(), OnOfertaClickListener {
     override fun onOfertaClick(oferta: Oferta) {
         val url = oferta.imagemOferta
         if (url.isNullOrBlank()) {
-            Toast.makeText(this, "Oferta sem encarte.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Oferta sem imagem.", Toast.LENGTH_SHORT).show()
             return
         }
 

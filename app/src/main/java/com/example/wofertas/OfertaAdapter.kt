@@ -90,7 +90,10 @@ class OfertaAdapter(
         // 5. Cliques
         holder.imageViewSave.setOnClickListener {
             // Envia o clique para a ListaOfertas tratar o salvamento no MongoDB
-            listener?.onSaveClick(oferta, holder.adapterPosition)
+            val currentPosition = holder.adapterPosition
+            if (currentPosition != RecyclerView.NO_POSITION) {
+                listener?.onSaveClick(oferta, currentPosition)
+            }
         }
 
         holder.itemView.setOnClickListener {

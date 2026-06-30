@@ -331,7 +331,7 @@
                         android:autofillHints="name"
                         android:background="@drawable/bg_field"
                         android:gravity="center_vertical"
-                        android:hint="Ex.: Encarte Semanal"
+                        android:hint="Ex.: Frango a R$ 9,99/kg"
                         android:inputType="textCapSentences"
                         android:paddingHorizontal="14dp"
                         android:singleLine="true"
@@ -371,7 +371,7 @@
                         android:autofillHints="date"
                         android:background="@drawable/bg_field"
                         android:gravity="center_vertical"
-                        android:hint="AAAA-MM-DD"
+                        android:hint="Toque para escolher a validade"
                         android:inputType="date"
                         android:paddingHorizontal="14dp"
                         android:singleLine="true"
@@ -381,7 +381,7 @@
 
                 </LinearLayout>
 
-                <!-- Card: upload do encarte -->
+                <!-- Card: imagem da oferta -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -394,7 +394,7 @@
 
                     <TextView
                         style="@style/SectionLabel"
-                        android:text="IMAGEM DO ENCARTE"
+                        android:text="IMAGEM DA OFERTA"
                         android:textColor="@color/darker_gray"
                         android:textColorHint="@color/darker_gray" />
 
@@ -426,7 +426,7 @@
                         style="@style/Btn.Outline"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:text="Selecionar Imagem" />
+                        android:text="Selecionar imagem da oferta" />
 
                 </LinearLayout>
 

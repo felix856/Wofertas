@@ -89,6 +89,7 @@
 
     <string name="cd_logo_supermercado">Logo do supermercado</string>
     <string name="cd_ver_encarte">Ver encarte</string>
+    <string name="cd_ver_imagem_oferta">Ver imagem da oferta</string>
     <string name="cd_editar_oferta">Editar oferta</string>
     <string name="cd_alterar_status">Alterar status</string>
     <string name="cd_excluir_oferta">Excluir oferta</string>

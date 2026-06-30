@@ -68,7 +68,7 @@
     android:background="@color/wofertas_blue_primary"
     app:itemIconTint="@color/white"
     app:itemTextColor="@color/white"
-    app:menu="@menu/dashboard_menu"
+    app:menu="@menu/bottom_nav_menu_supermercado"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent" />

@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wofertas.network.ApiClient
+import com.example.wofertas.network.OfertaRequest
 import com.example.wofertas.ui.publicar.PublicarOfertaActivity
 import com.example.wofertas.ui.encartes.EncartesActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -127,6 +128,7 @@ class MinhasOfertas : BaseMercadoActivity(), SupermercadoOfertaAdapter.OnItemAct
             putExtra("oferta_nome",   oferta.nome)
             putExtra("oferta_status", oferta.status)
             putExtra("oferta_data",   oferta.dataValidade)
+            putExtra("oferta_imagem", oferta.imagemOferta)
         })
     }
 
@@ -140,8 +142,29 @@ class MinhasOfertas : BaseMercadoActivity(), SupermercadoOfertaAdapter.OnItemAct
     }
 
     override fun onToggleStatusClick(oferta: Oferta) {
-        // Implementação futura para Ativar/Desativar rapidamente
-        Toast.makeText(this, "Funcionalidade de status em breve", Toast.LENGTH_SHORT).show()
+        val id = oferta.ofertaId ?: return
+        val novoStatus = if (oferta.status?.uppercase() == "SUSPENSO") "ATIVO" else "SUSPENSO"
+
+        lifecycleScope.launch {
+            try {
+                val request = OfertaRequest(
+                    nome = oferta.nome ?: "",
+                    status = novoStatus,
+                    data = oferta.dataValidade ?: "",
+                    imagemOferta = oferta.imagemOferta
+                )
+                val resp = api.atualizarOferta(id, request)
+                if (resp.isSuccessful) {
+                    carregarOfertas()
+                } else if (resp.code() == 401) {
+                    tratarSessaoExpirada()
+                } else {
+                    Toast.makeText(this@MinhasOfertas, "Erro ao alterar status (${resp.code()})", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@MinhasOfertas, "Erro de conexão", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun deletarOfertaApi(oferta: Oferta) {
@@ -177,10 +200,6 @@ class MinhasOfertas : BaseMercadoActivity(), SupermercadoOfertaAdapter.OnItemAct
                     finish(); true
                 }
                 R.id.navigation_minhas_ofertas -> true
-                R.id.navigation_criar_oferta -> {
-                    startActivity(Intent(this, PublicarOfertaActivity::class.java))
-                    true
-                }
                 R.id.navigation_gerenciar_ofertas_supermercado -> true
                 R.id.navigation_encartes -> {
                     abrirMeusEncartes()

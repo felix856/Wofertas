@@ -51,7 +51,7 @@
             app:layout_constraintStart_toStartOf="@id/txtNome"
             app:layout_constraintTop_toBottomOf="@id/txtNome"
             app:layout_constraintEnd_toEndOf="@id/txtNome"
-            tools:text="Encarte da Semana" />
+            tools:text="Frango a R$ 9,99/kg" />
 
         <!-- TextView para a Descrição Detalhada da Oferta -->
         <TextView

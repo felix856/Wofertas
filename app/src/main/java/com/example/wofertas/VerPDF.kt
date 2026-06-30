@@ -61,11 +61,12 @@ class VerPDF : AppCompatActivity() {
         pdfUrl = intent.getStringExtra("pdfUrl")
         if (pdfUrl.isNullOrBlank()) {
             pdfUrl = DataHolder.bigString
+            DataHolder.clean()
         }
         
         ofertaId    = intent.getStringExtra("oferta_id") ?: ""
         mercadoNome = intent.getStringExtra("mercado_nome") ?: ""
-        val titulo  = intent.getStringExtra("oferta_nome") ?: "Encarte da Oferta"
+        val titulo  = intent.getStringExtra("oferta_nome") ?: "Oferta"
 
         initViews(titulo)
         NotificationHelper.criarCanais(this)
@@ -73,7 +74,7 @@ class VerPDF : AppCompatActivity() {
         if (!pdfUrl.isNullOrBlank()) {
             carregarEncarte(pdfUrl!!)
         } else {
-            handleError("Encarte não encontrado.")
+            handleError("Arquivo nao encontrado.")
         }
     }
 
@@ -134,7 +135,7 @@ class VerPDF : AppCompatActivity() {
                 base64Bitmaps.add(bitmap)
                 mostrarBitmapDireto(0)
             } else {
-                handleError("Não foi possível carregar a imagem do encarte.")
+                handleError("Nao foi possivel carregar a imagem.")
             }
         }
     }
@@ -152,7 +153,7 @@ class VerPDF : AppCompatActivity() {
                     connection.setRequestProperty("Accept", "application/pdf,image/*,*/*")
                     val statusCode = connection.responseCode
                     if (statusCode !in 200..299) {
-                        throw IOException("HTTP $statusCode ao baixar encarte")
+                        throw IOException("HTTP $statusCode ao baixar arquivo")
                     }
                     val temp = File(cacheDir, "temp_encarte.dat")
                     connection.inputStream.use { input -> FileOutputStream(temp).use { output -> input.copyTo(output) } }
@@ -166,7 +167,7 @@ class VerPDF : AppCompatActivity() {
             }
             progressBar.visibility = View.GONE
             if (file != null) abrirArquivo(file)
-            else handleError("Falha ao baixar o encarte.")
+            else handleError("Falha ao baixar o arquivo.")
         }
     }
 
@@ -182,7 +183,7 @@ class VerPDF : AppCompatActivity() {
                 base64Bitmaps.clear()
                 base64Bitmaps.add(bitmap)
                 mostrarBitmapDireto(0)
-            } else handleError("Arquivo de encarte inválido ou corrompido.")
+            } else handleError("Arquivo invalido ou corrompido.")
         }
     }
 
@@ -210,7 +211,7 @@ class VerPDF : AppCompatActivity() {
             executarOcrNaPagina(bitmap, index)
         } catch (e: Exception) {
             Log.e("VerPDF", "Erro ao renderizar PDF", e)
-            handleError("Nao foi possivel renderizar este encarte.")
+            handleError("Nao foi possivel renderizar este arquivo.")
         }
     }
 
@@ -257,7 +258,7 @@ class VerPDF : AppCompatActivity() {
                         NotificationHelper.notificarProdutoEncontrado(
                             this@VerPDF, 
                             itemDaLista.nome, 
-                            mercadoNome.ifBlank { "Santo Amaro" }, 
+                            mercadoNome.ifBlank { "Mercado" },
                             precoTxt, 
                             (ofertaId + itemDaLista.id + matchOcr.nome).hashCode()
                         )

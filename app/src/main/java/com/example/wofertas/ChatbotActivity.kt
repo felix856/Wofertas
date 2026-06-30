@@ -224,7 +224,7 @@ class ChatbotActivity : AppCompatActivity() {
         val msg = pergunta.lowercase()
         return if (AuthManager.isMercado(this)) {
             when {
-                "oferta" in msg || "public" in msg -> "Para publicar, abra o dashboard do supermercado e toque em Publicar Oferta. Preencha nome, validade, imagem ou encarte e confirme."
+                "oferta" in msg || "public" in msg -> "Para publicar uma oferta, abra o dashboard do supermercado, preencha nome, validade e imagem da oferta. Para enviar PDF, use o menu Encartes."
                 "ranking" in msg -> "O ranking mostra a posicao do mercado conforme o engajamento das ofertas, principalmente curtidas e favoritos."
                 "dashboard" in msg || "metric" in msg -> "No dashboard voce acompanha visualizacoes, curtidas, favoritos, carrinhos e recomendacoes para melhorar suas campanhas."
                 else -> "Posso ajudar com ofertas, encartes, dashboard, ranking, perfil do mercado e publicacoes."

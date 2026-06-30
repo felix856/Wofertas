@@ -177,7 +177,7 @@ class CarrinhoActivity : BaseClienteActivity() {
                 val oferta = response.body()
                 val fonte = oferta?.imagemOferta ?: oferta?.imagem
                 if (fonte.isNullOrBlank()) {
-                    Toast.makeText(this@CarrinhoActivity, "Oferta sem encarte/imagem.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@CarrinhoActivity, "Oferta sem imagem.", Toast.LENGTH_LONG).show()
                     return@launch
                 }
 
