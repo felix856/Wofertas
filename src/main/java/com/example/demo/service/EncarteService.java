@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Sort;
 
 import com.example.demo.dto.AnalyticsEventRequest;
 import com.example.demo.dto.EncarteDTO;
@@ -88,6 +89,13 @@ public class EncarteService {
     public List<EncarteDTO> listarPorMercado(String mercadoId) {
         validarMercado(mercadoId);
         return encarteRepository.findByMercadoIdOrderByDataCriacaoDesc(mercadoId)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    public List<EncarteDTO> listarTodos() {
+        return encarteRepository.findAll(Sort.by(Sort.Direction.DESC, "dataCriacao"))
                 .stream()
                 .map(this::toDTO)
                 .toList();

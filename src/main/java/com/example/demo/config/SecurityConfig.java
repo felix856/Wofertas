@@ -117,9 +117,11 @@ public class SecurityConfig {
                     HttpMethod.GET,
                     "/ofertas/**",
                     "/mercados/**",
+                    "/encartes",
                     "/encartes/**",
                     "/api/ofertas/**",
                     "/api/mercados/**",
+                    "/api/encartes",
                     "/api/encartes/**",
                     "/privacy/legal",
                     "/api/privacy/legal"

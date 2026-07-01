@@ -41,6 +41,11 @@ public class EncarteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(encarteService.salvar(mercadoLogadoId, titulo, pdf));
     }
 
+    @GetMapping
+    public List<EncarteDTO> listarTodos() {
+        return encarteService.listarTodos();
+    }
+
     @GetMapping("/mercado/{mercadoId}")
     public List<EncarteDTO> listarPorMercado(@PathVariable String mercadoId) {
         return encarteService.listarPorMercado(mercadoId);
